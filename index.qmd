@@ -1,171 +1,596 @@
 ---
-title: "Dashboard Quarto!"
-subtitle: "AAJ - NUADE"
-format: dashboard
-logo: stf.png
-theme: AnnArbor
+title: "Agrupador de processos de controle concentrado"
+subtitle: "Apresentação oral da proposta de projeto de TCC 1
+Departamento de Estatística
+Universidade de Brasília"
+author:
+  - name: Bruno Gondim Toledo
+    email: bruno.gondim@aluno.unb.br
+    url: https://github.com/penasta
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: auto
+    scrollable: true
+    logo: unb.png
+    theme: serif
+    width: 1500
+    css: styles.css
+    footer: <https://unb.br/>
+resources:
+  - demo.pdf
+editor_options: 
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    dev: png
+    dev.args:
+      bg: transparent
 ---
 
-```{r}
-#| tags: [parameters]
-
-# to render w/ a different product type:
-# quarto render dashboard.qmd -P product_type:Premium
-
-product_type = "Joãozinho"
+```{r, include=FALSE}
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(tidyverse,knitr,ggdendro,dendextend,gridExtra,cluster,reticulate,
+               dslabs,Rtsne)
 ```
 
-```{r}
 
-if (!require("pacman")) install.packages("pacman")
+# Sumário
 
-pacman::p_load(
-  tidyverse, data.table,
-  readxl, readr, ggcorrplot, cowplot,
-  RColorBrewer, scales, nortest, xlsx
-)
-windowsFonts(Arial=windowsFont("sans"))
+::: {style="margin-top: 1.8em; font-size: 1.2em"}
+- Introdução
+- Objetivos
+- Metodologia
+- Cronograma
+- Referências
 
-# Definindo paleta de cores da stf
-cores_stf <- c("#006eab", "#00a8e7","#ffffff", "#000000", # Oficiais; priorizar.
-               "#003d5f","#004d78","#005e92","#007ec5","#008fde","#009ff8") # Não oficiais. Evitar usar.
+:::
 
-# Definindo paleta de cores da gestão do Min. Barroso
+## Introdução
 
-cores_gestao <- c("#0d446e","#0b6ea9","#2ca7df",
-                  "#fdb813","#808284","#EE2E62") # O código da 5ª parece incorreto.
+Com o advento de novas técnicas computacionais, a episteme da estatística tem se expandido para áreas antes inexploradas. A análise de textos, por exemplo, tem sido um campo fértil para a aplicação de técnicas de análise e aprendizado estatístico.
 
-# Fontes da gestão: Program Nar OT e Acumin Pro
+No campo do direito, a aplicação destas técnicas vêm sendo testadas em diversos âmbitos. No Supremo Tribunal Federal do Brasil, por exemplo, já existem tecnologias que utilizam destas técnicas para auxiliar o fluxo de trabalho.
 
-theme_stf <- function(...) {
-  theme <- ggplot2::theme_bw() +
-    ggplot2::theme(
-      axis.title.y = ggplot2::element_text(colour = "#000000", size = 10),
-      axis.title.x = ggplot2::element_text(colour = "#000000", size = 10),
-      axis.text = ggplot2::element_text(colour = "#000000", size = 10),
-      panel.border = ggplot2::element_blank(),
-      axis.line = ggplot2::element_line(colour = "#000000"),
-      text = element_text(family = "sans", size = 12),
-      legend.position = "top",
-      ...
-    )
-  return(
-    list(
-      theme,
-      scale_fill_manual(values = cores_stf),
-      scale_colour_manual(values = cores_stf),
-      scale_y_continuous(
-        labels = scales::number_format(decimal.mark = ',',
-#                                       accuracy = 0.01,
-                                       big.mark = "."))
-    )
-  )
+Este trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado.
+
+## Objetivos
+
+::: {style="margin-top: 1em; font-size: 1.2em"}
+
+O objetivo deste trabalho é formular um agregador de processos de controle concentrado. Constituem o dito controle concentrado os processos do Supremo Tribunal Federal das seguintes classes:
+
+::: incremental
+- ADI (Ação Direta de Inconstitucionalidade)
+- ADC (Ação Declaratória de Constitucionalidade)
+- ADPF (Arguição de Descumprimento de Preceito Fundamental)
+- ADO (Ação Direta de Inconstitucionalidade por Omissão)
+:::
+:::
+
+## Objetivos
+
+::: {style="margin-top: 1em; font-size: 1.2em"}
+O agrupador fornecerá subsídios aos responsáveis pelo encaminhamento dos processos que chegam ao STF, visando reduzir o trabalho mecânico humano.
+
+Dos objetivos específicos, espera-se:
+
+::: incremental
+- Processar os dados utilizando técnicas de Processamento de Linguagem Natural (PLN), transformando petições iniciais de processos em vetores numéricos;
+- Comparar técnicas de agrupamento;
+- Avaliar a similaridade entre processos em recortes temporais distintos;
+- Estudar técnicas de PLN, análise multivariada e visualização de dados.
+:::
+:::
+
+## Metodologia
+
+::: {style="margin-top: 1em; font-size: 1em"}
+
+::: incremental
+- Para a construção deste agregador, primeiramente utilizar-se-á técnicas de vetorização de texto.
+- Para obter uma vetorização bem sucedida, é necessário uma etapa anterior de ocerização e processamento do texto cru, disponível em formato PDF.
+- O algoritmos de vetorização foi fornecido pela STI do STF, com implementação em *Python*, versão 3.8, utilizando o módulo `Doc2Vec` da biblioteca `gensim`.
+- Os dados primários são públicos e podem ser acessados no [Portal do STF.](https://portal.stf.jus.br){preview-link="true" style="text-align: center"}
+- Para a manufatura deste trabalho, foi cedido pela STI do STF também os dados já ocerizados e pré-processados, em formato CSV.
+:::
+:::
+
+## Metodologia
+
+Tendo os dados e o modelo pré-treinado para vetorização, o código *Python* para a vetorização dos textos é o seguinte:
+
+```{python, eval = FALSE}
+#| echo: true
+
+# Módulos
+import polars
+import gensim
+from gensim.models.doc2vec import Doc2Vec
+
+# Função
+def infer_vector(text):
+    return model.infer_vector(text.split())
+
+# Modelo pré-treinado para Embedding
+model = gensim.models.Doc2Vec.load("modelo.model")
+
+# Dados
+df = polars.read_csv("dados.csv",columns=[1,3,4])
+
+# Saída: DataFrame com duas colunas: Texto original e vetor Embedding correspondente.
+df = df.with_columns_seq(polars.col("texto").apply(infer_vector).alias("vetor"))
+
+```
+
+## Metodologia
+
+::: {style="margin-top: 1em; font-size: 1.2em"}
+
+:::
+- O código *Python* está envelopado em um ambiente virtual *Conda*, para garantir a perenidade do código.
+- O código *Python* é chamado a partir de um script *R*, que faz a chamada do ambiente virtual e executa o código.
+- O código *R* também está envelopado em um ambiente virtual, utilizando o pacote `renv`.
+
+```{r, eval = FALSE}
+#| echo: true
+
+# Pacote
+library(reticulate)
+
+# Definindo o ambiente virtual python
+reticulate::use_condaenv("TCC")
+
+# Executando o script python
+reticulate::source_python("script.py")
+
+# Ajustando o dataframe trazido do python para formato R mais adequado
+df <- as.data.frame(do.call(rbind, lapply(a, function(x) c(x[[1]], x[[2]]))), stringsAsFactors = FALSE)
+
+```
+
+## Metodologia
+
+::: incremental
+- Por conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática do agregador.
+- Para teste da qualidade desta agregação, será realizado o agrupamento com dados em recortes temporais distintos, e em cada recorte, será avaliada a similaridade somente entre os processos em tramitação naquela data.
+
+:::
+
+## Metodologia
+
+::: columns
+
+::: {.column width="60%"}
+
+- Para a avaliação da similaridade entre os processos em formato vetorizado, será estudado o uso de medidas de distância, como a distância euclidiana e a distância de cosseno.
+- Para a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.
+- Para a visualização dos dados, serão estudadas técnicas como dendrogramas e *t-SNE*.
+
+:::
+
+::: {.column width="40%"}
+
+```{r, dev='svg', dev.args=list(bg="transparent")}
+#| echo: false
+
+ponto_P <- data.frame(x = 3, y = 4)
+ponto_Q <- data.frame(x = 7, y = 0)
+distancia <- sqrt((ponto_Q$x - ponto_P$x)^2 + (ponto_Q$y - ponto_P$y)^2)
+ggplot() +
+  geom_point(data = ponto_P, aes(x = x, y = y), color = "black", size = 3) +
+  geom_text(data = ponto_P, aes(x = x, y = y, label = "P"), vjust = -1, color = "black") +
+  geom_point(data = ponto_Q, aes(x = x, y = y), color = "black", size = 3) +
+  geom_text(data = ponto_Q, aes(x = x, y = y, label = "Q"), vjust = 2, color = "black") +
+  geom_segment(aes(x = ponto_P$x, y = ponto_P$y, xend = ponto_Q$x, yend = ponto_Q$y),
+               linetype = "dashed", color = "black") +
+  geom_text(aes(x = (ponto_P$x + ponto_Q$x)/2, y = (ponto_P$y + ponto_Q$y)/2, 
+                label = "d(P,Q)"), vjust = 5) +
+  ggtitle("Distância Euclidiana entre os pontos P e Q") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y= element_blank(),
+        axis.ticks.x= element_blank(),
+        text = element_text(size = 10),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill='transparent'),
+        legend.box.background = element_rect(fill='transparent')) +
+  xlim(2, 8) +
+  ylim(-1, 5) +
+  xlab("x") +
+  ylab("y")
+
+```
+
+```{r, dev='svg', dev.args=list(bg="transparent")}
+#| echo: false
+
+ponto_A <- data.frame(x = c(0, 3), y = c(0, 4))
+ponto_B <- data.frame(x = c(0, 5), y = c(0, 0))
+produto_escalar <- sum(ponto_A$x * ponto_B$x + ponto_A$y * ponto_B$y)
+magnitude_A <- sqrt(sum(ponto_A$x^2 + ponto_A$y^2))
+magnitude_B <- sqrt(sum(ponto_B$x^2 + ponto_B$y^2))
+angulo <- acos(produto_escalar / (magnitude_A * magnitude_B))
+desenhar_arco <- function(angulo, raio = 1, cor = "black") {
+  t <- seq(0, angulo, length.out = 100)
+  data.frame(x = raio * cos(t), y = raio * sin(t))
 }
+cor <- "black"
+ggplot() +
+  geom_segment(data = ponto_A, aes(x = x[1], y = y[1], xend = x[2], yend = y[2]),
+               arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
+  geom_segment(data = ponto_B, aes(x = x[1], y = y[1], xend = x[2], yend = y[2]),
+               arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
+  geom_path(data = desenhar_arco(angulo), aes(x = x, y = y), color = cor,
+            linetype = "dashed") +
+  geom_text(aes(x = ponto_A$x[2], y = ponto_A$y[2], label = "A"), vjust = -1, color = "black") +
+  geom_text(aes(x = ponto_B$x[2], y = ponto_B$y[2], label = "B"), vjust = -1, color = "black") +
+  geom_text(aes(x = 1, y = .5, label = "θ"),
+            color = "black") +
+  ggtitle("O cosseno como medida de similaridade entre A e B") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y= element_blank(),
+        axis.ticks.x= element_blank(),
+        text = element_text(size = 10),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill='transparent'),
+        legend.box.background = element_rect(fill='transparent')) +
+  xlim(-1, 6) +
+  ylim(-1, 5) +
+  xlab("x") +
+  ylab("y")
+```
 
-# Definindo função que retorna frequências relativas de um vetor
-percent <- function(absolute, digits = 2) {
-  return(round(100 * absolute / sum(absolute), digits))
-}
 
-# Definindo função que retorna banco de dados com frequências
-# relativas e absolutas de uma variável categórica
-vector_frequencies <- function(vector) {
-  frequency <- vector %>%
-    table() %>%
-    as_tibble() %>%
-    mutate(
-      rel = n %>%
-        percent() %>%
-        paste("%", sep = "")
-    )
-  colnames(frequency) <- c("groups", "absolute", "relative")
-  return(frequency)
-}
+:::
+:::
+
+## Metodologia
+
+::: columns
+
+::: {.column width="60%"}
+
+- Para a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.
+- Para a visualização dos dados, serão estudadas técnicas como dendrogramas e *t-SNE*.
+
+:::
+
+::: {.column width="40%"}
+
+```{r, dev='svg', dev.args=list(bg="transparent")}
+#| echo: false
+
+set.seed(123)
+dados <- matrix(rt(100,2), nrow=8)
+rownames(dados) <- letters[1:8]
+distancia <- dist(dados)
+agrupamento <- hclust(distancia)
+dendrograma <- as.dendrogram(agrupamento)
+# Rectangular lines
+ddata <- dendro_data(dendrograma, type = "rectangle")
+P1 <- ggplot(segment(ddata)) + 
+  geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) +
+  ggtitle("Fluxograma de um dendograma aglomerativo") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y= element_blank(),
+        axis.ticks.x= element_blank(),
+        text = element_text(size = 10),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill='transparent'),
+        legend.box.background = element_rect(fill='transparent'))
+
+set.seed(123)
+dados <- matrix(rt(100,2), nrow=8)
+rownames(dados) <- letters[1:8]
+distancia <- dist(dados)
+agrupamento <- diana(distancia)
+dendrograma <- as.dendrogram(agrupamento)
+# Rectangular lines
+ddata <- dendro_data(dendrograma, type = "rectangle")
+P2 <- ggplot(segment(ddata)) + 
+  geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) +
+  ggtitle("Fluxograma de um dendograma divisivo") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y= element_blank(),
+        axis.ticks.x= element_blank(),
+        text = element_text(size = 10),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill='transparent'),
+        legend.box.background = element_rect(fill='transparent'))+ 
+  scale_y_reverse(expand = c(0.2, 0))
+
+grid.arrange(P1, P2, nrow = 1)
 
 
 ```
 
-# Ministro (`r product_type`)
+```{r,results='hide',cache=T,fig.keep='all', dev='svg', dev.args=list(bg="transparent")}
+#| echo: false
 
-## Row
-
-```{r}
-#| content: valuebox
-#| title: "Acervo em 1/01/2024"
-
-list(
-  icon = "archive",
-  color = "#fdb813",
-  value = "25.000"
-)
-```
-
-```{r}
-#| content: valuebox
-#| title: "Acervo em 1/02/2024"
-
-list(
-  icon = "graph-down",
-  color = "#EE2E62",
-  value = "23.000"
-)
-```
-
-```{r}
-#| content: valuebox
-#| title: "Diminuição do acervo"
-
-list(
-  icon = "bullseye",
-  color = "#0d446e",
-  value = "5%"
-)
-```
-
-## Row {height="60%"}
-
-```{r}
-#| title: Um gráfico qualquer
-
-data <- aggregate(iris$Sepal.Length, by=list(Species=iris$Species), FUN=mean)
-
-ggplot(data, aes(x=Species, y=x)) +
-  geom_bar(stat="identity", fill=cores_stf[1]) +
-  labs(x="Espécie", y="Comprimento médio da sépala") +
-  theme_stf() +
-  ggtitle("Comprimento médio da sépala por espécie")
+mnist <- read_mnist()
+x_train <- mnist$train$images
+y_train <- mnist$train$labels
+x_train <- array_reshape(x_train, c(nrow(x_train), 784))
+set.seed(123)
+tsne <- Rtsne(x_train[1:1000,], dims = 2, perplexity=30, verbose=TRUE, max_iter = 500)
+df <- data.frame(x = tsne$Y[, 1], y = tsne$Y[, 2], Digit = as.factor(y_train[1:1000]))
+ggplot(df, aes(x=x, y=y, color=Digit)) +
+  geom_point() +
+  scale_color_discrete(guide = guide_legend(title = "Dígito")) +
+  ggtitle("Visualização t-SNE do Conjunto de Dados MNIST") +
+  theme_minimal()
 
 ```
 
+:::
 
-```{r}
-#| title: Um outro gráfico qualquer
+:::
 
-data <- aggregate(mtcars$mpg, by=list(Cylinders=mtcars$cyl), FUN=mean)
+## Cronograma
 
-ggplot(data, aes(x=Cylinders, y=x)) +
-  geom_bar(stat="identity", fill=cores_stf[2]) +
-  labs(x="Número de cilindros", y="Média de milhas por galão") +
-  theme_stf() +
-  ggtitle("Média de milhas por galão por número de cilindros")
+```{=html}
+<table>
+    <caption>Cronograma TCC 1</caption>
+    <thead>
+        <tr>
+            <th rowspan="2">Atividades</th>
+            <th colspan="5">1/2024</th>
+        </tr>
+        <tr>
+            <th>Mar</th>
+            <th>Abr</th>
+            <th>Mai</th>
+            <th>Jun</th>
+            <th>Jul</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Escolha do tema a ser abordado.</td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Levantamento de bibliografia relacionada ao tema.</td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Definição do recorte temporal com a AAJ do STF.</td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Solicitação dos dados para a STI do STF.</td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Solicitação dos algoritmos à STI do STF.</td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Revisão de literatura.</td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Desenvolvimento da proposta de projeto.</td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Análise preliminar do banco de dados.</td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Entrega da proposta do projeto.</td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Elaboração da apresentação da proposta.</td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td>Manipulação do banco de dados.</td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+        </tr> 
+        <tr>
+            <td>Análise do banco de dados.</td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+        </tr> 
+        <tr>
+            <td>Elaboração do relatório parcial.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+        </tr> 
+        <tr>
+            <td>Entrega do relatório parcial a Professora Orientadora.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+        </tr> 
+        <tr>
+            <td>Correção do relatório parcial.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+        </tr> 
+        <tr>
+            <td>Entrega do relatório parcial a banca.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+        </tr> 
+        </tbody>
+</table>
 
 ```
 
-## Row
+## Cronograma
 
-```{r}
-#| title: Uma lista qualquer
-mtcars
+```{=html}
+<table border="1" style="border-collapse: collapse; width: 100%;">
+    <caption>Tabela 2: Cronograma TCC 2</caption>
+    <thead>
+        <tr>
+            <th>Atividades</th>
+            <th>Ago</th>
+            <th>Set</th>
+            <th>Out</th>
+            <th>Nov</th>
+            <th>Dez</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Desenvolvimento do modelo e da aplicação.</td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Elaboração do relatório final.</td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Entrega do relatório final ao Professora Orientadora.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Correção do relatório final.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+            <td style="background-color:gray;"></td>
+        </tr>
+        <tr>
+            <td>Entrega do relatório final para a banca.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="background-color:gray;"></td>
+        </tr>
+    </tbody>
+</table>
+
 ```
 
-# Ministra Mariazinha 
+## Referências
 
-```{r}
-#| title: Lista qualquer
-mtcars
-```
+- ARTES, R.; BARROSO, L. P. Métodos multivariados de análise estatística. [S.l.]: São
+Paulo: Blucher, 2023.
+- EVERITT, B.; SKRONDAL, A. The cambridge dictionary of statistics. [S.l.]:
+Cambridge University Press, 2010. v. 4.
+- FREITAS, L. J. G. et al. Catboost algorithm application in legal texts and un 2030
+agenda. Revista de Informatica Teórica e Aplicada - RITA - ISSN 2175-2745. Vol. 30,
+Num. 02 (2023) 51-58, 2023.
+- FREITAS, L. J. G. et al. Text clustering applied to data augmentation in legal
+contexts. arXiv preprint arXiv:2404.08683, 2024.
+- JOHNSON, R. A.; WICHERN, D. W. Applied Multivariate Statistical Analysis. [S.l.]:
+6. ed.[S.l.]:Prentice Hall, 2007.
+- KAUFMAN, L.; ROUSSEEUW, P. J. Finding groups in data: an introduction to
+cluster analysis. [S.l.]: John Wiley & Sons, 1990.
+- LECUN, Y. et al. Gradient-based learning applied to document recognition.
+Proceedings of the IEEE, Ieee, v. 86, n. 11, p. 2278–2324, 1998.
+- MAATEN, L. Van der; HINTON, G. Visualizing data using t-sne. Journal of machine
+learning research, v. 9, n. 11, 2008.
+- MACQUEEN, J. et al. Some methods for classification and analysis of multivariate
+observations. [S.l.], 1967. v. 1. 281–297 p.
+- MORETTIN, P. A.; SINGER, J. M. Estatística e Ciência de Dados. [S.l.]: LTC, 2021.
+- RICARDO, B.-Y.; BERTHIER, R.-N. Modern information retrieval: the concepts and
+technology behind search. [S.l.]: New Jersey, USA: Addi-son-Wesley Professional, 2011.
+- von Borries, G.; WANG, H. Partition clustering of high dimensional low sample size
+data based on p-values. Computational statistics & data analysis, v. 53, n. 12, p.
+3987-3998, 2009.
 
-```{r}
-#| title: Outra lista qualquer
-iris
-```
+
