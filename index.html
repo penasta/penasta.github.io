@@ -396,7 +396,7 @@
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Agrupador de processos de controle concentrado</h1>
-  <p class="subtitle">Apresentação oral da proposta de projeto de TCC 1 Departamento de Estatística Universidade de Brasília</p>
+  <p class="subtitle">Apresentação oral da proposta de projeto de TCC 1</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -426,7 +426,7 @@
 <section id="introdução" class="slide level2">
 <h2>Introdução</h2>
 <p>Com o advento de novas técnicas computacionais, a episteme da estatística tem se expandido para áreas antes inexploradas. A análise de textos, por exemplo, tem sido um campo fértil para a aplicação de técnicas de análise e aprendizado estatístico.</p>
-<p>No campo do direito, a aplicação destas técnicas vêm sendo testadas em diversos âmbitos. No Supremo Tribunal Federal do Brasil, por exemplo, já existem tecnologias que utilizam destas técnicas para auxiliar o fluxo de trabalho.</p>
+<p>No campo do direito, a aplicação destas técnicas vêm sendo testada em diversos âmbitos. No Supremo Tribunal Federal do Brasil, por exemplo, já existem tecnologias que utilizam destas técnicas para auxiliar o fluxo de trabalho.</p>
 <p>Este trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado.</p>
 </section>
 <section id="objetivos" class="slide level2">
@@ -465,7 +465,7 @@
 <ul>
 <li class="fragment">Para a construção deste agregador, primeiramente utilizar-se-á técnicas de vetorização de texto.</li>
 <li class="fragment">Para obter uma vetorização bem sucedida, é necessário uma etapa anterior de ocerização e processamento do texto cru, disponível em formato PDF.</li>
-<li class="fragment">O algoritmos de vetorização foi fornecido pela STI do STF, com implementação em <em>Python</em>, versão 3.8, utilizando o módulo <code>Doc2Vec</code> da biblioteca <code>gensim</code>.</li>
+<li class="fragment">O algoritmo de vetorização foi fornecido pela STI do STF, com implementação em <em>Python</em>, versão 3.8, utilizando o módulo <code>Doc2Vec</code> da biblioteca <code>gensim</code>.</li>
 <li class="fragment">Os dados primários são públicos e podem ser acessados no <a href="https://portal.stf.jus.br" data-preview-link="true" style="text-align: center">Portal do STF.</a></li>
 <li class="fragment">Para a manufatura deste trabalho, foi cedido pela STI do STF também os dados já ocerizados e pré-processados, em formato CSV.</li>
 </ul>
@@ -524,7 +524,7 @@
 <div>
 <ul>
 <li class="fragment">Por conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática do agregador.</li>
-<li class="fragment">Para teste da qualidade desta agregação, será realizado o agrupamento com dados em recortes temporais distintos, e em cada recorte, será avaliada a similaridade somente entre os processos em tramitação naquela data.</li>
+<li class="fragment">Para teste da qualidade desta agregação, será realizado o agrupamento com dados em recortes temporais distintos, e, em cada recorte, será avaliada a similaridade somente entre os processos em tramitação naquela data.</li>
 </ul>
 </div>
 </section>
@@ -534,8 +534,6 @@
 <div class="column" style="width:60%;">
 <ul>
 <li>Para a avaliação da similaridade entre os processos em formato vetorizado, será estudado o uso de medidas de distância, como a distância euclidiana e a distância de cosseno.</li>
-<li>Para a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.</li>
-<li>Para a visualização dos dados, serão estudadas técnicas como dendrogramas e <em>t-SNE</em>.</li>
 </ul>
 </div><div class="column" style="width:40%;">
 <div class="cell">
@@ -596,10 +594,7 @@
 <caption>Cronograma TCC 1</caption>
 <thead>
 <tr class="header">
-<th rowspan="2" data-quarto-table-cell-role="th">Atividades</th>
-<th colspan="5" data-quarto-table-cell-role="th">1/2024</th>
-</tr>
-<tr class="odd">
+<th data-quarto-table-cell-role="th">Atividades</th>
 <th data-quarto-table-cell-role="th">Mar</th>
 <th data-quarto-table-cell-role="th">Abr</th>
 <th data-quarto-table-cell-role="th">Mai</th>
@@ -746,7 +741,7 @@
 <h2>Cronograma</h2>
 <div>
 <table data-quarto-postprocess="true" data-border="1" style="border-collapse: collapse; width: 100%;">
-<caption>Tabela 2: Cronograma TCC 2</caption>
+<caption>Cronograma TCC 2</caption>
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th">Atividades</th>
@@ -775,7 +770,7 @@
 <td></td>
 </tr>
 <tr class="odd">
-<td>Entrega do relatório final ao Professora Orientadora.</td>
+<td>Entrega do relatório final a Professora Orientadora.</td>
 <td></td>
 <td></td>
 <td></td>
@@ -804,19 +799,14 @@
 
 </div>
 </section>
-<section id="referências" class="slide level2 scrollable">
+<section id="referências" class="slide level2">
 <h2>Referências</h2>
 <ul>
 <li>ARTES, R.; BARROSO, L. P. Métodos multivariados de análise estatística. [S.l.]: São Paulo: Blucher, 2023.</li>
 <li>EVERITT, B.; SKRONDAL, A. The cambridge dictionary of statistics. [S.l.]: Cambridge University Press, 2010. v. 4.</li>
 <li>FREITAS, L. J. G. et al.&nbsp;Catboost algorithm application in legal texts and un 2030 agenda. Revista de Informatica Teórica e Aplicada - RITA - ISSN 2175-2745. Vol. 30, Num. 02 (2023) 51-58, 2023.</li>
 <li>FREITAS, L. J. G. et al.&nbsp;Text clustering applied to data augmentation in legal contexts. arXiv preprint arXiv:2404.08683, 2024.</li>
-<li>JOHNSON, R. A.; WICHERN, D. W. Applied Multivariate Statistical Analysis. [S.l.]:</li>
-</ul>
-<ol start="6" type="1">
-<li>ed.[S.l.]:Prentice Hall, 2007.</li>
-</ol>
-<ul>
+<li>JOHNSON, R. A.; WICHERN, D. W. Applied Multivariate Statistical Analysis. [S.l.]: 6. ed.[S.l.]:Prentice Hall, 2007.</li>
 <li>KAUFMAN, L.; ROUSSEEUW, P. J. Finding groups in data: an introduction to cluster analysis. [S.l.]: John Wiley &amp; Sons, 1990.</li>
 <li>LECUN, Y. et al.&nbsp;Gradient-based learning applied to document recognition. Proceedings of the IEEE, Ieee, v. 86, n.&nbsp;11, p.&nbsp;2278–2324, 1998.</li>
 <li>MAATEN, L. Van der; HINTON, G. Visualizing data using t-sne. Journal of machine learning research, v. 9, n.&nbsp;11, 2008.</li>
@@ -828,7 +818,7 @@
 <div class="quarto-auto-generated-content">
 <p><img src="unb.png" class="slide-logo"></p>
 <div class="footer footer-default">
-<p><a href="https://unb.br/" class="uri">https://unb.br/</a></p>
+<p>Departamento de estatística - UnB</p>
 </div>
 </div>
 </section></section>
