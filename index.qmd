@@ -12,7 +12,7 @@ format:
       buttons: true
     preview-links: auto
     scrollable: true
-    logo: unb.png
+    logo: as_vert_cor.jpg
     theme: serif
     width: 1500
     css: styles.css
