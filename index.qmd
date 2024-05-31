@@ -88,7 +88,7 @@ Dos objetivos específicos, espera-se:
 ::: {style="margin-top: 1em; font-size: 1em"}
 
 ::: incremental
-- Para a construção deste agregador, primeiramente utilizar-se-á técnicas de vetorização de texto.
+- Para a construção deste agregador, primeiramente utilizar-se-ão técnicas de vetorização de texto.
 - Para obter uma vetorização bem sucedida, é necessário uma etapa anterior de ocerização e processamento do texto cru, disponível em formato PDF.
 - O algoritmo de vetorização foi fornecido pela STI do STF, com implementação em *Python*, versão 3.8, utilizando o módulo `Doc2Vec` da biblioteca `gensim`.
 - Os dados primários são públicos e podem ser acessados no [Portal do STF.](https://portal.stf.jus.br){preview-link="true" style="text-align: center"}
