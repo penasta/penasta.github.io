@@ -11,6 +11,7 @@
   <meta name="generator" content="quarto-1.4.551">
 
   <meta name="author" content="Bruno Gondim Toledo">
+  <meta name="author" content="Thais Carvalho Valadares Rodrigues">
   <title>Agrupador de processos de controle concentrado</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -396,17 +397,25 @@
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Agrupador de processos de controle concentrado</h1>
-  <p class="subtitle">Apresentação oral da proposta de projeto de TCC 1</p>
+  <p class="subtitle">Projeto de TCC 1</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
 <a href="https://github.com/penasta">Bruno Gondim Toledo</a> 
 </div>
-<div class="quarto-title-author-email">
-<a href="mailto:bruno.gondim@aluno.unb.br">bruno.gondim@aluno.unb.br</a>
+        <p class="quarto-title-affiliation">
+            Estudante
+          </p>
+    </div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Thais Carvalho Valadares Rodrigues 
 </div>
-</div>
+        <p class="quarto-title-affiliation">
+            Orientadora
+          </p>
+    </div>
 </div>
 
 </section>
@@ -425,14 +434,18 @@
 </section>
 <section id="introdução" class="slide level2">
 <h2>Introdução</h2>
-<p>Com o advento de novas técnicas computacionais, a episteme da estatística tem se expandido para áreas antes inexploradas. A análise de textos, por exemplo, tem sido um campo fértil para a aplicação de técnicas de análise e aprendizado estatístico.</p>
-<p>No campo do direito, a aplicação destas técnicas vêm sendo testada em diversos âmbitos. No Supremo Tribunal Federal do Brasil, por exemplo, já existem tecnologias que utilizam destas técnicas para auxiliar o fluxo de trabalho.</p>
-<p>Este trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado.</p>
+<div>
+<ul>
+<li class="fragment"><p>No campo do direito, a aplicação de técnicas estatísticas vêm sendo testada em diversos âmbitos, inclusive no Supremo Tribunal Federal do Brasil</p></li>
+<li class="fragment"><p>É de interesse do tribunal a aplicação destas técnicas para agrupamento de processos. Um agrupador poderia ajudar a identificar processos semelhantes, trabalho este feito manualmente.</p></li>
+<li class="fragment"><p>Este trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado.</p></li>
+</ul>
+</div>
 </section>
 <section id="objetivos" class="slide level2">
 <h2>Objetivos</h2>
 <div style="margin-top: 1em; font-size: 1.2em">
-<p>O objetivo deste trabalho é formular um agregador de processos de controle concentrado. Constituem o dito controle concentrado os processos do Supremo Tribunal Federal das seguintes classes:</p>
+<p>O objetivo deste trabalho é formular um agregador de processos de controle concentrado, que são processos que tratam da constitucionalidade de leis e atos normativos. Constituem o dito controle concentrado os processos do Supremo Tribunal Federal das seguintes classes:</p>
 <div>
 <ul>
 <li class="fragment">ADI (Ação Direta de Inconstitucionalidade)</li>
@@ -460,21 +473,9 @@
 </section>
 <section id="metodologia" class="slide level2">
 <h2>Metodologia</h2>
-<div style="margin-top: 1em; font-size: 1em">
-<div>
-<ul>
-<li class="fragment">Para a construção deste agregador, primeiramente utilizar-se-ão técnicas de vetorização de texto.</li>
-<li class="fragment">Para obter uma vetorização bem sucedida, é necessário uma etapa anterior de ocerização e processamento do texto cru, disponível em formato PDF.</li>
-<li class="fragment">O algoritmo de vetorização foi fornecido pela STI do STF, com implementação em <em>Python</em>, versão 3.8, utilizando o módulo <code>Doc2Vec</code> da biblioteca <code>gensim</code>.</li>
-<li class="fragment">Os dados primários são públicos e podem ser acessados no <a href="https://portal.stf.jus.br" data-preview-link="true" style="text-align: center">Portal do STF.</a></li>
-<li class="fragment">Para a manufatura deste trabalho, foi cedido pela STI do STF também os dados já ocerizados e pré-processados, em formato CSV.</li>
-</ul>
-</div>
-</div>
-</section>
-<section id="metodologia-1" class="slide level2">
-<h2>Metodologia</h2>
-<p>Tendo os dados e o modelo pré-treinado para vetorização, o código <em>Python</em> para a vetorização dos textos é o seguinte:</p>
+<p>Tendo os dados e o modelo pré-treinado para vetorização, os códigos <em>Python</em> e <em>R</em> para a vetorização dos textos, e posterior análise, são da seguinte forma:</p>
+<div class="columns">
+<div class="column" style="width:50%;">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># Módulos</span></span>
 <span id="cb1-2"><a href=""></a><span class="im">import</span> polars</span>
@@ -494,17 +495,7 @@
 <span id="cb1-16"><a href=""></a><span class="co"># Saída: DataFrame com duas colunas: Texto original e vetor Embedding correspondente.</span></span>
 <span id="cb1-17"><a href=""></a>df <span class="op">=</span> df.with_columns_seq(polars.col(<span class="st">"texto"</span>).<span class="bu">apply</span>(infer_vector).alias(<span class="st">"vetor"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="metodologia-2" class="slide level2">
-<h2>Metodologia</h2>
-<div style="margin-top: 1em; font-size: 1.2em">
-
-</div>
-<ul>
-<li>O código <em>Python</em> está envelopado em um ambiente virtual <em>Conda</em>, para garantir a perenidade do código.</li>
-<li>O código <em>Python</em> é chamado a partir de um script <em>R</em>, que faz a chamada do ambiente virtual e executa o código.</li>
-<li>O código <em>R</em> também está envelopado em um ambiente virtual, utilizando o pacote <code>renv</code>.</li>
-</ul>
+</div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Pacote</span></span>
 <span id="cb2-2"><a href=""></a><span class="fu">library</span>(reticulate)</span>
@@ -518,22 +509,58 @@
 <span id="cb2-10"><a href=""></a><span class="co"># Ajustando o dataframe trazido do python para formato R mais adequado</span></span>
 <span id="cb2-11"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(a, <span class="cf">function</span>(x) <span class="fu">c</span>(x[[<span class="dv">1</span>]], x[[<span class="dv">2</span>]]))), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="metodologia-3" class="slide level2">
-<h2>Metodologia</h2>
-<div>
-<ul>
-<li class="fragment">Por conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática do agregador.</li>
-<li class="fragment">Para teste da qualidade desta agregação, será realizado o agrupamento com dados em recortes temporais distintos, e, em cada recorte, será avaliada a similaridade somente entre os processos em tramitação naquela data.</li>
-</ul>
+</div>
 </div>
 </section>
-<section id="metodologia-4" class="slide level2">
+<section id="metodologia-1" class="slide level2 scrollable">
+<h2>Metodologia</h2>
+<div style="margin-top: 1em; font-size: 1em">
+<p>Passos para a construção do agregador:</p>
+</div>
+<div class="columns">
+<div class="column" style="width:70%;">
+<ul>
+<li><ol type="1">
+<li>Obtenção dos dados:</li>
+</ol></li>
+</ul>
+<p>Os dados foram disponibilizados pelo STF (mas estão disponíveis publicamente no <a href="https://portal.stf.jus.br" data-preview-link="true" style="text-align: center">Portal do STF.</a>).</p>
+<ul>
+<li><ol start="2" type="1">
+<li>Vetorização (incluindo ocerização e processamento do texto PDF):</li>
+</ol></li>
+</ul>
+<p>Este módulo foi fornecido pelo STF (dados em formato CSV)</p>
+</div><div class="column" style="width:30%;">
+<p><img data-src="fig2.png" style="width:3in"></p>
+<p><img data-src="fig1.png" style="width:3in"></p>
+</div>
+</div>
+</section>
+<section id="metodologia-2" class="slide level2 scrollable">
+<h2>Metodologia</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<ul>
+<li><ol start="3" type="1">
+<li>Definir recortes temporais para a agregação</li>
+</ol></li>
+</ul>
+<p>Por conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática.</p>
+<p>Será realizado o agrupamento com dados em recortes temporais distintos, e, em cada recorte, será avaliada a similaridade entre os processos em tramitação naquela data.</p>
+</div><div class="column" style="width:30%;">
+<p><img data-src="fig3.png" class="relative" data-top="250" data-left="10" width="500" height="280"></p>
+</div>
+</div>
+</section>
+<section id="metodologia-3" class="slide level2 scrollable">
 <h2>Metodologia</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <ul>
-<li>Para a avaliação da similaridade entre os processos em formato vetorizado, será estudado o uso de medidas de distância, como a distância euclidiana e a distância de cosseno.</li>
+<li><ol start="4" type="1">
+<li>Aplicação de medidas de distância para comparar a similaridade dos processos (distância euclidiana, distância do cosseno etc)</li>
+</ol></li>
 </ul>
 </div><div class="column" style="width:40%;">
 <div class="cell">
@@ -557,13 +584,17 @@
 </div>
 </div>
 </section>
-<section id="metodologia-5" class="slide level2">
+<section id="metodologia-4" class="slide level2 scrollable">
 <h2>Metodologia</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <ul>
+<li><ol start="5" type="1">
 <li>Para a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.</li>
+</ol></li>
+<li><ol start="6" type="1">
 <li>Para a visualização dos dados, serão estudadas técnicas como dendrogramas e <em>t-SNE</em>.</li>
+</ol></li>
 </ul>
 </div><div class="column" style="width:40%;">
 <div class="cell">

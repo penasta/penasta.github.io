@@ -1,10 +1,14 @@
 ---
 title: "Agrupador de processos de controle concentrado"
-subtitle: "Apresentação oral da proposta de projeto de TCC 1"
+subtitle: "Projeto de TCC 1"
 author:
   - name: Bruno Gondim Toledo
-    email: bruno.gondim@aluno.unb.br
+    affiliation: 
+      - name: Estudante
     url: https://github.com/penasta
+  - name: Thais Carvalho Valadares Rodrigues
+    affiliation: 
+      - name: Orientadora
 format:
   revealjs: 
     slide-number: true
@@ -48,17 +52,19 @@ pacman::p_load(tidyverse,knitr,ggdendro,dendextend,gridExtra,cluster,reticulate,
 
 ## Introdução
 
-Com o advento de novas técnicas computacionais, a episteme da estatística tem se expandido para áreas antes inexploradas. A análise de textos, por exemplo, tem sido um campo fértil para a aplicação de técnicas de análise e aprendizado estatístico.
 
-No campo do direito, a aplicação destas técnicas vêm sendo testada em diversos âmbitos. No Supremo Tribunal Federal do Brasil, por exemplo, já existem tecnologias que utilizam destas técnicas para auxiliar o fluxo de trabalho.
+::: incremental
+- No campo do direito, a aplicação de técnicas estatísticas vêm sendo testada em diversos âmbitos, inclusive no Supremo Tribunal Federal do Brasil
 
-Este trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado.
+- É de interesse do tribunal a aplicação destas técnicas para agrupamento de processos. Um agrupador poderia ajudar a identificar processos semelhantes, trabalho este feito manualmente.
 
+- Este trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado.
+:::
 ## Objetivos
 
 ::: {style="margin-top: 1em; font-size: 1.2em"}
 
-O objetivo deste trabalho é formular um agregador de processos de controle concentrado. Constituem o dito controle concentrado os processos do Supremo Tribunal Federal das seguintes classes:
+O objetivo deste trabalho é formular um agregador de processos de controle concentrado, que são processos que tratam da constitucionalidade de leis e atos normativos. Constituem o dito controle concentrado os processos do Supremo Tribunal Federal das seguintes classes:
 
 ::: incremental
 - ADI (Ação Direta de Inconstitucionalidade)
@@ -85,20 +91,11 @@ Dos objetivos específicos, espera-se:
 
 ## Metodologia
 
-::: {style="margin-top: 1em; font-size: 1em"}
+Tendo os dados e o modelo pré-treinado para vetorização, os códigos *Python* e *R* para a vetorização dos textos, e posterior análise, são da seguinte forma:
 
-::: incremental
-- Para a construção deste agregador, primeiramente utilizar-se-ão técnicas de vetorização de texto.
-- Para obter uma vetorização bem sucedida, é necessário uma etapa anterior de ocerização e processamento do texto cru, disponível em formato PDF.
-- O algoritmo de vetorização foi fornecido pela STI do STF, com implementação em *Python*, versão 3.8, utilizando o módulo `Doc2Vec` da biblioteca `gensim`.
-- Os dados primários são públicos e podem ser acessados no [Portal do STF.](https://portal.stf.jus.br){preview-link="true" style="text-align: center"}
-- Para a manufatura deste trabalho, foi cedido pela STI do STF também os dados já ocerizados e pré-processados, em formato CSV.
-:::
-:::
+::: columns
 
-## Metodologia
-
-Tendo os dados e o modelo pré-treinado para vetorização, o código *Python* para a vetorização dos textos é o seguinte:
+::: {.column width="50%"}
 
 ```{python, eval = FALSE}
 #| echo: true
@@ -123,14 +120,9 @@ df = df.with_columns_seq(polars.col("texto").apply(infer_vector).alias("vetor"))
 
 ```
 
-## Metodologia
-
-::: {style="margin-top: 1em; font-size: 1.2em"}
-
 :::
-- O código *Python* está envelopado em um ambiente virtual *Conda*, para garantir a perenidade do código.
-- O código *Python* é chamado a partir de um script *R*, que faz a chamada do ambiente virtual e executa o código.
-- O código *R* também está envelopado em um ambiente virtual, utilizando o pacote `renv`.
+
+::: {.column width="50%"}
 
 ```{r, eval = FALSE}
 #| echo: true
@@ -149,11 +141,54 @@ df <- as.data.frame(do.call(rbind, lapply(a, function(x) c(x[[1]], x[[2]]))), st
 
 ```
 
+:::
+
+:::
+
 ## Metodologia
 
-::: incremental
-- Por conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática do agregador.
-- Para teste da qualidade desta agregação, será realizado o agrupamento com dados em recortes temporais distintos, e, em cada recorte, será avaliada a similaridade somente entre os processos em tramitação naquela data.
+::: {style="margin-top: 1em; font-size: 1em"}
+
+Passos para a construção do agregador:
+
+::: 
+::: columns
+
+::: {.column width="70%"}
+- 1. Obtenção dos dados:
+
+Os dados foram disponibilizados pelo STF (mas estão disponíveis publicamente no [Portal do STF.](https://portal.stf.jus.br){preview-link="true" style="text-align: center"}).
+
+- 2. Vetorização (incluindo ocerização e processamento do texto PDF):
+
+Este módulo foi fornecido pelo STF (dados em formato CSV)
+::: 
+::: {.column width="30%"}
+
+![](fig2.png){width=3in}
+
+![](fig1.png){width=3in}
+
+::: 
+::: 
+
+## Metodologia
+
+::: columns
+
+::: {.column width="70%"}
+
+- 3. Definir recortes temporais para a agregação
+
+Por conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática.
+
+Será realizado o agrupamento com dados em recortes temporais distintos, e, em cada recorte, será avaliada a similaridade entre os processos em tramitação naquela data.
+
+:::
+
+::: {.column width="30%"}
+![](fig3.png){.relative top="250" left="10" width="500" height="280"}
+:::
 
 :::
 
@@ -163,8 +198,7 @@ df <- as.data.frame(do.call(rbind, lapply(a, function(x) c(x[[1]], x[[2]]))), st
 
 ::: {.column width="60%"}
 
-- Para a avaliação da similaridade entre os processos em formato vetorizado, será estudado o uso de medidas de distância, como a distância euclidiana e a distância de cosseno.
-
+- 4. Aplicação de medidas de distância para comparar a similaridade dos processos (distância euclidiana, distância do cosseno etc)
 :::
 
 ::: {.column width="40%"}
@@ -260,8 +294,8 @@ ggplot() +
 
 ::: {.column width="60%"}
 
-- Para a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.
-- Para a visualização dos dados, serão estudadas técnicas como dendrogramas e *t-SNE*.
+- 5. Para a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.
+- 6. Para a visualização dos dados, serão estudadas técnicas como dendrogramas e *t-SNE*.
 
 :::
 
