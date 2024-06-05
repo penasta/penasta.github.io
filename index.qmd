@@ -35,7 +35,8 @@ knitr:
 ```{r, include=FALSE}
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
 pacman::p_load(tidyverse,knitr,ggdendro,dendextend,gridExtra,cluster,reticulate,
-               dslabs,Rtsne)
+               dslabs,Rtsne,ggrepel)
+
 ```
 
 
@@ -187,7 +188,39 @@ Será realizado o agrupamento com dados em recortes temporais distintos, e, em c
 :::
 
 ::: {.column width="30%"}
-![](fig3.png){.relative top="250" left="10" width="500" height="280"}
+
+```{r, dev='svg', dev.args=list(bg="transparent")}
+#| echo: false
+
+
+Ano <- 2016:2024
+Valor <- seq(770, 2048, length.out = length(Ano)) + rnorm(length(Ano), sd = 100)
+
+data <- data.frame(Ano, Valor)
+
+ggplot(data=data, aes(x=Ano, y=Valor)) +
+  geom_line(color="blue") +
+  geom_point(color="blue") +
+  geom_text_repel(aes(label=round(Valor)), size=5) +
+  scale_x_continuous(breaks = Ano) +
+  theme_classic() +
+  labs(title="Acervo de controle concentrado", subtitle="Dados fictícios",y="Quantidade") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y= element_blank(),
+        axis.ticks.x= element_blank(),
+        text = element_text(size = 10),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill='transparent'),
+        legend.box.background = element_rect(fill='transparent')) 
+
+```
+
+
 :::
 
 :::
