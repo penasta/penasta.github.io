@@ -55,7 +55,7 @@ pacman::p_load(tidyverse,knitr,ggdendro,dendextend,gridExtra,cluster,reticulate,
 
 
 ::: incremental
-- No campo do direito, a aplicação de técnicas estatísticas vêm sendo testada em diversos âmbitos, inclusive no Supremo Tribunal Federal do Brasil
+- No campo do direito, a aplicação de técnicas estatísticas vem sendo testada em diversos âmbitos, inclusive no Supremo Tribunal Federal do Brasil
 
 - É de interesse do tribunal a aplicação destas técnicas para agrupamento de processos. Um agrupador poderia ajudar a identificar processos semelhantes, trabalho este feito manualmente.
 
