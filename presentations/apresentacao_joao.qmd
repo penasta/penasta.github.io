@@ -30,7 +30,9 @@ knitr:
       bg: transparent
 ---
 
-```{r, include=FALSE}
+```{r}
+#| echo: false
+#| eval: false
 options(repos='http://cran.rstudio.org')
 have.packages <- installed.packages()
 cran.packages <- c('devtools','plotrix','randomForest','tree')
@@ -42,247 +44,13 @@ if(!('reprtree' %in% installed.packages())){
    install_github('munoztd0/reprtree')
 }
 for(p in c(cran.packages, 'reprtree')) eval(substitute(library(pkg), list(pkg=p)))
+```
 
+```{r, include=FALSE}
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
-pacman::p_load(tidyverse, randomForest,randomForest,reprtree,
-               reshape2,latex2exp,caret)
+pacman::p_load("tidyverse", "randomForest","randomForest","reprtree",
+               "reshape2","latex2exp")
 ```
-
-## Introdução
-
-Florestas aleatórias, ou *Random Forest*, é uma técnica em que iremos partir da ideia de árvores aleatórias (*random trees*) para fazer um classificador robusto. Em poucas palavras, poderia ser descrita como combinar força bruta computacional com seleção de modelos de árvores gerados via bootstrap por meio de uma "votação".
-
-O procedimento do algoritmo pode ser descrito como:
-
-::: incremental
-- 1. Definir o número de árvores a serem geradas (quanto mais, melhor);
-- 2. Colher uma amostra bootstrap de tamanho n dos dados de tamanho n;
-- 3. Aplicar o algoritmo de árvore aleatória para cada uma das árvores geradas;
-- 4. Colher os resultados das árvores e optar pelo melhor modelo (a moda entre as árvores).
-:::
-
-## Rotina
-
-Uma rotina minimalista de classificação via *Random Forest* em **R** pode ser executada da seguinte forma:
-
-
-::: columns
-
-::: {.column width="50%"}
-
-```{r}
-#| echo: TRUE
-
-library(randomForest)
-
-data <- iris
-
-data$Species <- as.factor(data$Species)
-
-set.seed(150167636)
-ind <- sample(2, nrow(data), replace = TRUE,
-              prob = c(0.7, 0.3))
-train <- data[ind==1,]
-test <- data[ind==2,]
-
-rf <- randomForest(Species~., data=train, proximity=TRUE)
-
-```
-
-:::
-
-::: {.column width="50%"}
-
-```{r}
-rf
-```
-
-Matriz de confusão:
-
-```{r}
-#| echo: true
-
-rf[["confusion"]]
-```
-
-:::
-
-:::
-
-## Resultados
-
-Podemos acessar os resultados do modelo no objeto *rf*
-
-::: columns
-
-::: {.column width="50%"}
-
-Teste do modelo no conjunto de treino:
-
-```{r}
-#| echo: true
-
-library(caret)
-
-p1 <- predict(rf, train)
-confusionMatrix(p1, train$ Species)
-```
-
-:::
-
-::: {.column width="50%"}
-
-Validação do modelo nos dados de teste:
-
-```{r}
-#| echo: true
-
-p2 <- predict(rf, test)
-confusionMatrix(p2, test$ Species)
-
-```
-
-:::
-:::
-
-## Observações
-
-- Vemos que o modelo em seu estado minimalista é extremamente simples de ser executado, e é uma modelagem extremamente robusta a *overfitting*, visto que irá gerar vários modelos (árvores) com dados *bootstrap* e selecionar o modelo que melhor se ajusta.
-
-- Já está implementado na função o procedimento de tomar uma amostra *bootstrap* dos dados fornecidos para cada árvore automaticamente.
-
-## Parâmetros
-
-- A função *randomForest* do pacote homônimo tem uma série de parâmetros opcionais além do mínimo obrigatório, que seria o modelo e os dados. O mais importante destes parâmetros é o *ntree*, que por *default* é 500 e em geral deve-se utilizar o máximo possível tal que execute em um tempo aceitável. Em geral, o restante dos parâmetros deve ser deixado em *default*.
-
-- Neste caso, o modelo foi extremamente eficiente mesmo na versão minimalista
-
-## Fine tuning
-
-Se for o caso, também podemos fazer o *fine-tuning* dos parâmetros do modelo
-
-::: columns
-
-::: {.column width="33%"}
-
-
-```{r}
-#| echo: true
-
-t <- tuneRF(train[,-5], train[,5],
-       stepFactor = 0.5,
-       plot = TRUE,
-       ntreeTry = 150,
-       trace = TRUE,
-       improve = 0.05)
-
-```
-:::
-::: {.column width="33%"}
-```{r}
-#| echo: true
-
-hist(treesize(rf),
-     main = "No. of Nodes for the Trees",
-     col = "green")
-
-```
-
-:::
-::: {.column width="33%"}
-
-```{r}
-#| echo: true
-
-varImpPlot(rf,
-           sort = T,
-           n.var = 10,
-           main = "Top 10 - Variable Importance")
-
-importance(rf)
-
-```
-
-
-:::
-:::
-
-## Importâncias
-
-::: columns
-
-::: {.column width="50%"}
-
-```{r}
-partialPlot(rf, train, Petal.Width, "setosa")
-```
-
-
-:::
-
-::: {.column width="50%"}
-
-```{r}
-MDSplot(rf, train$Species)
-```
-
-
-:::
-
-:::
-
-
-## Implementações
-
-Uma rotina de classificação via *Random forest* poderia ser executada de forma análoga da seguinte forma:
-
-::: columns
-
-::: {.column width="50%"}
-
-```{r}
-#| echo: true
-
-library(reticulate)
-```
-
-```{python}
-#| echo: true
-
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-from sklearn.ensemble import RandomForestClassifier
-from sklearn import datasets
-
-iris = datasets.load_iris()
-dados = pd.DataFrame(data=iris.data, columns=iris.feature_names)
-```
-
-```{python}
-#| echo: true
-
-X = dados
-y = iris.target
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-```
-
-:::
-
-::: {.column width="50%"}
-
-```{python}
-#| echo: true
-
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
-confusion_matrix(y_test, y_pred)
-```
-
-:::
-:::
 
 ## Motivação: Podemos melhorar o bagging?
 
@@ -294,6 +62,7 @@ Ou seja, serão **altamente correlacionadas**.
 
 ```{r}
 #| echo: true
+#| eval: false
 par(mfrow = c(2, 2))
 
 set.seed(123)
@@ -313,6 +82,8 @@ reprtree:::plot.getTree(model, k = 4)
 
 ```{r, results='hide'}
 par(mfrow = c(2, 2))
+
+
 
 set.seed(123)
 model <- randomForest(Species ~ ., data=iris, importance=TRUE, ntree=500, mtry = 4, do.trace=100)
@@ -377,14 +148,13 @@ onde:
 O dataset DARWIN (https://archive.ics.uci.edu/dataset/732/darwin) contém dados sobre a escrita a mão de pessoas afetadas pelo Alzheimer e de um grupo de controle, totalizando 174 observações. São 450 variáveis e o objetivo é distinguir pessoas afetadas (P) de pessoas saudáveis (H).
 
 ```{r}
-#| echo: false
-
 data = read.csv('data.csv', header = TRUE)
 ```
 
 ```{r}
 #| echo: false
-
+library('caret')
+library('dplyr')
 
 set.seed(123)  # Set seed for reproducibility
 splitIndex <- createDataPartition(data$class, p = 0.8, list = FALSE)
@@ -429,6 +199,7 @@ P  9 63   0.1250000
 
 ```{r}
 #| echo: false
+#| eval: false
 
 # Printa a matriz de confusão
 print(rf_model$confusion)
@@ -446,6 +217,7 @@ print(paste0("Test error:", round((1-accuracy)*100,2),"%"))
 
 ```{r}
 #| echo: false
+#| eval: false
 # Extrair a importância das variáveis baseadas no índice Gini
 importance <- importance(rf_model, type = 2)
 
@@ -485,6 +257,7 @@ No gráfico abaixo é possível perceber como a escolha do número de variáveis
 
 ```{r}
 #| echo: false
+#| eval: false
 # Definir os valores de mtry que queremos avaliar
 mtry_values <- seq(1, ncol(train_data) - 1)  # de 1 até o número de variáveis - 1
 
@@ -505,6 +278,7 @@ results <- data.frame(mtry = mtry_values, accuracy = accuracy)
 
 ```{r}
 #| echo: false
+#| eval: false
 
 # Identificar o índice do ponto com maior acurácia
 best_index <- which.max(results$accuracy)
@@ -541,6 +315,7 @@ Ainda, podemos verficiar a acurácia do modelo pelo número de árvores:
 
 ```{r}
 #| echo: false
+#| eval: false
 # Definir os valores de ntree que queremos avaliar
 ntree_values <- c(1, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)
 
@@ -575,6 +350,7 @@ ggsave('presentations/ntree_accuracy.png', width = 158, height  = 93, units = "m
 ```
 
 ![](ntree_accuracy.png){width=60%}
+
 
 # Referências:
 
