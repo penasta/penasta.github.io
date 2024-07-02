@@ -1,0 +1,297 @@
+---
+title: "Técnica Random Forest em árvores de decisão"
+subtitle: "Grupo 4"
+author:
+  - name: Bruno Gondim Toledo
+    url: https://github.com/penasta
+  - name: Stefan Zurman Gonçalves
+  - name: João Pedro Almeida Santos
+  - name: João Alberto de Rezende Alvares
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: auto
+    scrollable: true
+    logo: as_vert_cor.jpg
+    theme: serif
+    width: 1500
+    css: styles.css
+    footer: Departamento de estatística - UnB
+resources:
+  - demo.pdf
+editor_options: 
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    dev: png
+    dev.args:
+      bg: transparent
+---
+
+```{r, include=FALSE}
+options(repos='http://cran.rstudio.org')
+have.packages <- installed.packages()
+cran.packages <- c('devtools','plotrix','randomForest','tree')
+to.install <- setdiff(cran.packages, have.packages[,1])
+if(length(to.install)>0) install.packages(to.install)
+
+library(devtools)
+if(!('reprtree' %in% installed.packages())){
+   install_github('munoztd0/reprtree')
+}
+for(p in c(cran.packages, 'reprtree')) eval(substitute(library(pkg), list(pkg=p)))
+
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(tidyverse, randomForest,randomForest,reprtree,
+               reshape2,latex2exp,caret)
+```
+
+## Vantagens e desvantagens
+
+::: {style="margin-top: 1em; font-size: 1em"}
+sobre classificação por florestas aleatórias:
+:::
+
+::: columns
+::: {.column width="50%"}
+Vantagens
+
+::: incremental
+-   Robusto contra overfitting;
+-   Trabalha bem com dados de alta dimesão;
+-   Consegue captar relações não-lineares nos dados;
+-   Fornece uma medida de importância;
+-   Robusto contra outliers e ruídos;
+-   Consegue lidar com dados faltantes.
+:::
+:::
+
+::: {.column width="50%"}
+Desvantagens
+
+::: incremental
+-   Dificil interpretação;
+-   Não adequado para dados escassos;
+-   Demora para fazer predições;
+-   Requer ajuste de hiper-parâmetros.
+:::
+:::
+:::
+
+## Robustez a Dados Contaminados
+
+Uma das vantagens das florestas aleatórias é sua robustez a pontos atípicos, ou outliers. O exemplo a seguir demonstra a robustez desses modelos a contaminações, além de compará-los a outros métodos de classificação:
+
+```{r, cache=TRUE}
+
+pacman::p_load(randomForest)
+pacman::p_load(caret,e1071,VGAM)
+
+iris <- iris %>%
+  mutate(cor = ifelse(Species == "setosa",1,ifelse(Species == "versicolor",2,3)))
+
+set.seed(150167636)
+ind <- sample(2, nrow(iris), replace = TRUE,
+              prob = c(0.7, 0.3))
+train <- iris[ind==1,]
+test <- iris[ind==2,]
+
+
+
+i=4 #Número de pontos contaminados
+dadosPoluidos1 <- train[train$cor==1,]
+dadosPoluidos1 <- dadosPoluidos1[sample(1:nrow(dadosPoluidos1),i,replace = F),]
+
+dadosPoluidos2 <- train[train$cor==3,]
+dadosPoluidos2 <- dadosPoluidos2[sample(1:nrow(dadosPoluidos2),i,replace = F),]
+
+dadosPoluidos1$Petal.Length <- dadosPoluidos1$Petal.Length + 5
+dadosPoluidos1$Petal.Width <- dadosPoluidos1$Petal.Width + 1.7
+
+dadosPoluidos2$Petal.Length <- dadosPoluidos2$Petal.Length - 4
+dadosPoluidos2$Petal.Width <- dadosPoluidos2$Petal.Width - 1.2
+
+DadosExempOutTreino <- rbind(train,dadosPoluidos1,dadosPoluidos2)
+#DadosExempOutTreino <- DadosExempOutTreino[,-6]
+```
+
+## Robustez a Dados Contaminados
+
+::: columns
+::: {.column width="50%"}
+```{r, cache=TRUE}
+#| echo: false
+ggplot(train) +
+  aes(x = Petal.Length, y =Petal.Width) +
+  geom_point(colour = train$cor, size = 3) +
+  labs(
+    x = "Petal.Length",
+    y = "Petal.Width"
+  ) +
+  theme_bw()
+```
+:::
+
+::: {.column width="50%"}
+```{r, cache = TRUE}
+#| echo: false
+ggplot(DadosExempOutTreino) +
+  aes(x = Petal.Length, y =Petal.Width) +
+  geom_point(colour = DadosExempOutTreino$cor, size = 3) +
+  labs(
+    x = "Petal.Length",
+    y = "Petal.Width"
+  ) +
+  theme_bw()
+```
+:::
+:::
+
+```{r, cache=TRUE}
+#| echo: false
+DadosExempOutTreino <- DadosExempOutTreino[,-6]
+rm(dadosPoluidos1,dadosPoluidos2,train,ind)
+```
+
+## Robustez a Dados Contaminados
+
+::: columns
+::: {.column width="50%"}
+
+- Random Forest
+
+```{r, cache=TRUE}
+#Árvore de decisão
+Outliersrf <- randomForest(Species~., data=DadosExempOutTreino, proximity=TRUE)
+PredOutliersrf <- predict(Outliersrf, test)
+confusionMatrix(PredOutliersrf, test$Species)
+
+#Reg Logística
+OutliersRegLog <- vglm(Species ~., family=multinomial(refLevel="setosa"), 
+             data=DadosExempOutTreino) 
+PredOutliersRegLog <- predict(OutliersRegLog,type="response",newdata = test)
+PredOutliersRegLog <- ifelse(PredOutliersRegLog[,1]>PredOutliersRegLog[,2] &
+                               PredOutliersRegLog[,1]>PredOutliersRegLog[,3],"setosa",
+                      ifelse(PredOutliersRegLog[,2]>PredOutliersRegLog[,1] &
+                               PredOutliersRegLog[,2]>PredOutliersRegLog[,3],"versicolor",
+                             "virginica"))
+PredOutliersRegLog <- factor(PredOutliersRegLog)
+#confusionMatrix(PredOutliersRegLog, test$Species)
+```
+:::
+
+::: {.column width="50%"}
+
+- SVM
+
+```{r, cache=TRUE}
+#SVM
+#linear
+OutliersSVMlin <- svm(Species~., data=DadosExempOutTreino, kernel="linear")
+PredOutliersSVMlin <- predict(OutliersSVMlin, test)
+confusionMatrix(PredOutliersSVMlin, test$Species)
+
+#SVM
+#radial
+OutliersSVMrad <- svm(Species~., data=DadosExempOutTreino, kernel="radial")
+PredOutliersSVMrad <- predict(OutliersSVMrad, test)
+#confusionMatrix(PredOutliersSVMrad, test$Species)
+```
+:::
+:::
+
+```{r, cache=TRUE}
+#| echo: false
+Robust <- function(rep,ncont){
+  AccRF <- numeric()
+  AccSVMLin <- numeric()
+  AccSVMRad <- numeric()
+  AccRegLog <- numeric()
+  for (j in 1:rep){
+ind <- sample(2, nrow(iris), replace = TRUE,
+              prob = c(0.7, 0.3))
+trainRobust <- iris[ind==1,]
+testRobust <- iris[ind==2,]
+
+
+trainRobust <- trainRobust %>%
+  mutate(cor = ifelse(Species == "setosa",1,ifelse(Species == "versicolor",2,3)))
+
+i=ncont #Número de pontos contaminados
+dadosPoluidos1 <- trainRobust[trainRobust$cor==1,]
+dadosPoluidos1 <- dadosPoluidos1[sample(1:nrow(dadosPoluidos1),i,replace = F),]
+
+dadosPoluidos2 <- trainRobust[trainRobust$cor==3,]
+dadosPoluidos2 <- dadosPoluidos2[sample(1:nrow(dadosPoluidos2),i,replace = F),]
+
+dadosPoluidos1$Petal.Length <- dadosPoluidos1$Petal.Length + 5
+dadosPoluidos1$Petal.Width <- dadosPoluidos1$Petal.Width + 1.7
+
+dadosPoluidos2$Petal.Length <- dadosPoluidos2$Petal.Length - 4
+dadosPoluidos2$Petal.Width <- dadosPoluidos2$Petal.Width - 1.2
+
+DadosExempOutTreino <- rbind(trainRobust,dadosPoluidos1,dadosPoluidos2)
+
+DadosExempOutTreino <- DadosExempOutTreino[,-6]
+rm(dadosPoluidos1,dadosPoluidos2,trainRobust,ind)
+
+#Árvore de decisão
+Outliersrf <- randomForest(Species~., data=DadosExempOutTreino, proximity=TRUE)
+PredOutliersrf <- predict(Outliersrf, testRobust)
+AccRF[j] <- confusionMatrix(PredOutliersrf, testRobust$Species)$overall[1]
+
+#SVM
+#linear
+OutliersSVMlin <- svm(Species~., data=DadosExempOutTreino, kernel="linear")
+PredOutliersSVMlin <- predict(OutliersSVMlin, testRobust)
+AccSVMLin[j] <- confusionMatrix(PredOutliersSVMlin, testRobust$Species)$overall[1]
+
+#radial
+OutliersSVMrad <- svm(Species~., data=DadosExempOutTreino, kernel="radial")
+PredOutliersSVMrad <- predict(OutliersSVMrad, testRobust)
+AccSVMRad[j] <- confusionMatrix(PredOutliersSVMrad, testRobust$Species)$overall[1]
+
+#Reg Logística
+OutliersRegLog <- vglm(Species ~., family=multinomial(refLevel="setosa"), 
+                       data=DadosExempOutTreino) 
+PredOutliersRegLog <- predict(OutliersRegLog,type="response",newdata = testRobust)
+PredOutliersRegLog <- ifelse(PredOutliersRegLog[,1]>PredOutliersRegLog[,2] &
+                               PredOutliersRegLog[,1]>PredOutliersRegLog[,3],"setosa",
+                             ifelse(PredOutliersRegLog[,2]>PredOutliersRegLog[,1] &
+                                      PredOutliersRegLog[,2]>PredOutliersRegLog[,3],"versicolor",
+                                    "virginica"))
+PredOutliersRegLog <- factor(PredOutliersRegLog)
+AccRegLog[j] <- confusionMatrix(PredOutliersRegLog, testRobust$Species)$overall[1]
+  }
+  return(data.frame(AccRF,AccSVMLin,AccSVMRad,AccRegLog))
+}
+```
+
+## Robustez a Dados Contaminados
+
+::: columns
+::: {.column width="50%"}
+
+Comparando robustez de modelos com 2 observações contaminadas
+
+```{r, cache=TRUE}
+Simulações2 <- Robust(rep = 100,ncont = 2)
+
+boxplot(Simulações2)
+
+```
+:::
+
+::: {.column width="50%"}
+
+Comparando robustez de modelos com 8 observações contaminadas
+
+```{r, cache=TRUE}
+Simulações8 <- Robust(rep = 100,ncont = 8)
+
+boxplot(Simulações8)
+```
+:::
+:::
