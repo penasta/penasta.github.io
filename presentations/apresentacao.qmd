@@ -109,6 +109,14 @@ Uma forma de superar a baixa precisão das árvores de decisão é a utilizaçã
 - Florestas aleatórias fornecem uma melhoria em relação ao método *bagging*, já que a correlação entre as árvores diminui.
 :::
 
+## Considerações
+
+- De forma geral, pode-se dizer que o procedimento introduz mais aleatoriedade e diversidade no processo de construção em relação ao método *bagging*.
+
+- Intuitivamente, a utilização de florestas aleatórias para tomada de decisão corresponde à síntese da opinião de indivíduos com diferentes fontes de informação.
+
+- Em geral, florestas aleatórias produzem resultados menos variáveis em relação ao método *bagging*, já que nesse método as árvores geradas podem ser muito semelhantes, dependendo de preditores fortes, o que não contribui para redução de variabilidade das predições, o que não acontece com florestas aleatórias.
+
 ## Rotina
 
 Uma rotina minimalista de classificação via *Random Forest* em **R** pode ser executada da seguinte forma:
@@ -609,9 +617,19 @@ rm(dadosPoluidos1,dadosPoluidos2,train,ind)
 Outliersrf <- randomForest(Species~., data=DadosExempOutTreino, proximity=TRUE)
 PredOutliersrf <- predict(Outliersrf, test)
 confusionMatrix(PredOutliersrf, test$Species)
+```
 
+:::
+
+::: {.column width="50%"}
+
+
+- Regressão logística
+
+```{r}
+library(VGAM)
 #Reg Logística
-OutliersRegLog <- vglm(Species ~., family=multinomial(refLevel="setosa"), 
+OutliersRegLog <- VGAM::vglm(Species ~., family=VGAM::multinomial(refLevel="setosa"), 
              data=DadosExempOutTreino) 
 PredOutliersRegLog <- predict(OutliersRegLog,type="response",newdata = test)
 PredOutliersRegLog <- ifelse(PredOutliersRegLog[,1]>PredOutliersRegLog[,2] &
@@ -620,13 +638,19 @@ PredOutliersRegLog <- ifelse(PredOutliersRegLog[,1]>PredOutliersRegLog[,2] &
                                PredOutliersRegLog[,2]>PredOutliersRegLog[,3],"versicolor",
                              "virginica"))
 PredOutliersRegLog <- factor(PredOutliersRegLog)
-#confusionMatrix(PredOutliersRegLog, test$Species)
+confusionMatrix(PredOutliersRegLog, test$Species)
 ```
+
 :::
 
+:::
+
+## Robustez a Dados Contaminados
+
+::: columns
 ::: {.column width="50%"}
 
-- SVM
+- SVM linear
 
 ```{r, cache=TRUE}
 #SVM
@@ -634,15 +658,29 @@ PredOutliersRegLog <- factor(PredOutliersRegLog)
 OutliersSVMlin <- svm(Species~., data=DadosExempOutTreino, kernel="linear")
 PredOutliersSVMlin <- predict(OutliersSVMlin, test)
 confusionMatrix(PredOutliersSVMlin, test$Species)
+```
 
+:::
+
+::: {.column width="50%"}
+
+
+- SVM radial
+
+```{r}
 #SVM
 #radial
-OutliersSVMrad <- svm(Species~., data=DadosExempOutTreino, kernel="radial")
+OutliersSVMrad <- e1071::svm(Species~., data=DadosExempOutTreino, kernel="radial")
 PredOutliersSVMrad <- predict(OutliersSVMrad, test)
-#confusionMatrix(PredOutliersSVMrad, test$Species)
+confusionMatrix(PredOutliersSVMrad, test$Species)
 ```
+
 :::
 :::
+
+## Robustez a Dados Contaminados
+
+Comparando robustez de modelos com observações contaminadas
 
 ```{r, cache=TRUE}
 #| echo: false
@@ -711,12 +749,22 @@ AccRegLog[j] <- confusionMatrix(PredOutliersRegLog, testRobust$Species)$overall[
 }
 ```
 
+Sem contaminações
+
+```{r, cache=TRUE}
+Simulações2 <- Robust(rep = 100,ncont = 0)
+
+boxplot(Simulações2)
+
+```
+
 ## Robustez a Dados Contaminados
+
 
 ::: columns
 ::: {.column width="50%"}
 
-Comparando robustez de modelos com 2 observações contaminadas
+2 contaminações
 
 ```{r, cache=TRUE}
 Simulações2 <- Robust(rep = 100,ncont = 2)
@@ -724,17 +772,51 @@ Simulações2 <- Robust(rep = 100,ncont = 2)
 boxplot(Simulações2)
 
 ```
+
 :::
 
 ::: {.column width="50%"}
 
-Comparando robustez de modelos com 8 observações contaminadas
+4 contaminações
+
+
+```{r, cache=TRUE}
+Simulações2 <- Robust(rep = 100,ncont = 4)
+
+boxplot(Simulações2)
+
+```
+
+:::
+
+:::
+
+## Robustez a Dados Contaminados
+
+::: columns
+
+::: {.column width="50%"}
+
+6 contaminações
+
+```{r, cache=TRUE}
+Simulações8 <- Robust(rep = 100,ncont = 6)
+
+boxplot(Simulações8)
+```
+
+:::
+
+::: {.column width="50%"}
+
+8 contaminações
 
 ```{r, cache=TRUE}
 Simulações8 <- Robust(rep = 100,ncont = 8)
 
 boxplot(Simulações8)
 ```
+
 :::
 :::
 

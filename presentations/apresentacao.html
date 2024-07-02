@@ -481,6 +481,14 @@ João Alberto de Rezende Alvares
 </ul>
 </div>
 </section>
+<section id="considerações" class="slide level2">
+<h2>Considerações</h2>
+<ul>
+<li><p>De forma geral, pode-se dizer que o procedimento introduz mais aleatoriedade e diversidade no processo de construção em relação ao método <em>bagging</em>.</p></li>
+<li><p>Intuitivamente, a utilização de florestas aleatórias para tomada de decisão corresponde à síntese da opinião de indivíduos com diferentes fontes de informação.</p></li>
+<li><p>Em geral, florestas aleatórias produzem resultados menos variáveis em relação ao método <em>bagging</em>, já que nesse método as árvores geradas podem ser muito semelhantes, dependendo de preditores fortes, o que não contribui para redução de variabilidade das predições, o que não acontece com florestas aleatórias.</p></li>
+</ul>
+</section>
 <section id="rotina" class="slide level2">
 <h2>Rotina</h2>
 <p>Uma rotina minimalista de classificação via <em>Random Forest</em> em <strong>R</strong> pode ser executada da seguinte forma:</p>
@@ -747,9 +755,9 @@ Petal.Width         27.318058</code></pre>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href=""></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
 <span id="cb17-2"><a href=""></a>confusion_matrix(y_test, y_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>array([[11,  0,  0],
-       [ 0, 16,  0],
-       [ 0,  2, 16]], dtype=int64)</code></pre>
+<pre><code>array([[16,  0,  0],
+       [ 0, 17,  2],
+       [ 0,  0, 10]], dtype=int64)</code></pre>
 </div>
 </div>
 </div>
@@ -917,7 +925,51 @@ Balanced Accuracy            1.000            0.9201           0.8988</code></pr
 </div>
 </div><div class="column" style="width:50%;">
 <ul>
-<li>SVM</li>
+<li>Regressão logística</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+            Reference
+Prediction   setosa versicolor virginica
+  setosa         17          0         0
+  versicolor      0          6         1
+  virginica       0          5        11
+
+Overall Statistics
+                                          
+               Accuracy : 0.85            
+                 95% CI : (0.7016, 0.9429)
+    No Information Rate : 0.425           
+    P-Value [Acc &gt; NIR] : 3.669e-08       
+                                          
+                  Kappa : 0.7697          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: setosa Class: versicolor Class: virginica
+Sensitivity                  1.000            0.5455           0.9167
+Specificity                  1.000            0.9655           0.8214
+Pos Pred Value               1.000            0.8571           0.6875
+Neg Pred Value               1.000            0.8485           0.9583
+Prevalence                   0.425            0.2750           0.3000
+Detection Rate               0.425            0.1500           0.2750
+Detection Prevalence         0.425            0.1750           0.4000
+Balanced Accuracy            1.000            0.7555           0.8690</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="robustez-a-dados-contaminados-3" class="slide level2">
+<h2>Robustez a Dados Contaminados</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>SVM linear</li>
 </ul>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -953,30 +1005,102 @@ Detection Prevalence         0.425            0.2500           0.3250
 Balanced Accuracy            1.000            0.8918           0.9226</code></pre>
 </div>
 </div>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>SVM radial</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+            Reference
+Prediction   setosa versicolor virginica
+  setosa         17          0         0
+  versicolor      0         10         1
+  virginica       0          1        11
+
+Overall Statistics
+                                          
+               Accuracy : 0.95            
+                 95% CI : (0.8308, 0.9939)
+    No Information Rate : 0.425           
+    P-Value [Acc &gt; NIR] : 2.026e-12       
+                                          
+                  Kappa : 0.9235          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: setosa Class: versicolor Class: virginica
+Sensitivity                  1.000            0.9091           0.9167
+Specificity                  1.000            0.9655           0.9643
+Pos Pred Value               1.000            0.9091           0.9167
+Neg Pred Value               1.000            0.9655           0.9643
+Prevalence                   0.425            0.2750           0.3000
+Detection Rate               0.425            0.2500           0.2750
+Detection Prevalence         0.425            0.2750           0.3000
+Balanced Accuracy            1.000            0.9373           0.9405</code></pre>
+</div>
+</div>
 </div>
 </div>
 </section>
-<section id="robustez-a-dados-contaminados-3" class="slide level2">
+<section id="robustez-a-dados-contaminados-4" class="slide level2">
+<h2>Robustez a Dados Contaminados</h2>
+<p>Comparando robustez de modelos com observações contaminadas</p>
+<p>Sem contaminações</p>
+
+<img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-32-1.png" width="960" class="r-stretch"></section>
+<section id="robustez-a-dados-contaminados-5" class="slide level2">
 <h2>Robustez a Dados Contaminados</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p>Comparando robustez de modelos com 2 observações contaminadas</p>
+<p>2 contaminações</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-30-1.png" width="960"></p>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-33-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<p>Comparando robustez de modelos com 8 observações contaminadas</p>
+<p>4 contaminações</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-31-1.png" width="960"></p>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-34-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="robustez-a-dados-contaminados-6" class="slide level2">
+<h2>Robustez a Dados Contaminados</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>6 contaminações</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-35-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p>8 contaminações</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-36-1.png" width="960"></p>
 </figure>
 </div>
 </div>
