@@ -755,9 +755,9 @@ Petal.Width         27.318058</code></pre>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href=""></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
 <span id="cb17-2"><a href=""></a>confusion_matrix(y_test, y_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>array([[16,  0,  0],
-       [ 0, 17,  2],
-       [ 0,  0, 10]], dtype=int64)</code></pre>
+<pre><code>array([[10,  0,  0],
+       [ 0, 15,  1],
+       [ 0,  0, 19]], dtype=int64)</code></pre>
 </div>
 </div>
 </div>
@@ -855,6 +855,37 @@ P  8 64   0.1111111</code></pre>
 <section id="robustez-a-dados-contaminados" class="slide level2">
 <h2>Robustez a Dados Contaminados</h2>
 <p>Uma das vantagens das florestas aleatórias é sua robustez a pontos atípicos, ou outliers. O exemplo a seguir demonstra a robustez desses modelos a contaminações, além de compará-los a outros métodos de classificação:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(randomForest)</span>
+<span id="cb23-2"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(caret,e1071,VGAM)</span>
+<span id="cb23-3"><a href=""></a></span>
+<span id="cb23-4"><a href=""></a>iris <span class="ot">&lt;-</span> iris <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">cor =</span> <span class="fu">ifelse</span>(Species <span class="sc">==</span> <span class="st">"setosa"</span>,<span class="dv">1</span>,<span class="fu">ifelse</span>(Species <span class="sc">==</span> <span class="st">"versicolor"</span>,<span class="dv">2</span>,<span class="dv">3</span>)))</span>
+<span id="cb23-6"><a href=""></a></span>
+<span id="cb23-7"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">150167636</span>)</span>
+<span id="cb23-8"><a href=""></a>ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">2</span>, <span class="fu">nrow</span>(iris), <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-9"><a href=""></a>              <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.3</span>))</span>
+<span id="cb23-10"><a href=""></a>train <span class="ot">&lt;-</span> iris[ind<span class="sc">==</span><span class="dv">1</span>,]</span>
+<span id="cb23-11"><a href=""></a>test <span class="ot">&lt;-</span> iris[ind<span class="sc">==</span><span class="dv">2</span>,]</span>
+<span id="cb23-12"><a href=""></a></span>
+<span id="cb23-13"><a href=""></a></span>
+<span id="cb23-14"><a href=""></a></span>
+<span id="cb23-15"><a href=""></a>i<span class="ot">=</span><span class="dv">4</span> <span class="co">#Número de pontos contaminados</span></span>
+<span id="cb23-16"><a href=""></a>dadosPoluidos1 <span class="ot">&lt;-</span> train[train<span class="sc">$</span>cor<span class="sc">==</span><span class="dv">1</span>,]</span>
+<span id="cb23-17"><a href=""></a>dadosPoluidos1 <span class="ot">&lt;-</span> dadosPoluidos1[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(dadosPoluidos1),i,<span class="at">replace =</span> F),]</span>
+<span id="cb23-18"><a href=""></a></span>
+<span id="cb23-19"><a href=""></a>dadosPoluidos2 <span class="ot">&lt;-</span> train[train<span class="sc">$</span>cor<span class="sc">==</span><span class="dv">3</span>,]</span>
+<span id="cb23-20"><a href=""></a>dadosPoluidos2 <span class="ot">&lt;-</span> dadosPoluidos2[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(dadosPoluidos2),i,<span class="at">replace =</span> F),]</span>
+<span id="cb23-21"><a href=""></a></span>
+<span id="cb23-22"><a href=""></a>dadosPoluidos1<span class="sc">$</span>Petal.Length <span class="ot">&lt;-</span> dadosPoluidos1<span class="sc">$</span>Petal.Length <span class="sc">+</span> <span class="dv">5</span></span>
+<span id="cb23-23"><a href=""></a>dadosPoluidos1<span class="sc">$</span>Petal.Width <span class="ot">&lt;-</span> dadosPoluidos1<span class="sc">$</span>Petal.Width <span class="sc">+</span> <span class="fl">1.7</span></span>
+<span id="cb23-24"><a href=""></a></span>
+<span id="cb23-25"><a href=""></a>dadosPoluidos2<span class="sc">$</span>Petal.Length <span class="ot">&lt;-</span> dadosPoluidos2<span class="sc">$</span>Petal.Length <span class="sc">-</span> <span class="dv">4</span></span>
+<span id="cb23-26"><a href=""></a>dadosPoluidos2<span class="sc">$</span>Petal.Width <span class="ot">&lt;-</span> dadosPoluidos2<span class="sc">$</span>Petal.Width <span class="sc">-</span> <span class="fl">1.2</span></span>
+<span id="cb23-27"><a href=""></a></span>
+<span id="cb23-28"><a href=""></a>DadosExempOutTreino <span class="ot">&lt;-</span> <span class="fu">rbind</span>(train,dadosPoluidos1,dadosPoluidos2)</span>
+<span id="cb23-29"><a href=""></a><span class="co">#DadosExempOutTreino &lt;- DadosExempOutTreino[,-6]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="robustez-a-dados-contaminados-1" class="slide level2">
 <h2>Robustez a Dados Contaminados</h2>

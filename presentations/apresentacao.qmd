@@ -534,7 +534,7 @@ ggplot(results, aes(x = ntree, y = accuracy)) +
 
 Uma das vantagens das florestas aleatórias é sua robustez a pontos atípicos, ou outliers. O exemplo a seguir demonstra a robustez desses modelos a contaminações, além de compará-los a outros métodos de classificação:
 
-```{r, cache=TRUE}
+```{r, cache=TRUE, echo=TRUE}
 
 pacman::p_load(randomForest)
 pacman::p_load(caret,e1071,VGAM)
