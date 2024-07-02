@@ -335,8 +335,6 @@ Ou seja, serão **altamente correlacionadas**.
 
 ## Definições
 
-Breiman, L. Random Forests. Machine Learning **45**, 5–32 (2001)
-
 As árvores podem ser representadas como $h_1(\boldsymbol x),\;  h_2(\boldsymbol x),\; . . . ,\; h_K( \boldsymbol x)$ na forma
 
 $$ \{ h \left( \boldsymbol x, \Theta_k \right), \; \; k = 1, \dots \}  $$
@@ -345,11 +343,15 @@ onde $\Theta_k \; \text{i.i.d}$ são vetores aleatórios representando a escolha
 
 Normalmente, $p \approx \sqrt m$
 
+## Definições
+
 **1)** A medida em que o número de árvores cresce, a média de acertos se estabiliza e a chance de cometer uma predição errada pode ser quantificada:
 
 $$  P_{\boldsymbol X, Y} \left(   P_{\Theta}( h(\boldsymbol X, \Theta) = Y)   - P_{\Theta} (h(\boldsymbol X, \Theta)  \neq Y) < 0\right) $$
 
 - $P_{\Theta}( h(\boldsymbol X, \Theta) = Y)$ representa a probabilidade de que uma árvore acerte a predição de Y
+
+## Definições
 
 **2)** A acurácia da random forest vai depender do "poder" de cada um dos classificadores individuais e da dependência entre eles.
 

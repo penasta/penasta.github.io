@@ -748,7 +748,7 @@ Petal.Width         27.318058</code></pre>
 <span id="cb17-2"><a href=""></a>confusion_matrix(y_test, y_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>array([[15,  0,  0],
-       [ 0, 11,  2],
+       [ 0, 10,  3],
        [ 0,  0, 17]], dtype=int64)</code></pre>
 </div>
 </div>
@@ -763,16 +763,21 @@ Petal.Width         27.318058</code></pre>
 </section>
 <section id="definições" class="slide level2">
 <h2>Definições</h2>
-<p>Breiman, L. Random Forests. Machine Learning <strong>45</strong>, 5–32 (2001)</p>
 <p>As árvores podem ser representadas como <span class="math inline">\(h_1(\boldsymbol x),\;  h_2(\boldsymbol x),\; . . . ,\; h_K( \boldsymbol x)\)</span> na forma</p>
 <p><span class="math display">\[ \{ h \left( \boldsymbol x, \Theta_k \right), \; \; k = 1, \dots \}  \]</span></p>
 <p>onde <span class="math inline">\(\Theta_k \; \text{i.i.d}\)</span> são vetores aleatórios representando a escolha de <span class="math inline">\(p\)</span> entre os <span class="math inline">\(m\)</span> atributos de <span class="math inline">\(\boldsymbol X\)</span>.</p>
 <p>Normalmente, <span class="math inline">\(p \approx \sqrt m\)</span></p>
+</section>
+<section id="definições-1" class="slide level2">
+<h2>Definições</h2>
 <p><strong>1)</strong> A medida em que o número de árvores cresce, a média de acertos se estabiliza e a chance de cometer uma predição errada pode ser quantificada:</p>
 <p><span class="math display">\[  P_{\boldsymbol X, Y} \left(   P_{\Theta}( h(\boldsymbol X, \Theta) = Y)   - P_{\Theta} (h(\boldsymbol X, \Theta)  \neq Y) &lt; 0\right) \]</span></p>
 <ul>
 <li><span class="math inline">\(P_{\Theta}( h(\boldsymbol X, \Theta) = Y)\)</span> representa a probabilidade de que uma árvore acerte a predição de Y</li>
 </ul>
+</section>
+<section id="definições-2" class="slide level2">
+<h2>Definições</h2>
 <p><strong>2)</strong> A acurácia da random forest vai depender do “poder” de cada um dos classificadores individuais e da dependência entre eles.</p>
 <p>Um limite superior para o erro de generalização é dado por</p>
 <p><span class="math display">\[PE^* \le -\bar \rho(1 − s^2)/s^2 \]</span></p>
