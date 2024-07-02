@@ -747,19 +747,13 @@ Petal.Width         27.318058</code></pre>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href=""></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
 <span id="cb17-2"><a href=""></a>confusion_matrix(y_test, y_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>array([[15,  0,  0],
-       [ 0, 10,  3],
-       [ 0,  0, 17]], dtype=int64)</code></pre>
+<pre><code>array([[20,  0,  0],
+       [ 0, 12,  1],
+       [ 0,  0, 12]], dtype=int64)</code></pre>
 </div>
 </div>
 </div>
 </div>
-</section>
-<section id="motivação-podemos-melhorar-o-bagging" class="slide level2">
-<h2>Motivação: Podemos melhorar o bagging?</h2>
-<p>Suponha que entre as variáveis do modelo, há uma com forte poder preditivo e outras com poder moderado. Da forma que é construído, o algoritmo Bagging vai quase sempre dispor o preditor mais poderoso no topo de cada árvore.</p>
-<p>Dessa forma, as árvores construídas com o <em>bagging</em> vão ser muito parecidas umas com as outras.</p>
-<p>Ou seja, serão <strong>altamente correlacionadas</strong>.</p>
 </section>
 <section id="definições" class="slide level2">
 <h2>Definições</h2>

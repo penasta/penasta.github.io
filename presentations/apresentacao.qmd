@@ -325,14 +325,6 @@ confusion_matrix(y_test, y_pred)
 :::
 :::
 
-## Motivação: Podemos melhorar o bagging?
-
-Suponha que entre as variáveis do modelo, há uma com forte poder preditivo e outras com poder moderado. Da forma que é construído, o algoritmo Bagging vai quase sempre dispor o preditor mais poderoso no topo de cada árvore. 
-
-Dessa forma, as árvores construídas com o *bagging* vão ser muito parecidas umas com as outras. 
-
-Ou seja, serão **altamente correlacionadas**.
-
 ## Definições
 
 As árvores podem ser representadas como $h_1(\boldsymbol x),\;  h_2(\boldsymbol x),\; . . . ,\; h_K( \boldsymbol x)$ na forma
