@@ -425,24 +425,59 @@ João Alberto de Rezende Alvares
 </div>
 
 </section>
-<section id="introdução" class="slide level2 scrollable">
+<section id="introdução" class="slide level2">
 <h2>Introdução</h2>
-<p>Florestas aleatórias, ou <em>Random Forest</em>, é uma técnica em que iremos partir da ideia de árvores aleatórias (<em>random trees</em>) para fazer um classificador robusto. Em poucas palavras, poderia ser descrita como combinar força bruta computacional com seleção de modelos de árvores gerados via bootstrap por meio de uma “votação”.</p>
-<p>O procedimento do algoritmo pode ser descrito como:</p>
+<div style="margin-top: 1em; font-size: 1em">
+<p>O que é floresta aleatória?</p>
+</div>
+<p>Floresta aleatória é um algoritmo de <em>Machine learning</em>, utilizado para realizar predições, que combina o resultado de múltiplas árvores de decisão criadas aleatoriamente com o objetivo de diminuir a variância e o viés no contexto dos métodos de árvores.</p>
+</section>
+<section id="introdução-1" class="slide level2">
+<h2>Introdução</h2>
+<div style="margin-top: 1em; font-size: 1em">
+<p>Árvore de decisão</p>
+</div>
+<p>Uma árvore de decisão é a forma mais básica entre os métodos baseados em árvore, muito utilizada em regressão e classificação, uma árvore de decisão consiste em segmentar o espaço composto pelas variáveis preditoras em regiões mais simples, nos quais a média (se a variável resposta for quantitativa) é utilizada como valor predito ou (caso categorizado) a classe da variável resposta com maior frequência, os modelos de árvores de decisão são atraentes pela simplicidade e fácil interpretação, contudo não possuem a precisão que outros métodos de classificação ou regressão alcançam.</p>
+</section>
+<section id="vantagens-e-desvantagens" class="slide level2">
+<h2>Vantagens e desvantagens</h2>
+<div style="margin-top: 1em; font-size: 1em">
+<p>sobre árvore de decisão:</p>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Vantagens</p>
 <div>
 <ul>
-<li class="fragment"><ol type="1">
-<li class="fragment">Definir o número de árvores a serem geradas (quanto mais, melhor);</li>
-</ol></li>
-<li class="fragment"><ol start="2" type="1">
-<li class="fragment">Colher uma amostra bootstrap de tamanho n dos dados de tamanho n;</li>
-</ol></li>
-<li class="fragment"><ol start="3" type="1">
-<li class="fragment">Aplicar o algoritmo de árvore aleatória para cada uma das árvores geradas;</li>
-</ol></li>
-<li class="fragment"><ol start="4" type="1">
-<li class="fragment">Colher os resultados das árvores e optar pelo melhor modelo (a moda entre as árvores).</li>
-</ol></li>
+<li class="fragment">São facilmente explicaveis;</li>
+<li class="fragment">Podem ser representadas graficamente com fácil interpretação;</li>
+<li class="fragment">Podem manupular preditores qualitativos sem a necessidade de variáveis <em>dummy</em>.</li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<p>Desvantagens</p>
+<div>
+<ul>
+<li class="fragment">Não possuem o mesmo nível de precisão preditiva como outros modelos de regressão e classificação;</li>
+<li class="fragment">Não são robustas, ou seja, uma pequena mudança nos dados pode gerar uma grande mudança na árvore de estimação final.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="motivação" class="slide level2">
+<h2>Motivação</h2>
+<p>Uma forma de superar a baixa precisão das árvores de decisão é a utilização de métodos agregadoes que ajustam modelos poderosos, como floresta aleatória, que consegue uma grande melhoria no poder de predição mesmo comparando com outros modelos de classificação.</p>
+</section>
+<section id="procedimento" class="slide level2">
+<h2>Procedimento</h2>
+<div>
+<ul>
+<li class="fragment">Como na técnica <em>bagging</em>, construímos várias árvores a partir das amostras <em>bootstrap</em> do conjunto de testes.</li>
+<li class="fragment">Na construção de cada árvore, cada vez que uma divisão (ou corte) é considerada para alguma árvore, <strong>uma seleção aleatória dos preditores é escolhida</strong> como candidatos dos cortes ao invés de todos os preditores como normalmente é feito.</li>
+<li class="fragment">Essa abordagem tem como propósito reduzir a correlação entre as árvores, reduzindo a variância quando tiramos a média das árvores, já que a média tende a ser menor quando temos menor correlação entre as árvores.</li>
+<li class="fragment">A escolha do número de preditores que serão selecionados para cada corte, é tipicamente escolhida pela raiz quadrada do número total de preditores.</li>
+<li class="fragment">Florestas aleatórias fornecem uma melhoria em relação ao método <em>bagging</em>, já que a correlação entre as árvores diminui.</li>
 </ul>
 </div>
 </section>
@@ -484,16 +519,6 @@ versicolor      0         36         3  0.07692308
 virginica       0          4        34  0.10526316</code></pre>
 </div>
 </div>
-<p>Matriz de confusão:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>rf[[<span class="st">"confusion"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>           setosa versicolor virginica class.error
-setosa         33          0         0  0.00000000
-versicolor      0         36         3  0.07692308
-virginica       0          4        34  0.10526316</code></pre>
-</div>
-</div>
 </div>
 </div>
 </section>
@@ -504,10 +529,10 @@ virginica       0          4        34  0.10526316</code></pre>
 <div class="column" style="width:50%;">
 <p>Teste do modelo no conjunto de treino:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">library</span>(caret)</span>
-<span id="cb5-2"><a href=""></a></span>
-<span id="cb5-3"><a href=""></a>p1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, train)</span>
-<span id="cb5-4"><a href=""></a><span class="fu">confusionMatrix</span>(p1, train<span class="sc">$</span> Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">library</span>(caret)</span>
+<span id="cb3-2"><a href=""></a></span>
+<span id="cb3-3"><a href=""></a>p1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, train)</span>
+<span id="cb3-4"><a href=""></a><span class="fu">confusionMatrix</span>(p1, train<span class="sc">$</span> Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
@@ -544,8 +569,8 @@ Balanced Accuracy              1.0            1.0000           1.0000</code></pr
 </div><div class="column" style="width:50%;">
 <p>Validação do modelo nos dados de teste:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>p2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, test)</span>
-<span id="cb7-2"><a href=""></a><span class="fu">confusionMatrix</span>(p2, test<span class="sc">$</span> Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>p2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, test)</span>
+<span id="cb5-2"><a href=""></a><span class="fu">confusionMatrix</span>(p2, test<span class="sc">$</span> Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
@@ -582,13 +607,6 @@ Balanced Accuracy            1.000            0.9201           0.8988</code></pr
 </div>
 </div>
 </section>
-<section id="observações" class="slide level2">
-<h2>Observações</h2>
-<ul>
-<li><p>Vemos que o modelo em seu estado minimalista é extremamente simples de ser executado, e é uma modelagem extremamente robusta a <em>overfitting</em>, visto que irá gerar vários modelos (árvores) com dados <em>bootstrap</em> e selecionar o modelo que melhor se ajusta.</p></li>
-<li><p>Já está implementado na função o procedimento de tomar uma amostra <em>bootstrap</em> dos dados fornecidos para cada árvore automaticamente.</p></li>
-</ul>
-</section>
 <section id="parâmetros" class="slide level2">
 <h2>Parâmetros</h2>
 <ul>
@@ -598,16 +616,18 @@ Balanced Accuracy            1.000            0.9201           0.8988</code></pr
 </section>
 <section id="fine-tuning" class="slide level2">
 <h2>Fine tuning</h2>
+<div style="margin-top: 1em; font-size: 1em">
 <p>Se for o caso, também podemos fazer o <em>fine-tuning</em> dos parâmetros do modelo</p>
+</div>
 <div class="columns">
-<div class="column" style="width:33%;">
+<div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>t <span class="ot">&lt;-</span> <span class="fu">tuneRF</span>(train[,<span class="sc">-</span><span class="dv">5</span>], train[,<span class="dv">5</span>],</span>
-<span id="cb9-2"><a href=""></a>       <span class="at">stepFactor =</span> <span class="fl">0.5</span>,</span>
-<span id="cb9-3"><a href=""></a>       <span class="at">plot =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-4"><a href=""></a>       <span class="at">ntreeTry =</span> <span class="dv">150</span>,</span>
-<span id="cb9-5"><a href=""></a>       <span class="at">trace =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-6"><a href=""></a>       <span class="at">improve =</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>t <span class="ot">&lt;-</span> <span class="fu">tuneRF</span>(train[,<span class="sc">-</span><span class="dv">5</span>], train[,<span class="dv">5</span>],</span>
+<span id="cb7-2"><a href=""></a>       <span class="at">stepFactor =</span> <span class="fl">0.5</span>,</span>
+<span id="cb7-3"><a href=""></a>       <span class="at">plot =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-4"><a href=""></a>       <span class="at">ntreeTry =</span> <span class="dv">150</span>,</span>
+<span id="cb7-5"><a href=""></a>       <span class="at">trace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-6"><a href=""></a>       <span class="at">improve =</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>mtry = 2  OOB error = 5.45% 
 Searching left ...
@@ -620,16 +640,39 @@ mtry = 1    OOB error = 5.45%
 <div class="cell-output-display">
 <div>
 <figure>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">hist</span>(<span class="fu">treesize</span>(rf),</span>
+<span id="cb9-2"><a href=""></a>     <span class="at">main =</span> <span class="st">"No. of Nodes for the Trees"</span>,</span>
+<span id="cb9-3"><a href=""></a>     <span class="at">col =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-7-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-</div><div class="column" style="width:33%;">
+</div>
+</div>
+</section>
+<section id="importâncias" class="slide level2">
+<h2>Importâncias</h2>
+<div style="margin-top: 1em; font-size: 1em">
+<p>Podemos verificar a importância de cada variável para o modelo.</p>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">hist</span>(<span class="fu">treesize</span>(rf),</span>
-<span id="cb11-2"><a href=""></a>     <span class="at">main =</span> <span class="st">"No. of Nodes for the Trees"</span>,</span>
-<span id="cb11-3"><a href=""></a>     <span class="at">col =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">varImpPlot</span>(rf,</span>
+<span id="cb10-2"><a href=""></a>           <span class="at">sort =</span> T,</span>
+<span id="cb10-3"><a href=""></a>           <span class="at">n.var =</span> <span class="dv">10</span>,</span>
+<span id="cb10-4"><a href=""></a>           <span class="at">main =</span> <span class="st">"Top 10 - Variable Importance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -637,21 +680,7 @@ mtry = 1    OOB error = 5.45%
 </figure>
 </div>
 </div>
-</div>
-</div><div class="column" style="width:33%;">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">varImpPlot</span>(rf,</span>
-<span id="cb12-2"><a href=""></a>           <span class="at">sort =</span> T,</span>
-<span id="cb12-3"><a href=""></a>           <span class="at">n.var =</span> <span class="dv">10</span>,</span>
-<span id="cb12-4"><a href=""></a>           <span class="at">main =</span> <span class="st">"Top 10 - Variable Importance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-9-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">importance</span>(rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">importance</span>(rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             MeanDecreaseGini
 Sepal.Length         7.299621
@@ -660,13 +689,16 @@ Petal.Length        35.799244
 Petal.Width         27.318058</code></pre>
 </div>
 </div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-9-1.png" width="960"></p>
+</figure>
 </div>
 </div>
-</section>
-<section id="importâncias" class="slide level2">
-<h2>Importâncias</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -676,56 +708,48 @@ Petal.Width         27.318058</code></pre>
 </div>
 </div>
 </div>
-</div><div class="column" style="width:50%;">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
 </div>
 </div>
 </section>
 <section id="implementações" class="slide level2">
 <h2>Implementações</h2>
-<p>Uma rotina de classificação via <em>Random forest</em> poderia ser executada de forma análoga da seguinte forma:</p>
+<div style="margin-top: 1em; font-size: 1em">
+<p>Uma rotina de classificação via <em>Random forest</em> poderia ser executada de forma análoga em <em>python</em> da seguinte forma:</p>
+</div>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">library</span>(reticulate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">library</span>(reticulate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href=""></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb16-2"><a href=""></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb16-3"><a href=""></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb16-4"><a href=""></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
-<span id="cb16-5"><a href=""></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
-<span id="cb16-6"><a href=""></a><span class="im">from</span> sklearn <span class="im">import</span> datasets</span>
-<span id="cb16-7"><a href=""></a></span>
-<span id="cb16-8"><a href=""></a>iris <span class="op">=</span> datasets.load_iris()</span>
-<span id="cb16-9"><a href=""></a>dados <span class="op">=</span> pd.DataFrame(data<span class="op">=</span>iris.data, columns<span class="op">=</span>iris.feature_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href=""></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-2"><a href=""></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-3"><a href=""></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb14-4"><a href=""></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
+<span id="cb14-5"><a href=""></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<span id="cb14-6"><a href=""></a><span class="im">from</span> sklearn <span class="im">import</span> datasets</span>
+<span id="cb14-7"><a href=""></a></span>
+<span id="cb14-8"><a href=""></a>iris <span class="op">=</span> datasets.load_iris()</span>
+<span id="cb14-9"><a href=""></a>dados <span class="op">=</span> pd.DataFrame(data<span class="op">=</span>iris.data, columns<span class="op">=</span>iris.feature_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href=""></a>X <span class="op">=</span> dados</span>
-<span id="cb17-2"><a href=""></a>y <span class="op">=</span> iris.target</span>
-<span id="cb17-3"><a href=""></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href=""></a>X <span class="op">=</span> dados</span>
+<span id="cb15-2"><a href=""></a>y <span class="op">=</span> iris.target</span>
+<span id="cb15-3"><a href=""></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href=""></a>model <span class="op">=</span> RandomForestClassifier()</span>
-<span id="cb18-2"><a href=""></a>model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href=""></a>model <span class="op">=</span> RandomForestClassifier()</span>
+<span id="cb16-2"><a href=""></a>model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <style>#sk-container-id-1 {color: black;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RandomForestClassifier()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier()</pre></div></div></div></div></div>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href=""></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
-<span id="cb19-2"><a href=""></a>confusion_matrix(y_test, y_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href=""></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb17-2"><a href=""></a>confusion_matrix(y_test, y_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>array([[14,  0,  0],
-       [ 0, 14,  1],
-       [ 0,  3, 13]], dtype=int64)</code></pre>
+<pre><code>array([[15,  0,  0],
+       [ 0, 11,  2],
+       [ 0,  0, 17]], dtype=int64)</code></pre>
 </div>
 </div>
 </div>
@@ -736,64 +760,26 @@ Petal.Width         27.318058</code></pre>
 <p>Suponha que entre as variáveis do modelo, há uma com forte poder preditivo e outras com poder moderado. Da forma que é construído, o algoritmo Bagging vai quase sempre dispor o preditor mais poderoso no topo de cada árvore.</p>
 <p>Dessa forma, as árvores construídas com o <em>bagging</em> vão ser muito parecidas umas com as outras.</p>
 <p>Ou seja, serão <strong>altamente correlacionadas</strong>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb21-2"><a href=""></a></span>
-<span id="cb21-3"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb21-4"><a href=""></a>model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Species <span class="sc">~</span> ., <span class="at">data=</span>iris, <span class="at">importance=</span><span class="cn">TRUE</span>, <span class="at">ntree=</span><span class="dv">500</span>, <span class="at">mtry =</span> <span class="dv">4</span>, <span class="at">do.trace=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>ntree      OOB      1      2      3
-  100:   4.00%  0.00%  6.00%  6.00%
-  200:   4.00%  0.00%  6.00%  6.00%
-  300:   4.00%  0.00%  6.00%  6.00%
-  400:   4.00%  0.00%  6.00%  6.00%
-  500:   4.00%  0.00%  6.00%  6.00%</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>reprtree<span class="sc">:::</span><span class="fu">plot.getTree</span>(model, <span class="at">k =</span> <span class="dv">1</span>)</span>
-<span id="cb23-2"><a href=""></a>reprtree<span class="sc">:::</span><span class="fu">plot.getTree</span>(model, <span class="at">k =</span> <span class="dv">2</span>)</span>
-<span id="cb23-3"><a href=""></a>reprtree<span class="sc">:::</span><span class="fu">plot.getTree</span>(model, <span class="at">k =</span> <span class="dv">3</span>)</span>
-<span id="cb23-4"><a href=""></a>reprtree<span class="sc">:::</span><span class="fu">plot.getTree</span>(model, <span class="at">k =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-</div>
-<img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
-<section class="slide level2">
-
-<!-- A agregação de quantidades correlacionadas não costuma levar a uma redução significativa da variância quando comparadas com quantidades não correlacionadas. -->
-<!-- Como pode ser visto no exemplo utilizando o banco IRIS, as árvores tem estruturas muito parecidas -->
-
-<img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+</section>
 <section id="definições" class="slide level2">
 <h2>Definições</h2>
 <p>Breiman, L. Random Forests. Machine Learning <strong>45</strong>, 5–32 (2001)</p>
 <p>As árvores podem ser representadas como <span class="math inline">\(h_1(\boldsymbol x),\;  h_2(\boldsymbol x),\; . . . ,\; h_K( \boldsymbol x)\)</span> na forma</p>
 <p><span class="math display">\[ \{ h \left( \boldsymbol x, \Theta_k \right), \; \; k = 1, \dots \}  \]</span></p>
-<p>onde <span class="math inline">\(\Theta_k \; \text{i.i.d}\)</span> são vetores aleatórios representando a escolha de $ p$ entre os <span class="math inline">\(m\)</span> atributos de <span class="math inline">\(\boldsymbol X\)</span>.</p>
+<p>onde <span class="math inline">\(\Theta_k \; \text{i.i.d}\)</span> são vetores aleatórios representando a escolha de <span class="math inline">\(p\)</span> entre os <span class="math inline">\(m\)</span> atributos de <span class="math inline">\(\boldsymbol X\)</span>.</p>
 <p>Normalmente, <span class="math inline">\(p \approx \sqrt m\)</span></p>
-</section>
-<section class="slide level2">
-
-<!-- $$mg(\boldsymbol X, Y) = av_k I (h_k(\boldsymbol X) = Y) - \underset{j \neq Y}{\text{max}} av_k I(h_k (\boldsymbol X) = j)$$. -->
-<!-- A margem é a diferença entre a média do número de votos para a classe correta e máximo da média de votos para a classe incorreta. -->
-<!-- O erro de generalização, a probabilidade de que a função de margem seja menor que zero, é dado por: -->
-<!-- $$ PE^{*} = P_{\boldsymbol X, Y} (mg(\boldsymbol X, Y) < 0$$ -->
 <p><strong>1)</strong> A medida em que o número de árvores cresce, a média de acertos se estabiliza e a chance de cometer uma predição errada pode ser quantificada:</p>
 <p><span class="math display">\[  P_{\boldsymbol X, Y} \left(   P_{\Theta}( h(\boldsymbol X, \Theta) = Y)   - P_{\Theta} (h(\boldsymbol X, \Theta)  \neq Y) &lt; 0\right) \]</span></p>
 <ul>
 <li><span class="math inline">\(P_{\Theta}( h(\boldsymbol X, \Theta) = Y)\)</span> representa a probabilidade de que uma árvore acerte a predição de Y</li>
 </ul>
-<!-- A diferença dos dois termos representa a margem (o quão mais provável é prever a classe correta do que a incorreta). -->
-<!-- A probabilidade $P_{\boldsymbol X, Y}$ mede a frequência em que a margem é negativa, indicando um erro. -->
-<!-- Basicamente, a medida em que o número de árvores cresce, o comportamento da random forest se torna mais previsível, de forma que o erro de generalização se estabiliza e converge para um valor fixo, e assim é possível estimar a taxa de erro da random forest. -->
 <p><strong>2)</strong> A acurácia da random forest vai depender do “poder” de cada um dos classificadores individuais e da dependência entre eles.</p>
 <p>Um limite superior para o erro de generalização é dado por</p>
 <p><span class="math display">\[PE^* \le -\bar \rho(1 − s^2)/s^2 \]</span></p>
 <p>onde:</p>
 <ul>
-<li><span class="math inline">\(\boldsymbol s = E_{\boldsymbol X, Y} mr({\boldsymbol X, Y} )\)</span> é o “poder” das árvores <span class="math inline">\(h(\boldsymbol x, \Theta)\)</span></li>
-</ul>
-<!-- É  a média do nível de acerto das classes corretas. -->
-<ul>
-<li><span class="math inline">\(\bar \rho\)</span> pode ser entendido como a média entre as correlações das árvores.</li>
+<li><p><span class="math inline">\(\boldsymbol s = E_{\boldsymbol X, Y} mr({\boldsymbol X, Y} )\)</span> é o “poder” das árvores <span class="math inline">\(h(\boldsymbol x, \Theta)\)</span></p></li>
+<li><p><span class="math inline">\(\bar \rho\)</span> pode ser entendido como a média entre as correlações das árvores.</p></li>
 </ul>
 </section>
 <section id="exemplo-alzheimer" class="slide level2">
@@ -802,14 +788,15 @@ Petal.Width         27.318058</code></pre>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb24-2"><a href=""></a></span>
-<span id="cb24-3"><a href=""></a>rf_model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(</span>
-<span id="cb24-4"><a href=""></a>  class <span class="sc">~</span> ., <span class="at">data =</span> train_data, </span>
-<span id="cb24-5"><a href=""></a>  <span class="at">ntree =</span> <span class="dv">500</span>, </span>
-<span id="cb24-6"><a href=""></a>  <span class="at">importance =</span> <span class="cn">TRUE</span></span>
-<span id="cb24-7"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb19-2"><a href=""></a></span>
+<span id="cb19-3"><a href=""></a>rf_model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(</span>
+<span id="cb19-4"><a href=""></a>  class <span class="sc">~</span> ., <span class="at">data =</span> train_data, </span>
+<span id="cb19-5"><a href=""></a>  <span class="at">ntree =</span> <span class="dv">500</span>, </span>
+<span id="cb19-6"><a href=""></a>  <span class="at">importance =</span> <span class="cn">TRUE</span></span>
+<span id="cb19-7"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div><div class="column" style="width:50%;">
 <pre><code>No. of variables tried at each split: 21
 OOB estimate of  error rate: 13.57%
 
@@ -827,45 +814,45 @@ P  8 64   0.1111111</code></pre>
 <pre><code>[1] "Test error:8.82%"</code></pre>
 </div>
 </div>
-</div><div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-23-1.png" width="960"></p>
-</figure>
 </div>
 </div>
-</div><div class="column" style="width:50%;">
-<p><img data-src="importance.png" style="width:80.0%"></p>
-</div>
-</div>
-<!--Pelo gráfico, percebe-se o destaque de algumas varíaveis quanto ao nível de importância.-->
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+<div class="columns">
+<!-- ::: {.column width="33%"} --><!-- ```{r, cache=TRUE} --><!-- #| echo: false --><!-- # Extrair a importância das variáveis baseadas no índice Gini --><!-- importance <- importance(rf_model, type = 2) --><!-- # Criar um dataframe com as variáveis e sua importância --><!-- importance_df <- data.frame(variable = rownames(importance), importance = importance[, "MeanDecreaseGini"]) --><!-- importance_df <- importance_df[order(importance_df$importance, decreasing = TRUE), ] --><!-- # Plotar a importância das variáveis --><!-- ggplot(importance_df, aes(x = reorder(variable, importance), y = importance)) + --><!--   geom_bar(stat = "identity", fill = "steelblue") + --><!--   labs(title = "Importância das Variáveis - Índice Gini", --><!--        x = "Variáveis", --><!--        y = "Importância") + --><!--   theme_minimal() + --><!--   theme( --><!--     axis.text.x = element_blank(), --><!--     axis.ticks.x = element_blank() --><!--   ) --><!-- ``` --><!-- ::: --><div class="column" style="width:50%;">
 <p>No gráfico abaixo é possível perceber como a escolha do número de variáveis em cada <em>split</em> faz diferença para o resultado final do modelo.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-26-1.png" width="960"></p>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-21-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><img data-src="mtry_accuracy.png" style="width:60.0%"></p>
+</div><div class="column" style="width:50%;">
 <p>Ainda, podemos verficiar a acurácia do modelo pelo número de árvores:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-28-1.png" width="960"></p>
+<p><img data-src="apresentacao_files/figure-revealjs/unnamed-chunk-22-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><img data-src="ntree_accuracy.png" style="width:60.0%"></p>
+</div>
+</div>
 </section>
 <section id="referências" class="title-slide slide level1 center">
 <h1>Referências:</h1>
-<p>https://www.r-bloggers.com/2021/04/random-forest-in-r/</p>
+<ul>
+<li><p>Trevor Hastie, Robert Tibshirani, Gareth M. James, Daniela Witten. An introduction to Statistical Learning. Springer, 2013.</p></li>
+<li><p>Pedro A. Morettin, Julio M. Singer. Estatística e Ciência de Dados. USP, 2021.</p></li>
+<li><p>Finnstats. Randon Forest in R. Acessado em junho de 2024. Link: https://www.r-bloggers.com/2021/04/random-forest-in-r/</p></li>
+<li><p>Breiman, L. Random Forests. Machine Learning <strong>45</strong>, 5–32 (2001)</p></li>
+</ul>
 <div class="quarto-auto-generated-content">
 <p><img src="as_vert_cor.jpg" class="slide-logo"></p>
 <div class="footer footer-default">

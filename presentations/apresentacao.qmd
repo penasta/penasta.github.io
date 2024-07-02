@@ -50,15 +50,63 @@ pacman::p_load(tidyverse, randomForest,randomForest,reprtree,
 
 ## Introdução
 
-Florestas aleatórias, ou *Random Forest*, é uma técnica em que iremos partir da ideia de árvores aleatórias (*random trees*) para fazer um classificador robusto. Em poucas palavras, poderia ser descrita como combinar força bruta computacional com seleção de modelos de árvores gerados via bootstrap por meio de uma "votação".
+::: {style="margin-top: 1em; font-size: 1em"}
+O que é floresta aleatória?
+::: 
 
-O procedimento do algoritmo pode ser descrito como:
+Floresta aleatória é um algoritmo de *Machine learning*, utilizado para realizar predições, que combina o resultado de múltiplas árvores de decisão criadas aleatoriamente com o objetivo de diminuir a variância e o viés no contexto dos métodos de árvores.
+
+## Introdução
+
+::: {style="margin-top: 1em; font-size: 1em"}
+Árvore de decisão
+::: 
+
+Uma árvore de decisão é a forma mais básica entre os métodos baseados em árvore, muito utilizada em regressão e classificação, uma árvore de decisão consiste em segmentar o espaço composto pelas variáveis preditoras em regiões mais simples, nos quais a média (se a variável resposta for quantitativa) é utilizada como valor predito ou (caso categorizado) a classe da variável resposta com maior frequência, os modelos de árvores de decisão são atraentes pela simplicidade e fácil interpretação, contudo não possuem a precisão que outros métodos de classificação ou regressão alcançam.
+
+## Vantagens e desvantagens
+
+::: {style="margin-top: 1em; font-size: 1em"}
+sobre árvore de decisão:
+::: 
+
+::: columns
+::: {.column width="50%"}
+
+Vantagens
 
 ::: incremental
-- 1. Definir o número de árvores a serem geradas (quanto mais, melhor);
-- 2. Colher uma amostra bootstrap de tamanho n dos dados de tamanho n;
-- 3. Aplicar o algoritmo de árvore aleatória para cada uma das árvores geradas;
-- 4. Colher os resultados das árvores e optar pelo melhor modelo (a moda entre as árvores).
+- São facilmente explicaveis;
+- Podem ser representadas graficamente com fácil interpretação;
+- Podem manupular preditores qualitativos sem a necessidade de variáveis *dummy*.
+:::
+
+:::
+
+::: {.column width="50%"}
+
+Desvantagens
+
+::: incremental
+- Não possuem o mesmo nível de precisão preditiva como outros modelos de regressão e classificação;
+- Não são robustas, ou seja, uma pequena mudança nos dados pode gerar uma grande mudança na árvore de estimação final.
+:::
+
+:::
+:::
+
+## Motivação
+
+Uma forma de superar a baixa precisão das árvores de decisão é a utilização de métodos agregadoes que ajustam modelos poderosos, como floresta aleatória, que consegue uma grande melhoria no poder de predição mesmo comparando com outros modelos de classificação.
+
+## Procedimento
+
+::: incremental
+- Como na técnica *bagging*, construímos várias árvores a partir das amostras *bootstrap* do conjunto de testes.
+- Na construção de cada árvore, cada vez que uma divisão (ou corte) é considerada para alguma árvore, **uma seleção aleatória dos preditores é escolhida** como candidatos dos cortes ao invés de todos os preditores como normalmente é feito.
+- Essa abordagem tem como propósito reduzir a correlação entre as árvores, reduzindo a variância quando tiramos a média das árvores, já que a média tende a ser menor quando temos menor correlação entre as árvores.
+- A escolha do número de preditores que serão selecionados para cada corte, é tipicamente escolhida pela raiz quadrada do número total de preditores.
+- Florestas aleatórias fornecem uma melhoria em relação ao método *bagging*, já que a correlação entre as árvores diminui.
 :::
 
 ## Rotina
@@ -70,7 +118,7 @@ Uma rotina minimalista de classificação via *Random Forest* em **R** pode ser 
 
 ::: {.column width="50%"}
 
-```{r}
+```{r, cache=TRUE}
 #| echo: TRUE
 
 library(randomForest)
@@ -95,14 +143,6 @@ rf <- randomForest(Species~., data=train, proximity=TRUE)
 
 ```{r}
 rf
-```
-
-Matriz de confusão:
-
-```{r}
-#| echo: true
-
-rf[["confusion"]]
 ```
 
 :::
@@ -145,12 +185,6 @@ confusionMatrix(p2, test$ Species)
 :::
 :::
 
-## Observações
-
-- Vemos que o modelo em seu estado minimalista é extremamente simples de ser executado, e é uma modelagem extremamente robusta a *overfitting*, visto que irá gerar vários modelos (árvores) com dados *bootstrap* e selecionar o modelo que melhor se ajusta.
-
-- Já está implementado na função o procedimento de tomar uma amostra *bootstrap* dos dados fornecidos para cada árvore automaticamente.
-
 ## Parâmetros
 
 - A função *randomForest* do pacote homônimo tem uma série de parâmetros opcionais além do mínimo obrigatório, que seria o modelo e os dados. O mais importante destes parâmetros é o *ntree*, que por *default* é 500 e em geral deve-se utilizar o máximo possível tal que execute em um tempo aceitável. Em geral, o restante dos parâmetros deve ser deixado em *default*.
@@ -159,12 +193,13 @@ confusionMatrix(p2, test$ Species)
 
 ## Fine tuning
 
+::: {style="margin-top: 1em; font-size: 1em"}
 Se for o caso, também podemos fazer o *fine-tuning* dos parâmetros do modelo
+::: 
 
 ::: columns
 
-::: {.column width="33%"}
-
+::: {.column width="50%"}
 
 ```{r}
 #| echo: true
@@ -177,8 +212,11 @@ t <- tuneRF(train[,-5], train[,5],
        improve = 0.05)
 
 ```
+
 :::
-::: {.column width="33%"}
+
+::: {.column width="50%"}
+
 ```{r}
 #| echo: true
 
@@ -189,7 +227,17 @@ hist(treesize(rf),
 ```
 
 :::
-::: {.column width="33%"}
+
+:::
+
+## Importâncias
+::: {style="margin-top: 1em; font-size: 1em"}
+Podemos verificar a importância de cada variável para o modelo.
+::: 
+
+::: columns
+
+::: {.column width="50%"}
 
 ```{r}
 #| echo: true
@@ -204,23 +252,14 @@ importance(rf)
 ```
 
 
-:::
-:::
 
-## Importâncias
-
-::: columns
+:::
 
 ::: {.column width="50%"}
 
 ```{r}
 partialPlot(rf, train, Petal.Width, "setosa")
 ```
-
-
-:::
-
-::: {.column width="50%"}
 
 ```{r}
 MDSplot(rf, train$Species)
@@ -234,7 +273,9 @@ MDSplot(rf, train$Species)
 
 ## Implementações
 
-Uma rotina de classificação via *Random forest* poderia ser executada de forma análoga da seguinte forma:
+::: {style="margin-top: 1em; font-size: 1em"}
+Uma rotina de classificação via *Random forest* poderia ser executada de forma análoga em *python* da seguinte forma:
+::: 
 
 ::: columns
 
@@ -292,38 +333,6 @@ Dessa forma, as árvores construídas com o *bagging* vão ser muito parecidas u
 
 Ou seja, serão **altamente correlacionadas**.
 
-```{r}
-#| echo: true
-par(mfrow = c(2, 2))
-
-set.seed(123)
-model <- randomForest(Species ~ ., data=iris, importance=TRUE, ntree=500, mtry = 4, do.trace=100)
-
-reprtree:::plot.getTree(model, k = 1)
-reprtree:::plot.getTree(model, k = 2)
-reprtree:::plot.getTree(model, k = 3)
-reprtree:::plot.getTree(model, k = 4)
-```
-
----
-
-<!-- A agregação de quantidades correlacionadas não costuma levar a uma redução significativa da variância quando comparadas com quantidades não correlacionadas. -->
-
-<!-- Como pode ser visto no exemplo utilizando o banco IRIS, as árvores tem estruturas muito parecidas -->
-
-```{r, results='hide'}
-par(mfrow = c(2, 2))
-
-set.seed(123)
-model <- randomForest(Species ~ ., data=iris, importance=TRUE, ntree=500, mtry = 4, do.trace=100)
-
-reprtree:::plot.getTree(model, k = 1)
-reprtree:::plot.getTree(model, k = 2)
-reprtree:::plot.getTree(model, k = 3)
-reprtree:::plot.getTree(model, k = 4)
-```
-
-
 ## Definições
 
 Breiman, L. Random Forests. Machine Learning **45**, 5–32 (2001)
@@ -332,31 +341,15 @@ As árvores podem ser representadas como $h_1(\boldsymbol x),\;  h_2(\boldsymbol
 
 $$ \{ h \left( \boldsymbol x, \Theta_k \right), \; \; k = 1, \dots \}  $$
 
-onde $\Theta_k \; \text{i.i.d}$ são vetores aleatórios representando a escolha de $ p$ entre os $m$ atributos de $\boldsymbol X$. 
+onde $\Theta_k \; \text{i.i.d}$ são vetores aleatórios representando a escolha de $p$ entre os $m$ atributos de $\boldsymbol X$. 
 
 Normalmente, $p \approx \sqrt m$
-
----
-<!-- $$mg(\boldsymbol X, Y) = av_k I (h_k(\boldsymbol X) = Y) - \underset{j \neq Y}{\text{max}} av_k I(h_k (\boldsymbol X) = j)$$. -->
-
-<!-- A margem é a diferença entre a média do número de votos para a classe correta e máximo da média de votos para a classe incorreta. -->
-
-<!-- O erro de generalização, a probabilidade de que a função de margem seja menor que zero, é dado por: -->
-
-<!-- $$ PE^{*} = P_{\boldsymbol X, Y} (mg(\boldsymbol X, Y) < 0$$ -->
 
 **1)** A medida em que o número de árvores cresce, a média de acertos se estabiliza e a chance de cometer uma predição errada pode ser quantificada:
 
 $$  P_{\boldsymbol X, Y} \left(   P_{\Theta}( h(\boldsymbol X, \Theta) = Y)   - P_{\Theta} (h(\boldsymbol X, \Theta)  \neq Y) < 0\right) $$
 
 - $P_{\Theta}( h(\boldsymbol X, \Theta) = Y)$ representa a probabilidade de que uma árvore acerte a predição de Y
-
-<!-- A diferença dos dois termos representa a margem (o quão mais provável é prever a classe correta do que a incorreta). -->
-
-<!-- A probabilidade $P_{\boldsymbol X, Y}$ mede a frequência em que a margem é negativa, indicando um erro. -->
-
-<!-- Basicamente, a medida em que o número de árvores cresce, o comportamento da random forest se torna mais previsível, de forma que o erro de generalização se estabiliza e converge para um valor fixo, e assim é possível estimar a taxa de erro da random forest. -->
-
 
 **2)** A acurácia da random forest vai depender do "poder" de cada um dos classificadores individuais e da dependência entre eles.
 
@@ -368,13 +361,15 @@ onde:
 
 - $\boldsymbol s = E_{\boldsymbol X, Y} mr({\boldsymbol X, Y} )$ é o "poder" das árvores $h(\boldsymbol x, \Theta)$
 
-<!-- É  a média do nível de acerto das classes corretas. -->
-
 - $\bar \rho$ pode ser entendido como a média entre as correlações das árvores.
 
 ## Exemplo Alzheimer
 
 O dataset DARWIN (https://archive.ics.uci.edu/dataset/732/darwin) contém dados sobre a escrita a mão de pessoas afetadas pelo Alzheimer e de um grupo de controle, totalizando 174 observações. São 450 variáveis e o objetivo é distinguir pessoas afetadas (P) de pessoas saudáveis (H).
+
+::: {.columns}
+
+::: {.column width="50%"}
 
 ```{r}
 #| echo: false
@@ -382,28 +377,23 @@ O dataset DARWIN (https://archive.ics.uci.edu/dataset/732/darwin) contém dados 
 data = read.csv('data.csv', header = TRUE)
 ```
 
-```{r}
+```{r, cache=TRUE}
 #| echo: false
 
-
-set.seed(123)  # Set seed for reproducibility
+set.seed(123)
 splitIndex <- createDataPartition(data$class, p = 0.8, list = FALSE)
 
 train_data <- data[splitIndex, ]  %>% dplyr::select(-`ID`)
 test_data <- data[-splitIndex, ]  %>% dplyr::select(-`ID`)
 ```
 
-```{r}
+```{r, cache=TRUE}
 #| echo: false
 train_data$class <- as.factor(train_data$class)
 test_data$class <- as.factor(test_data$class)
 ```
 
-
-:::: {.columns}
-
-::: {.column width="50%"}
-```{r, results='hide'}
+```{r, results='hide', cache=TRUE}
 #| echo: true
 set.seed(123)
 
@@ -414,6 +404,9 @@ rf_model <- randomForest(
   )
 ```
 
+:::
+
+::: {.column width="50%"}
 
 ```{}
 No. of variables tried at each split: 21
@@ -425,9 +418,7 @@ H 58 10   0.1470588
 P  9 63   0.1250000
 ```
 
-
-
-```{r}
+```{r, cache=TRUE}
 #| echo: false
 
 # Printa a matriz de confusão
@@ -441,49 +432,46 @@ predictions <- predict(rf_model, test_data)
 accuracy <- mean(predictions == test_data$class)
 print(paste0("Test error:", round((1-accuracy)*100,2),"%"))
 ```
+
 :::
 
+:::
 
-```{r}
-#| echo: false
-# Extrair a importância das variáveis baseadas no índice Gini
-importance <- importance(rf_model, type = 2)
+##
 
-# Criar um dataframe com as variáveis e sua importância
-importance_df <- data.frame(variable = rownames(importance), importance = importance[, "MeanDecreaseGini"])
-importance_df <- importance_df[order(importance_df$importance, decreasing = TRUE), ]
+::: {.columns}
 
-# Plotar a importância das variáveis
-ggplot(importance_df, aes(x = reorder(variable, importance), y = importance)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  labs(title = "Importância das Variáveis - Índice Gini",
-       x = "Variáveis",
-       y = "Importância") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),
-    axis.ticks.x = element_blank()
-  )
-```
+<!-- ::: {.column width="33%"} -->
 
+<!-- ```{r, cache=TRUE} -->
+<!-- #| echo: false -->
+<!-- # Extrair a importância das variáveis baseadas no índice Gini -->
+<!-- importance <- importance(rf_model, type = 2) -->
 
-```{r}
-#| echo: false
-#| eval: false
-ggsave('presentations/importance.png', width = 158, height = 93, units = "mm")
-```
+<!-- # Criar um dataframe com as variáveis e sua importância -->
+<!-- importance_df <- data.frame(variable = rownames(importance), importance = importance[, "MeanDecreaseGini"]) -->
+<!-- importance_df <- importance_df[order(importance_df$importance, decreasing = TRUE), ] -->
+
+<!-- # Plotar a importância das variáveis -->
+<!-- ggplot(importance_df, aes(x = reorder(variable, importance), y = importance)) + -->
+<!--   geom_bar(stat = "identity", fill = "steelblue") + -->
+<!--   labs(title = "Importância das Variáveis - Índice Gini", -->
+<!--        x = "Variáveis", -->
+<!--        y = "Importância") + -->
+<!--   theme_minimal() + -->
+<!--   theme( -->
+<!--     axis.text.x = element_blank(), -->
+<!--     axis.ticks.x = element_blank() -->
+<!--   ) -->
+<!-- ``` -->
+
+<!-- ::: -->
 
 ::: {.column width="50%"}
-![](importance.png){width=80%}
-:::
-::::
-
-<!--Pelo gráfico, percebe-se o destaque de algumas varíaveis quanto ao nível de importância.-->
-
 
 No gráfico abaixo é possível perceber como a escolha do número de variáveis em cada *split* faz diferença para o resultado final do modelo. 
 
-```{r}
+```{r, cache=TRUE}
 #| echo: false
 # Definir os valores de mtry que queremos avaliar
 mtry_values <- seq(1, ncol(train_data) - 1)  # de 1 até o número de variáveis - 1
@@ -503,7 +491,7 @@ for (i in seq_along(mtry_values)) {
 results <- data.frame(mtry = mtry_values, accuracy = accuracy)
 ```
 
-```{r}
+```{r, cache=TRUE}
 #| echo: false
 
 # Identificar o índice do ponto com maior acurácia
@@ -527,19 +515,13 @@ ggplot(results, aes(x = mtry, y = accuracy)) +
   theme_minimal()
 ```
 
+:::
 
-```{r}
-#| echo: false
-#| eval: false
-ggsave('presentations/mtry_accuracy.png', width = 158, height  = 93, units = "mm")
-```
-
-
-![](mtry_accuracy.png){width=60%}
+::: {.column width="50%"}
 
 Ainda, podemos verficiar a acurácia do modelo pelo número de árvores:
 
-```{r}
+```{r, cache=TRUE}
 #| echo: false
 # Definir os valores de ntree que queremos avaliar
 ntree_values <- c(1, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)
@@ -568,14 +550,17 @@ ggplot(results, aes(x = ntree, y = accuracy)) +
   ylim(0,1)
 ```
 
-```{r}
-#| echo: false
-#| eval: false
-ggsave('presentations/ntree_accuracy.png', width = 158, height  = 93, units = "mm")
-```
+:::
 
-![](ntree_accuracy.png){width=60%}
+:::
+
 
 # Referências:
 
-https://www.r-bloggers.com/2021/04/random-forest-in-r/
+- Trevor Hastie, Robert Tibshirani, Gareth M. James, Daniela Witten. An introduction to Statistical Learning. Springer, 2013.
+
+- Pedro A. Morettin, Julio M. Singer. Estatística e Ciência de Dados. USP, 2021.
+
+- Finnstats. Randon Forest in R. Acessado em junho de 2024. Link: https://www.r-bloggers.com/2021/04/random-forest-in-r/
+
+- Breiman, L. Random Forests. Machine Learning **45**, 5–32 (2001)
