@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="index_files/libs/clipboard/clipboard.min.js"></script>
-<script src="index_files/libs/quarto-html/tabby.min.js"></script>
-<script src="index_files/libs/quarto-html/popper.min.js"></script>
-<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="../../cup-hot" rel="icon">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.551">
 
   <meta name="author" content="Bruno Gondim Toledo">
   <meta name="author" content="Thais Carvalho Valadares Rodrigues">
-  <title>Agrupador de processos de controle concentrado</title>
+  <title>Bruno Gondim - Agrupador de processos de controle concentrado</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -96,14 +97,14 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto.css">
   <link rel="stylesheet" href="styles.css">
-  <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
 
   .callout {
@@ -390,6 +391,13 @@
       margin-right: 0; 
     }
   </style>
+<meta property="og:title" content="Bruno Gondim - Agrupador de processos de controle concentrado">
+<meta property="og:description" content="Projeto de TCC 1">
+<meta property="og:site_name" content="Bruno Gondim">
+<meta name="twitter:title" content="Bruno Gondim - Agrupador de processos de controle concentrado">
+<meta name="twitter:description" content="Projeto de TCC 1">
+<meta name="twitter:creator" content="@penasta">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -477,37 +485,37 @@ Thais Carvalho Valadares Rodrigues
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># Módulos</span></span>
-<span id="cb1-2"><a href=""></a><span class="im">import</span> polars</span>
-<span id="cb1-3"><a href=""></a><span class="im">import</span> gensim</span>
-<span id="cb1-4"><a href=""></a><span class="im">from</span> gensim.models.doc2vec <span class="im">import</span> Doc2Vec</span>
-<span id="cb1-5"><a href=""></a></span>
-<span id="cb1-6"><a href=""></a><span class="co"># Função</span></span>
-<span id="cb1-7"><a href=""></a><span class="kw">def</span> infer_vector(text):</span>
-<span id="cb1-8"><a href=""></a>    <span class="cf">return</span> model.infer_vector(text.split())</span>
-<span id="cb1-9"><a href=""></a></span>
-<span id="cb1-10"><a href=""></a><span class="co"># Modelo pré-treinado para Embedding</span></span>
-<span id="cb1-11"><a href=""></a>model <span class="op">=</span> gensim.models.Doc2Vec.load(<span class="st">"modelo.model"</span>)</span>
-<span id="cb1-12"><a href=""></a></span>
-<span id="cb1-13"><a href=""></a><span class="co"># Dados</span></span>
-<span id="cb1-14"><a href=""></a>df <span class="op">=</span> polars.read_csv(<span class="st">"dados.csv"</span>,columns<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>])</span>
-<span id="cb1-15"><a href=""></a></span>
-<span id="cb1-16"><a href=""></a><span class="co"># Saída: DataFrame com duas colunas: Texto original e vetor Embedding correspondente.</span></span>
-<span id="cb1-17"><a href=""></a>df <span class="op">=</span> df.with_columns_seq(polars.col(<span class="st">"texto"</span>).<span class="bu">apply</span>(infer_vector).alias(<span class="st">"vetor"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co"># Módulos</span></span>
+<span id="cb1-2"><a></a><span class="im">import</span> polars</span>
+<span id="cb1-3"><a></a><span class="im">import</span> gensim</span>
+<span id="cb1-4"><a></a><span class="im">from</span> gensim.models.doc2vec <span class="im">import</span> Doc2Vec</span>
+<span id="cb1-5"><a></a></span>
+<span id="cb1-6"><a></a><span class="co"># Função</span></span>
+<span id="cb1-7"><a></a><span class="kw">def</span> infer_vector(text):</span>
+<span id="cb1-8"><a></a>    <span class="cf">return</span> model.infer_vector(text.split())</span>
+<span id="cb1-9"><a></a></span>
+<span id="cb1-10"><a></a><span class="co"># Modelo pré-treinado para Embedding</span></span>
+<span id="cb1-11"><a></a>model <span class="op">=</span> gensim.models.Doc2Vec.load(<span class="st">"modelo.model"</span>)</span>
+<span id="cb1-12"><a></a></span>
+<span id="cb1-13"><a></a><span class="co"># Dados</span></span>
+<span id="cb1-14"><a></a>df <span class="op">=</span> polars.read_csv(<span class="st">"dados.csv"</span>,columns<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>])</span>
+<span id="cb1-15"><a></a></span>
+<span id="cb1-16"><a></a><span class="co"># Saída: DataFrame com duas colunas: Texto original e vetor Embedding correspondente.</span></span>
+<span id="cb1-17"><a></a>df <span class="op">=</span> df.with_columns_seq(polars.col(<span class="st">"texto"</span>).<span class="bu">apply</span>(infer_vector).alias(<span class="st">"vetor"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Pacote</span></span>
-<span id="cb2-2"><a href=""></a><span class="fu">library</span>(reticulate)</span>
-<span id="cb2-3"><a href=""></a></span>
-<span id="cb2-4"><a href=""></a><span class="co"># Definindo o ambiente virtual python</span></span>
-<span id="cb2-5"><a href=""></a>reticulate<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"TCC"</span>)</span>
-<span id="cb2-6"><a href=""></a></span>
-<span id="cb2-7"><a href=""></a><span class="co"># Executando o script python</span></span>
-<span id="cb2-8"><a href=""></a>reticulate<span class="sc">::</span><span class="fu">source_python</span>(<span class="st">"script.py"</span>)</span>
-<span id="cb2-9"><a href=""></a></span>
-<span id="cb2-10"><a href=""></a><span class="co"># Ajustando o dataframe trazido do python para formato R mais adequado</span></span>
-<span id="cb2-11"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(a, <span class="cf">function</span>(x) <span class="fu">c</span>(x[[<span class="dv">1</span>]], x[[<span class="dv">2</span>]]))), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># Pacote</span></span>
+<span id="cb2-2"><a></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb2-3"><a></a></span>
+<span id="cb2-4"><a></a><span class="co"># Definindo o ambiente virtual python</span></span>
+<span id="cb2-5"><a></a>reticulate<span class="sc">::</span><span class="fu">use_condaenv</span>(<span class="st">"TCC"</span>)</span>
+<span id="cb2-6"><a></a></span>
+<span id="cb2-7"><a></a><span class="co"># Executando o script python</span></span>
+<span id="cb2-8"><a></a>reticulate<span class="sc">::</span><span class="fu">source_python</span>(<span class="st">"script.py"</span>)</span>
+<span id="cb2-9"><a></a></span>
+<span id="cb2-10"><a></a><span class="co"># Ajustando o dataframe trazido do python para formato R mais adequado</span></span>
+<span id="cb2-11"><a></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(a, <span class="cf">function</span>(x) <span class="fu">c</span>(x[[<span class="dv">1</span>]], x[[<span class="dv">2</span>]]))), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -854,6 +862,7 @@ Thais Carvalho Valadares Rodrigues
 <li>RICARDO, B.-Y.; BERTHIER, R.-N. Modern information retrieval: the concepts and technology behind search. [S.l.]: New Jersey, USA: Addi-son-Wesley Professional, 2011.</li>
 <li>von Borries, G.; WANG, H. Partition clustering of high dimensional low sample size data based on p-values. Computational statistics &amp; data analysis, v. 53, n.&nbsp;12, p. 3987-3998, 2009.</li>
 </ul>
+
 <div class="quarto-auto-generated-content">
 <p><img src="as_vert_cor.jpg" class="slide-logo"></p>
 <div class="footer footer-default">
@@ -865,20 +874,20 @@ Thais Carvalho Valadares Rodrigues
   </div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="index_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="index_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="index_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
-  <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="index_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="index_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="index_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="index_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

@@ -1,0 +1,34 @@
+project:
+  type: website
+
+website:
+  title: "Bruno Gondim"
+  favicon: cup-hot
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - text: Presentations
+        menu:
+          - href: presentations/nlp/index.qmd
+            text: Agrupador de processos de controle concentrado       
+          - href: presentations/random_forest/apresentacao.qmd
+            text: Técnicas de Random Forest em árvores de decisão  
+    logo: cup-hot
+    tools:
+      - icon: linkedin
+        href: https://www.linkedin.com/in/bruno-gondim/
+      - icon: github
+        href: https://github.com/penasta
+      - icon: mailbox
+        mailto: brunogtoledo96@gmail.com
+  page-footer: "MIT License 2024, Bruno Gondim." 
+  twitter-card: 
+    creator: "@penasta"
+  open-graph: true
+
+format:
+  html:
+    theme: cyborg
+    css: styles.css
+    toc: true
