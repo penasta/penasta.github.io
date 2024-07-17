@@ -1,5 +1,180 @@
 [
   {
+    "objectID": "presentations/random_forest/apresentacao.html#introdução",
+    "href": "presentations/random_forest/apresentacao.html#introdução",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Introdução",
+    "text": "Introdução\n\nO que é floresta aleatória?\n\nFloresta aleatória é um algoritmo de Machine learning, utilizado para realizar predições, que combina o resultado de múltiplas árvores de decisão criadas aleatoriamente com o objetivo de diminuir a variância e o viés no contexto dos métodos de árvores."
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#introdução-1",
+    "href": "presentations/random_forest/apresentacao.html#introdução-1",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Introdução",
+    "text": "Introdução\n\nÁrvore de decisão\n\nUma árvore de decisão é a forma mais básica entre os métodos baseados em árvore, muito utilizada em regressão e classificação, uma árvore de decisão consiste em segmentar o espaço composto pelas variáveis preditoras em regiões mais simples, nos quais a média (se a variável resposta for quantitativa) é utilizada como valor predito ou (caso categorizado) a classe da variável resposta com maior frequência, os modelos de árvores de decisão são atraentes pela simplicidade e fácil interpretação, contudo não possuem a precisão que outros métodos de classificação ou regressão alcançam."
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens",
+    "href": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Vantagens e desvantagens",
+    "text": "Vantagens e desvantagens\n\nsobre árvore de decisão:\n\n\n\nVantagens\n\n\nSão facilmente explicaveis;\nPodem ser representadas graficamente com fácil interpretação;\nPodem manupular preditores qualitativos sem a necessidade de variáveis dummy.\n\n\n\nDesvantagens\n\n\nNão possuem o mesmo nível de precisão preditiva como outros modelos de regressão e classificação;\nNão são robustas, ou seja, uma pequena mudança nos dados pode gerar uma grande mudança na árvore de estimação final."
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#motivação",
+    "href": "presentations/random_forest/apresentacao.html#motivação",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Motivação",
+    "text": "Motivação\nUma forma de superar a baixa precisão das árvores de decisão é a utilização de métodos agregadoes que ajustam modelos poderosos, como floresta aleatória, que consegue uma grande melhoria no poder de predição mesmo comparando com outros modelos de classificação."
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#procedimento",
+    "href": "presentations/random_forest/apresentacao.html#procedimento",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Procedimento",
+    "text": "Procedimento\n\n\nComo na técnica bagging, construímos várias árvores a partir das amostras bootstrap do conjunto de testes.\nNa construção de cada árvore, cada vez que uma divisão (ou corte) é considerada para alguma árvore, uma seleção aleatória dos preditores é escolhida como candidatos dos cortes ao invés de todos os preditores como normalmente é feito.\nEssa abordagem tem como propósito reduzir a correlação entre as árvores, reduzindo a variância quando tiramos a média das árvores, já que a média tende a ser menor quando temos menor correlação entre as árvores.\nA escolha do número de preditores que serão selecionados para cada corte, é tipicamente escolhida pela raiz quadrada do número total de preditores.\nFlorestas aleatórias fornecem uma melhoria em relação ao método bagging, já que a correlação entre as árvores diminui."
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#considerações",
+    "href": "presentations/random_forest/apresentacao.html#considerações",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Considerações",
+    "text": "Considerações\n\nDe forma geral, pode-se dizer que o procedimento introduz mais aleatoriedade e diversidade no processo de construção em relação ao método bagging.\nIntuitivamente, a utilização de florestas aleatórias para tomada de decisão corresponde à síntese da opinião de indivíduos com diferentes fontes de informação.\nEm geral, florestas aleatórias produzem resultados menos variáveis em relação ao método bagging, já que nesse método as árvores geradas podem ser muito semelhantes, dependendo de preditores fortes, o que não contribui para redução de variabilidade das predições, o que não acontece com florestas aleatórias."
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#rotina",
+    "href": "presentations/random_forest/apresentacao.html#rotina",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Rotina",
+    "text": "Rotina\nUma rotina minimalista de classificação via Random Forest em R pode ser executada da seguinte forma:\n\n\n\nlibrary(randomForest)\n\ndata &lt;- iris\n\ndata$Species &lt;- as.factor(data$Species)\n\nset.seed(150167636)\nind &lt;- sample(2, nrow(data), replace = TRUE,\n              prob = c(0.7, 0.3))\ntrain &lt;- data[ind==1,]\ntest &lt;- data[ind==2,]\n\nrf &lt;- randomForest(Species~., data=train, proximity=TRUE)\n\n\n\n\n\nCall:\n randomForest(formula = Species ~ ., data = train, proximity = TRUE) \n               Type of random forest: classification\n                     Number of trees: 500\nNo. of variables tried at each split: 2\n\n        OOB estimate of  error rate: 6.36%\nConfusion matrix:\n           setosa versicolor virginica class.error\nsetosa         33          0         0  0.00000000\nversicolor      0         36         3  0.07692308\nvirginica       0          4        34  0.10526316"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#resultados",
+    "href": "presentations/random_forest/apresentacao.html#resultados",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Resultados",
+    "text": "Resultados\nPodemos acessar os resultados do modelo no objeto rf\n\n\nTeste do modelo no conjunto de treino:\n\nlibrary(caret)\n\np1 &lt;- predict(rf, train)\nconfusionMatrix(p1, train$ Species)\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         33          0         0\n  versicolor      0         39         0\n  virginica       0          0        38\n\nOverall Statistics\n                                    \n               Accuracy : 1         \n                 95% CI : (0.967, 1)\n    No Information Rate : 0.3545    \n    P-Value [Acc &gt; NIR] : &lt; 2.2e-16 \n                                    \n                  Kappa : 1         \n                                    \n Mcnemar's Test P-Value : NA        \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                    1.0            1.0000           1.0000\nSpecificity                    1.0            1.0000           1.0000\nPos Pred Value                 1.0            1.0000           1.0000\nNeg Pred Value                 1.0            1.0000           1.0000\nPrevalence                     0.3            0.3545           0.3455\nDetection Rate                 0.3            0.3545           0.3455\nDetection Prevalence           0.3            0.3545           0.3455\nBalanced Accuracy              1.0            1.0000           1.0000\n\n\n\nValidação do modelo nos dados de teste:\n\np2 &lt;- predict(rf, test)\nconfusionMatrix(p2, test$ Species)\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0         10         2\n  virginica       0          1        10\n\nOverall Statistics\n                                          \n               Accuracy : 0.925           \n                 95% CI : (0.7961, 0.9843)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.546e-11       \n                                          \n                  Kappa : 0.8854          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.9091           0.8333\nSpecificity                  1.000            0.9310           0.9643\nPos Pred Value               1.000            0.8333           0.9091\nNeg Pred Value               1.000            0.9643           0.9310\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2500           0.2500\nDetection Prevalence         0.425            0.3000           0.2750\nBalanced Accuracy            1.000            0.9201           0.8988"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#parâmetros",
+    "href": "presentations/random_forest/apresentacao.html#parâmetros",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Parâmetros",
+    "text": "Parâmetros\n\nA função randomForest do pacote homônimo tem uma série de parâmetros opcionais além do mínimo obrigatório, que seria o modelo e os dados. O mais importante destes parâmetros é o ntree, que por default é 500 e em geral deve-se utilizar o máximo possível tal que execute em um tempo aceitável. Em geral, o restante dos parâmetros deve ser deixado em default.\nNeste caso, o modelo foi extremamente eficiente mesmo na versão minimalista"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#fine-tuning",
+    "href": "presentations/random_forest/apresentacao.html#fine-tuning",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Fine tuning",
+    "text": "Fine tuning\n\nSe for o caso, também podemos fazer o fine-tuning dos parâmetros do modelo\n\n\n\n\nt &lt;- tuneRF(train[,-5], train[,5],\n       stepFactor = 0.5,\n       plot = TRUE,\n       ntreeTry = 150,\n       trace = TRUE,\n       improve = 0.05)\n\nmtry = 2  OOB error = 5.45% \nSearching left ...\nmtry = 4    OOB error = 5.45% \n0 0.05 \nSearching right ...\nmtry = 1    OOB error = 5.45% \n0 0.05 \n\n\n\n\n\n\n\n\n\n\n\nhist(treesize(rf),\n     main = \"No. of Nodes for the Trees\",\n     col = \"green\")"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#importâncias",
+    "href": "presentations/random_forest/apresentacao.html#importâncias",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Importâncias",
+    "text": "Importâncias\n\nPodemos verificar a importância de cada variável para o modelo.\n\n\n\n\nvarImpPlot(rf,\n           sort = T,\n           n.var = 10,\n           main = \"Top 10 - Variable Importance\")\n\n\n\n\n\n\n\nimportance(rf)\n\n             MeanDecreaseGini\nSepal.Length         7.299621\nSepal.Width          2.006132\nPetal.Length        35.799244\nPetal.Width         27.318058"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#implementações",
+    "href": "presentations/random_forest/apresentacao.html#implementações",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Implementações",
+    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[15,  0,  0],\n       [ 0, 12,  1],\n       [ 0,  1, 16]], dtype=int64)"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#definições",
+    "href": "presentations/random_forest/apresentacao.html#definições",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Definições",
+    "text": "Definições\nAs árvores podem ser representadas como \\(h_1(\\boldsymbol x),\\;  h_2(\\boldsymbol x),\\; . . . ,\\; h_K( \\boldsymbol x)\\) na forma\n\\[ \\{ h \\left( \\boldsymbol x, \\Theta_k \\right), \\; \\; k = 1, \\dots \\}  \\]\nonde \\(\\Theta_k \\; \\text{i.i.d}\\) são vetores aleatórios representando a escolha de \\(p\\) entre os \\(m\\) atributos de \\(\\boldsymbol X\\).\nNormalmente, \\(p \\approx \\sqrt m\\)"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#definições-1",
+    "href": "presentations/random_forest/apresentacao.html#definições-1",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Definições",
+    "text": "Definições\n1) A medida em que o número de árvores cresce, a média de acertos se estabiliza e a chance de cometer uma predição errada pode ser quantificada:\n\\[  P_{\\boldsymbol X, Y} \\left(   P_{\\Theta}( h(\\boldsymbol X, \\Theta) = Y)   - P_{\\Theta} (h(\\boldsymbol X, \\Theta)  \\neq Y) &lt; 0\\right) \\]\n\n\\(P_{\\Theta}( h(\\boldsymbol X, \\Theta) = Y)\\) representa a probabilidade de que uma árvore acerte a predição de Y"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#definições-2",
+    "href": "presentations/random_forest/apresentacao.html#definições-2",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Definições",
+    "text": "Definições\n2) A acurácia da random forest vai depender do “poder” de cada um dos classificadores individuais e da dependência entre eles.\nUm limite superior para o erro de generalização é dado por\n\\[PE^* \\le -\\bar \\rho(1 − s^2)/s^2 \\]\nonde:\n\n\\(\\boldsymbol s = E_{\\boldsymbol X, Y} mr({\\boldsymbol X, Y} )\\) é o “poder” das árvores \\(h(\\boldsymbol x, \\Theta)\\)\n\\(\\bar \\rho\\) pode ser entendido como a média entre as correlações das árvores."
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#exemplo-alzheimer",
+    "href": "presentations/random_forest/apresentacao.html#exemplo-alzheimer",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Exemplo Alzheimer",
+    "text": "Exemplo Alzheimer\nO dataset DARWIN (https://archive.ics.uci.edu/dataset/732/darwin) contém dados sobre a escrita a mão de pessoas afetadas pelo Alzheimer e de um grupo de controle, totalizando 174 observações. São 450 variáveis e o objetivo é distinguir pessoas afetadas (P) de pessoas saudáveis (H).\n\n\n\nset.seed(123)\n\nrf_model &lt;- randomForest(\n  class ~ ., data = train_data, \n  ntree = 500, \n  importance = TRUE\n  )\n\n\nNo. of variables tried at each split: 21\nOOB estimate of  error rate: 13.57%\n\nConfusion matrix:\n   H  P class.error\nH 58 10   0.1470588\nP  9 63   0.1250000\n\n\n   H  P class.error\nH 58 10   0.1470588\nP  8 64   0.1111111\n\n\n[1] \"Test error:8.82%\""
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#section",
+    "href": "presentations/random_forest/apresentacao.html#section",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "",
+    "text": "No gráfico abaixo é possível perceber como a escolha do número de variáveis em cada split faz diferença para o resultado final do modelo.\n\n\n\n\n\n\n\n\n\n\nAinda, podemos verficiar a acurácia do modelo pelo número de árvores:"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados",
+    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Robustez a Dados Contaminados",
+    "text": "Robustez a Dados Contaminados\nUma das vantagens das florestas aleatórias é sua robustez a pontos atípicos, ou outliers. O exemplo a seguir demonstra a robustez desses modelos a contaminações, além de compará-los a outros métodos de classificação:\n\npacman::p_load(randomForest)\npacman::p_load(caret,e1071,VGAM)\n\niris &lt;- iris %&gt;%\n  mutate(cor = ifelse(Species == \"setosa\",1,ifelse(Species == \"versicolor\",2,3)))\n\nset.seed(150167636)\nind &lt;- sample(2, nrow(iris), replace = TRUE,\n              prob = c(0.7, 0.3))\ntrain &lt;- iris[ind==1,]\ntest &lt;- iris[ind==2,]\n\n\n\ni=4 #Número de pontos contaminados\ndadosPoluidos1 &lt;- train[train$cor==1,]\ndadosPoluidos1 &lt;- dadosPoluidos1[sample(1:nrow(dadosPoluidos1),i,replace = F),]\n\ndadosPoluidos2 &lt;- train[train$cor==3,]\ndadosPoluidos2 &lt;- dadosPoluidos2[sample(1:nrow(dadosPoluidos2),i,replace = F),]\n\ndadosPoluidos1$Petal.Length &lt;- dadosPoluidos1$Petal.Length + 5\ndadosPoluidos1$Petal.Width &lt;- dadosPoluidos1$Petal.Width + 1.7\n\ndadosPoluidos2$Petal.Length &lt;- dadosPoluidos2$Petal.Length - 4\ndadosPoluidos2$Petal.Width &lt;- dadosPoluidos2$Petal.Width - 1.2\n\nDadosExempOutTreino &lt;- rbind(train,dadosPoluidos1,dadosPoluidos2)\n#DadosExempOutTreino &lt;- DadosExempOutTreino[,-6]"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-1",
+    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-1",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Robustez a Dados Contaminados",
+    "text": "Robustez a Dados Contaminados"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-2",
+    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-2",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Robustez a Dados Contaminados",
+    "text": "Robustez a Dados Contaminados\n\n\n\nRandom Forest\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0         10         2\n  virginica       0          1        10\n\nOverall Statistics\n                                          \n               Accuracy : 0.925           \n                 95% CI : (0.7961, 0.9843)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.546e-11       \n                                          \n                  Kappa : 0.8854          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.9091           0.8333\nSpecificity                  1.000            0.9310           0.9643\nPos Pred Value               1.000            0.8333           0.9091\nNeg Pred Value               1.000            0.9643           0.9310\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2500           0.2500\nDetection Prevalence         0.425            0.3000           0.2750\nBalanced Accuracy            1.000            0.9201           0.8988\n\n\n\n\nRegressão logística\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0          6         1\n  virginica       0          5        11\n\nOverall Statistics\n                                          \n               Accuracy : 0.85            \n                 95% CI : (0.7016, 0.9429)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.669e-08       \n                                          \n                  Kappa : 0.7697          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.5455           0.9167\nSpecificity                  1.000            0.9655           0.8214\nPos Pred Value               1.000            0.8571           0.6875\nNeg Pred Value               1.000            0.8485           0.9583\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.1500           0.2750\nDetection Prevalence         0.425            0.1750           0.4000\nBalanced Accuracy            1.000            0.7555           0.8690"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-3",
+    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-3",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Robustez a Dados Contaminados",
+    "text": "Robustez a Dados Contaminados\n\n\n\nSVM linear\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0          9         1\n  virginica       0          2        11\n\nOverall Statistics\n                                          \n               Accuracy : 0.925           \n                 95% CI : (0.7961, 0.9843)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.546e-11       \n                                          \n                  Kappa : 0.8852          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.8182           0.9167\nSpecificity                  1.000            0.9655           0.9286\nPos Pred Value               1.000            0.9000           0.8462\nNeg Pred Value               1.000            0.9333           0.9630\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2250           0.2750\nDetection Prevalence         0.425            0.2500           0.3250\nBalanced Accuracy            1.000            0.8918           0.9226\n\n\n\n\nSVM radial\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0         10         1\n  virginica       0          1        11\n\nOverall Statistics\n                                          \n               Accuracy : 0.95            \n                 95% CI : (0.8308, 0.9939)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 2.026e-12       \n                                          \n                  Kappa : 0.9235          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.9091           0.9167\nSpecificity                  1.000            0.9655           0.9643\nPos Pred Value               1.000            0.9091           0.9167\nNeg Pred Value               1.000            0.9655           0.9643\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2500           0.2750\nDetection Prevalence         0.425            0.2750           0.3000\nBalanced Accuracy            1.000            0.9373           0.9405"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-4",
+    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-4",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Robustez a Dados Contaminados",
+    "text": "Robustez a Dados Contaminados\nComparando robustez de modelos com observações contaminadas\nSem contaminações"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-5",
+    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-5",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Robustez a Dados Contaminados",
+    "text": "Robustez a Dados Contaminados\n\n\n2 contaminações\n\n\n\n\n\n\n\n\n\n\n4 contaminações"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-6",
+    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-6",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Robustez a Dados Contaminados",
+    "text": "Robustez a Dados Contaminados\n\n\n6 contaminações\n\n\n\n\n\n\n\n\n\n\n8 contaminações"
+  },
+  {
+    "objectID": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens-1",
+    "href": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens-1",
+    "title": "Técnica Random Forest em árvores de decisão",
+    "section": "Vantagens e desvantagens",
+    "text": "Vantagens e desvantagens\n\nsobre classificação por florestas aleatórias:\n\n\n\nVantagens\n\n\nRobusto contra overfitting;\nTrabalha bem com dados de alta dimesão;\nConsegue captar relações não-lineares nos dados;\nFornece uma medida de importância;\nRobusto contra outliers e ruídos;\nConsegue lidar com dados faltantes.\n\n\n\nDesvantagens\n\n\nDificil interpretação;\nNão adequado para dados escassos;\nDemora para fazer predições;\nRequer ajuste de hiper-parâmetros."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Bruno Gondim",
@@ -96,180 +271,5 @@
     "title": "Agrupador de processos de controle concentrado",
     "section": "Referências",
     "text": "Referências\n\nARTES, R.; BARROSO, L. P. Métodos multivariados de análise estatística. [S.l.]: São Paulo: Blucher, 2023.\nEVERITT, B.; SKRONDAL, A. The cambridge dictionary of statistics. [S.l.]: Cambridge University Press, 2010. v. 4.\nFREITAS, L. J. G. et al. Catboost algorithm application in legal texts and un 2030 agenda. Revista de Informatica Teórica e Aplicada - RITA - ISSN 2175-2745. Vol. 30, Num. 02 (2023) 51-58, 2023.\nFREITAS, L. J. G. et al. Text clustering applied to data augmentation in legal contexts. arXiv preprint arXiv:2404.08683, 2024.\nJOHNSON, R. A.; WICHERN, D. W. Applied Multivariate Statistical Analysis. [S.l.]: 6. ed.[S.l.]:Prentice Hall, 2007.\nKAUFMAN, L.; ROUSSEEUW, P. J. Finding groups in data: an introduction to cluster analysis. [S.l.]: John Wiley & Sons, 1990.\nLECUN, Y. et al. Gradient-based learning applied to document recognition. Proceedings of the IEEE, Ieee, v. 86, n. 11, p. 2278–2324, 1998.\nMAATEN, L. Van der; HINTON, G. Visualizing data using t-sne. Journal of machine learning research, v. 9, n. 11, 2008.\nMACQUEEN, J. et al. Some methods for classification and analysis of multivariate observations. [S.l.], 1967. v. 1. 281–297 p.\nMORETTIN, P. A.; SINGER, J. M. Estatística e Ciência de Dados. [S.l.]: LTC, 2021.\nRICARDO, B.-Y.; BERTHIER, R.-N. Modern information retrieval: the concepts and technology behind search. [S.l.]: New Jersey, USA: Addi-son-Wesley Professional, 2011.\nvon Borries, G.; WANG, H. Partition clustering of high dimensional low sample size data based on p-values. Computational statistics & data analysis, v. 53, n. 12, p. 3987-3998, 2009.\n\n\n\n\n\nDepartamento de estatística - UnB"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#introdução",
-    "href": "presentations/random_forest/apresentacao.html#introdução",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Introdução",
-    "text": "Introdução\n\nO que é floresta aleatória?\n\nFloresta aleatória é um algoritmo de Machine learning, utilizado para realizar predições, que combina o resultado de múltiplas árvores de decisão criadas aleatoriamente com o objetivo de diminuir a variância e o viés no contexto dos métodos de árvores."
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#introdução-1",
-    "href": "presentations/random_forest/apresentacao.html#introdução-1",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Introdução",
-    "text": "Introdução\n\nÁrvore de decisão\n\nUma árvore de decisão é a forma mais básica entre os métodos baseados em árvore, muito utilizada em regressão e classificação, uma árvore de decisão consiste em segmentar o espaço composto pelas variáveis preditoras em regiões mais simples, nos quais a média (se a variável resposta for quantitativa) é utilizada como valor predito ou (caso categorizado) a classe da variável resposta com maior frequência, os modelos de árvores de decisão são atraentes pela simplicidade e fácil interpretação, contudo não possuem a precisão que outros métodos de classificação ou regressão alcançam."
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens",
-    "href": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Vantagens e desvantagens",
-    "text": "Vantagens e desvantagens\n\nsobre árvore de decisão:\n\n\n\nVantagens\n\n\nSão facilmente explicaveis;\nPodem ser representadas graficamente com fácil interpretação;\nPodem manupular preditores qualitativos sem a necessidade de variáveis dummy.\n\n\n\nDesvantagens\n\n\nNão possuem o mesmo nível de precisão preditiva como outros modelos de regressão e classificação;\nNão são robustas, ou seja, uma pequena mudança nos dados pode gerar uma grande mudança na árvore de estimação final."
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#motivação",
-    "href": "presentations/random_forest/apresentacao.html#motivação",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Motivação",
-    "text": "Motivação\nUma forma de superar a baixa precisão das árvores de decisão é a utilização de métodos agregadoes que ajustam modelos poderosos, como floresta aleatória, que consegue uma grande melhoria no poder de predição mesmo comparando com outros modelos de classificação."
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#procedimento",
-    "href": "presentations/random_forest/apresentacao.html#procedimento",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Procedimento",
-    "text": "Procedimento\n\n\nComo na técnica bagging, construímos várias árvores a partir das amostras bootstrap do conjunto de testes.\nNa construção de cada árvore, cada vez que uma divisão (ou corte) é considerada para alguma árvore, uma seleção aleatória dos preditores é escolhida como candidatos dos cortes ao invés de todos os preditores como normalmente é feito.\nEssa abordagem tem como propósito reduzir a correlação entre as árvores, reduzindo a variância quando tiramos a média das árvores, já que a média tende a ser menor quando temos menor correlação entre as árvores.\nA escolha do número de preditores que serão selecionados para cada corte, é tipicamente escolhida pela raiz quadrada do número total de preditores.\nFlorestas aleatórias fornecem uma melhoria em relação ao método bagging, já que a correlação entre as árvores diminui."
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#considerações",
-    "href": "presentations/random_forest/apresentacao.html#considerações",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Considerações",
-    "text": "Considerações\n\nDe forma geral, pode-se dizer que o procedimento introduz mais aleatoriedade e diversidade no processo de construção em relação ao método bagging.\nIntuitivamente, a utilização de florestas aleatórias para tomada de decisão corresponde à síntese da opinião de indivíduos com diferentes fontes de informação.\nEm geral, florestas aleatórias produzem resultados menos variáveis em relação ao método bagging, já que nesse método as árvores geradas podem ser muito semelhantes, dependendo de preditores fortes, o que não contribui para redução de variabilidade das predições, o que não acontece com florestas aleatórias."
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#rotina",
-    "href": "presentations/random_forest/apresentacao.html#rotina",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Rotina",
-    "text": "Rotina\nUma rotina minimalista de classificação via Random Forest em R pode ser executada da seguinte forma:\n\n\n\nlibrary(randomForest)\n\ndata &lt;- iris\n\ndata$Species &lt;- as.factor(data$Species)\n\nset.seed(150167636)\nind &lt;- sample(2, nrow(data), replace = TRUE,\n              prob = c(0.7, 0.3))\ntrain &lt;- data[ind==1,]\ntest &lt;- data[ind==2,]\n\nrf &lt;- randomForest(Species~., data=train, proximity=TRUE)\n\n\n\n\n\nCall:\n randomForest(formula = Species ~ ., data = train, proximity = TRUE) \n               Type of random forest: classification\n                     Number of trees: 500\nNo. of variables tried at each split: 2\n\n        OOB estimate of  error rate: 6.36%\nConfusion matrix:\n           setosa versicolor virginica class.error\nsetosa         33          0         0  0.00000000\nversicolor      0         36         3  0.07692308\nvirginica       0          4        34  0.10526316"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#resultados",
-    "href": "presentations/random_forest/apresentacao.html#resultados",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Resultados",
-    "text": "Resultados\nPodemos acessar os resultados do modelo no objeto rf\n\n\nTeste do modelo no conjunto de treino:\n\nlibrary(caret)\n\np1 &lt;- predict(rf, train)\nconfusionMatrix(p1, train$ Species)\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         33          0         0\n  versicolor      0         39         0\n  virginica       0          0        38\n\nOverall Statistics\n                                    \n               Accuracy : 1         \n                 95% CI : (0.967, 1)\n    No Information Rate : 0.3545    \n    P-Value [Acc &gt; NIR] : &lt; 2.2e-16 \n                                    \n                  Kappa : 1         \n                                    \n Mcnemar's Test P-Value : NA        \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                    1.0            1.0000           1.0000\nSpecificity                    1.0            1.0000           1.0000\nPos Pred Value                 1.0            1.0000           1.0000\nNeg Pred Value                 1.0            1.0000           1.0000\nPrevalence                     0.3            0.3545           0.3455\nDetection Rate                 0.3            0.3545           0.3455\nDetection Prevalence           0.3            0.3545           0.3455\nBalanced Accuracy              1.0            1.0000           1.0000\n\n\n\nValidação do modelo nos dados de teste:\n\np2 &lt;- predict(rf, test)\nconfusionMatrix(p2, test$ Species)\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0         10         2\n  virginica       0          1        10\n\nOverall Statistics\n                                          \n               Accuracy : 0.925           \n                 95% CI : (0.7961, 0.9843)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.546e-11       \n                                          \n                  Kappa : 0.8854          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.9091           0.8333\nSpecificity                  1.000            0.9310           0.9643\nPos Pred Value               1.000            0.8333           0.9091\nNeg Pred Value               1.000            0.9643           0.9310\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2500           0.2500\nDetection Prevalence         0.425            0.3000           0.2750\nBalanced Accuracy            1.000            0.9201           0.8988"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#parâmetros",
-    "href": "presentations/random_forest/apresentacao.html#parâmetros",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Parâmetros",
-    "text": "Parâmetros\n\nA função randomForest do pacote homônimo tem uma série de parâmetros opcionais além do mínimo obrigatório, que seria o modelo e os dados. O mais importante destes parâmetros é o ntree, que por default é 500 e em geral deve-se utilizar o máximo possível tal que execute em um tempo aceitável. Em geral, o restante dos parâmetros deve ser deixado em default.\nNeste caso, o modelo foi extremamente eficiente mesmo na versão minimalista"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#fine-tuning",
-    "href": "presentations/random_forest/apresentacao.html#fine-tuning",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Fine tuning",
-    "text": "Fine tuning\n\nSe for o caso, também podemos fazer o fine-tuning dos parâmetros do modelo\n\n\n\n\nt &lt;- tuneRF(train[,-5], train[,5],\n       stepFactor = 0.5,\n       plot = TRUE,\n       ntreeTry = 150,\n       trace = TRUE,\n       improve = 0.05)\n\nmtry = 2  OOB error = 5.45% \nSearching left ...\nmtry = 4    OOB error = 5.45% \n0 0.05 \nSearching right ...\nmtry = 1    OOB error = 5.45% \n0 0.05 \n\n\n\n\n\n\n\n\n\n\n\nhist(treesize(rf),\n     main = \"No. of Nodes for the Trees\",\n     col = \"green\")"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#importâncias",
-    "href": "presentations/random_forest/apresentacao.html#importâncias",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Importâncias",
-    "text": "Importâncias\n\nPodemos verificar a importância de cada variável para o modelo.\n\n\n\n\nvarImpPlot(rf,\n           sort = T,\n           n.var = 10,\n           main = \"Top 10 - Variable Importance\")\n\n\n\n\n\n\n\nimportance(rf)\n\n             MeanDecreaseGini\nSepal.Length         7.299621\nSepal.Width          2.006132\nPetal.Length        35.799244\nPetal.Width         27.318058"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#implementações",
-    "href": "presentations/random_forest/apresentacao.html#implementações",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Implementações",
-    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[15,  0,  0],\n       [ 0, 12,  2],\n       [ 0,  0, 16]], dtype=int64)"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#definições",
-    "href": "presentations/random_forest/apresentacao.html#definições",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Definições",
-    "text": "Definições\nAs árvores podem ser representadas como \\(h_1(\\boldsymbol x),\\;  h_2(\\boldsymbol x),\\; . . . ,\\; h_K( \\boldsymbol x)\\) na forma\n\\[ \\{ h \\left( \\boldsymbol x, \\Theta_k \\right), \\; \\; k = 1, \\dots \\}  \\]\nonde \\(\\Theta_k \\; \\text{i.i.d}\\) são vetores aleatórios representando a escolha de \\(p\\) entre os \\(m\\) atributos de \\(\\boldsymbol X\\).\nNormalmente, \\(p \\approx \\sqrt m\\)"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#definições-1",
-    "href": "presentations/random_forest/apresentacao.html#definições-1",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Definições",
-    "text": "Definições\n1) A medida em que o número de árvores cresce, a média de acertos se estabiliza e a chance de cometer uma predição errada pode ser quantificada:\n\\[  P_{\\boldsymbol X, Y} \\left(   P_{\\Theta}( h(\\boldsymbol X, \\Theta) = Y)   - P_{\\Theta} (h(\\boldsymbol X, \\Theta)  \\neq Y) &lt; 0\\right) \\]\n\n\\(P_{\\Theta}( h(\\boldsymbol X, \\Theta) = Y)\\) representa a probabilidade de que uma árvore acerte a predição de Y"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#definições-2",
-    "href": "presentations/random_forest/apresentacao.html#definições-2",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Definições",
-    "text": "Definições\n2) A acurácia da random forest vai depender do “poder” de cada um dos classificadores individuais e da dependência entre eles.\nUm limite superior para o erro de generalização é dado por\n\\[PE^* \\le -\\bar \\rho(1 − s^2)/s^2 \\]\nonde:\n\n\\(\\boldsymbol s = E_{\\boldsymbol X, Y} mr({\\boldsymbol X, Y} )\\) é o “poder” das árvores \\(h(\\boldsymbol x, \\Theta)\\)\n\\(\\bar \\rho\\) pode ser entendido como a média entre as correlações das árvores."
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#exemplo-alzheimer",
-    "href": "presentations/random_forest/apresentacao.html#exemplo-alzheimer",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Exemplo Alzheimer",
-    "text": "Exemplo Alzheimer\nO dataset DARWIN (https://archive.ics.uci.edu/dataset/732/darwin) contém dados sobre a escrita a mão de pessoas afetadas pelo Alzheimer e de um grupo de controle, totalizando 174 observações. São 450 variáveis e o objetivo é distinguir pessoas afetadas (P) de pessoas saudáveis (H).\n\n\n\nset.seed(123)\n\nrf_model &lt;- randomForest(\n  class ~ ., data = train_data, \n  ntree = 500, \n  importance = TRUE\n  )\n\n\nNo. of variables tried at each split: 21\nOOB estimate of  error rate: 13.57%\n\nConfusion matrix:\n   H  P class.error\nH 58 10   0.1470588\nP  9 63   0.1250000\n\n\n   H  P class.error\nH 58 10   0.1470588\nP  8 64   0.1111111\n\n\n[1] \"Test error:8.82%\""
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#section",
-    "href": "presentations/random_forest/apresentacao.html#section",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "",
-    "text": "No gráfico abaixo é possível perceber como a escolha do número de variáveis em cada split faz diferença para o resultado final do modelo.\n\n\n\n\n\n\n\n\n\n\nAinda, podemos verficiar a acurácia do modelo pelo número de árvores:"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados",
-    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Robustez a Dados Contaminados",
-    "text": "Robustez a Dados Contaminados\nUma das vantagens das florestas aleatórias é sua robustez a pontos atípicos, ou outliers. O exemplo a seguir demonstra a robustez desses modelos a contaminações, além de compará-los a outros métodos de classificação:\n\npacman::p_load(randomForest)\npacman::p_load(caret,e1071,VGAM)\n\niris &lt;- iris %&gt;%\n  mutate(cor = ifelse(Species == \"setosa\",1,ifelse(Species == \"versicolor\",2,3)))\n\nset.seed(150167636)\nind &lt;- sample(2, nrow(iris), replace = TRUE,\n              prob = c(0.7, 0.3))\ntrain &lt;- iris[ind==1,]\ntest &lt;- iris[ind==2,]\n\n\n\ni=4 #Número de pontos contaminados\ndadosPoluidos1 &lt;- train[train$cor==1,]\ndadosPoluidos1 &lt;- dadosPoluidos1[sample(1:nrow(dadosPoluidos1),i,replace = F),]\n\ndadosPoluidos2 &lt;- train[train$cor==3,]\ndadosPoluidos2 &lt;- dadosPoluidos2[sample(1:nrow(dadosPoluidos2),i,replace = F),]\n\ndadosPoluidos1$Petal.Length &lt;- dadosPoluidos1$Petal.Length + 5\ndadosPoluidos1$Petal.Width &lt;- dadosPoluidos1$Petal.Width + 1.7\n\ndadosPoluidos2$Petal.Length &lt;- dadosPoluidos2$Petal.Length - 4\ndadosPoluidos2$Petal.Width &lt;- dadosPoluidos2$Petal.Width - 1.2\n\nDadosExempOutTreino &lt;- rbind(train,dadosPoluidos1,dadosPoluidos2)\n#DadosExempOutTreino &lt;- DadosExempOutTreino[,-6]"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-1",
-    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-1",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Robustez a Dados Contaminados",
-    "text": "Robustez a Dados Contaminados"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-2",
-    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-2",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Robustez a Dados Contaminados",
-    "text": "Robustez a Dados Contaminados\n\n\n\nRandom Forest\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0         10         2\n  virginica       0          1        10\n\nOverall Statistics\n                                          \n               Accuracy : 0.925           \n                 95% CI : (0.7961, 0.9843)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.546e-11       \n                                          \n                  Kappa : 0.8854          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.9091           0.8333\nSpecificity                  1.000            0.9310           0.9643\nPos Pred Value               1.000            0.8333           0.9091\nNeg Pred Value               1.000            0.9643           0.9310\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2500           0.2500\nDetection Prevalence         0.425            0.3000           0.2750\nBalanced Accuracy            1.000            0.9201           0.8988\n\n\n\n\nRegressão logística\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0          6         1\n  virginica       0          5        11\n\nOverall Statistics\n                                          \n               Accuracy : 0.85            \n                 95% CI : (0.7016, 0.9429)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.669e-08       \n                                          \n                  Kappa : 0.7697          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.5455           0.9167\nSpecificity                  1.000            0.9655           0.8214\nPos Pred Value               1.000            0.8571           0.6875\nNeg Pred Value               1.000            0.8485           0.9583\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.1500           0.2750\nDetection Prevalence         0.425            0.1750           0.4000\nBalanced Accuracy            1.000            0.7555           0.8690"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-3",
-    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-3",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Robustez a Dados Contaminados",
-    "text": "Robustez a Dados Contaminados\n\n\n\nSVM linear\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0          9         1\n  virginica       0          2        11\n\nOverall Statistics\n                                          \n               Accuracy : 0.925           \n                 95% CI : (0.7961, 0.9843)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 3.546e-11       \n                                          \n                  Kappa : 0.8852          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.8182           0.9167\nSpecificity                  1.000            0.9655           0.9286\nPos Pred Value               1.000            0.9000           0.8462\nNeg Pred Value               1.000            0.9333           0.9630\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2250           0.2750\nDetection Prevalence         0.425            0.2500           0.3250\nBalanced Accuracy            1.000            0.8918           0.9226\n\n\n\n\nSVM radial\n\n\n\nConfusion Matrix and Statistics\n\n            Reference\nPrediction   setosa versicolor virginica\n  setosa         17          0         0\n  versicolor      0         10         1\n  virginica       0          1        11\n\nOverall Statistics\n                                          \n               Accuracy : 0.95            \n                 95% CI : (0.8308, 0.9939)\n    No Information Rate : 0.425           \n    P-Value [Acc &gt; NIR] : 2.026e-12       \n                                          \n                  Kappa : 0.9235          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: setosa Class: versicolor Class: virginica\nSensitivity                  1.000            0.9091           0.9167\nSpecificity                  1.000            0.9655           0.9643\nPos Pred Value               1.000            0.9091           0.9167\nNeg Pred Value               1.000            0.9655           0.9643\nPrevalence                   0.425            0.2750           0.3000\nDetection Rate               0.425            0.2500           0.2750\nDetection Prevalence         0.425            0.2750           0.3000\nBalanced Accuracy            1.000            0.9373           0.9405"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-4",
-    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-4",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Robustez a Dados Contaminados",
-    "text": "Robustez a Dados Contaminados\nComparando robustez de modelos com observações contaminadas\nSem contaminações"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-5",
-    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-5",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Robustez a Dados Contaminados",
-    "text": "Robustez a Dados Contaminados\n\n\n2 contaminações\n\n\n\n\n\n\n\n\n\n\n4 contaminações"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-6",
-    "href": "presentations/random_forest/apresentacao.html#robustez-a-dados-contaminados-6",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Robustez a Dados Contaminados",
-    "text": "Robustez a Dados Contaminados\n\n\n6 contaminações\n\n\n\n\n\n\n\n\n\n\n8 contaminações"
-  },
-  {
-    "objectID": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens-1",
-    "href": "presentations/random_forest/apresentacao.html#vantagens-e-desvantagens-1",
-    "title": "Técnica Random Forest em árvores de decisão",
-    "section": "Vantagens e desvantagens",
-    "text": "Vantagens e desvantagens\n\nsobre classificação por florestas aleatórias:\n\n\n\nVantagens\n\n\nRobusto contra overfitting;\nTrabalha bem com dados de alta dimesão;\nConsegue captar relações não-lineares nos dados;\nFornece uma medida de importância;\nRobusto contra outliers e ruídos;\nConsegue lidar com dados faltantes.\n\n\n\nDesvantagens\n\n\nDificil interpretação;\nNão adequado para dados escassos;\nDemora para fazer predições;\nRequer ajuste de hiper-parâmetros."
   }
 ]
