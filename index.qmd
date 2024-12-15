@@ -8,6 +8,9 @@ about:
       href: https://www.linkedin.com/in/bruno-gondim/
     - icon: github
       href: https://github.com/penasta
+    - icon: mailbox
+      aria-label: email
+      href: "mailto:brunogtoledo96@gmail.com"  
 ---
 
 Estudante de graduação no bacharel de Estatística na Universidade de Brasília - UnB
