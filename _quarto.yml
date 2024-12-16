@@ -14,6 +14,8 @@ website:
             text: Agrupador de processos de controle concentrado       
           - href: presentations/random_forest/apresentacao.qmd
             text: Técnicas de Random Forest em árvores de decisão  
+          - href: presentations/estocasticos/estocasticos.qmd
+            text: Processos de Poisson não homogêneos de n tipos
     logo: cup-hot
     tools:
       - icon: linkedin
@@ -21,10 +23,8 @@ website:
       - icon: github
         href: https://github.com/penasta
       - icon: mailbox
-        mailto: brunogtoledo96@gmail.com
+        href: "mailto:brunogtoledo96@gmail.com"  
   page-footer: "MIT License 2024, Bruno Gondim." 
-  twitter-card: 
-    creator: "@penasta"
   open-graph: true
 
 format:
