@@ -81,7 +81,7 @@
     "href": "presentations/random_forest/apresentacao.html#implementações",
     "title": "Técnica Random Forest em árvores de decisão",
     "section": "Implementações",
-    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[10,  0,  0],\n       [ 0, 15,  2],\n       [ 0,  1, 17]], dtype=int64)"
+    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[19,  0,  0],\n       [ 0, 12,  1],\n       [ 0,  2, 11]], dtype=int64)"
   },
   {
     "objectID": "presentations/random_forest/apresentacao.html#definições",
@@ -173,6 +173,69 @@
     "title": "Técnica Random Forest em árvores de decisão",
     "section": "Vantagens e desvantagens",
     "text": "Vantagens e desvantagens\n\nsobre classificação por florestas aleatórias:\n\n\n\nVantagens\n\n\nRobusto contra overfitting;\nTrabalha bem com dados de alta dimesão;\nConsegue captar relações não-lineares nos dados;\nFornece uma medida de importância;\nRobusto contra outliers e ruídos;\nConsegue lidar com dados faltantes.\n\n\n\nDesvantagens\n\n\nDificil interpretação;\nNão adequado para dados escassos;\nDemora para fazer predições;\nRequer ajuste de hiper-parâmetros."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html",
+    "href": "presentations/estocasticos/estocasticos.html",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "",
+    "text": "Modelagem de dados e previsão de eventos futuros tem sido o garantidor do mercado de trabalho em estatística estar aquecido. Este tipo de inteligência aplicada à negócios vem se tornando essencial em qualquer setor, inclusive no poder Judiciário. Apesar deste não depender de faturamento para sua existência por ser inalienável ao setor público, tem sido do interesse dos próprios tribunais saber indicadores e estatísticas relacionadas ao próprio tribunal. E a modelagem surge neste contexto para agregar valor às decisões estratégicas deste poder.\nBuscou-se trabalhos de temas semelhantes, que visam modelar a quantidade de decisões em processos em tribunais. Entretanto, não consegui localizar nenhum; motivo esse talvez por ser tema sensível, no sentido de poder levar indiretamente a comparação de rendimentos entre juízes em um tribunal, seja pela possível falta de pertinência do assunto, seja pela tentativa inédita de modelar algo do tipo.\nEntretando, buscou-se trabalhos que modelam outros tipos de contagem usando de processo de Poisson não homogêneo, como (DINCER;DEMIR;YALÇIN,2022).\nNa metodologia, com base no livro ROSS (2010), apresento toda a metodologia e suporte teórico adotado na seção de análises. Na seção aplicação computacional iremos trazer uma possível solução simulada do problema proposto, e na seção de resultados apresento as conclusões gerais."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#dia-útil",
+    "href": "presentations/estocasticos/estocasticos.html#dia-útil",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Dia útil",
+    "text": "Dia útil\nPor mais hiperbólico que pareça, não foi possível localizar uma definição fechada de dia útil. Portanto, consideraremos como dia útil, todos os dias do ano excetuado os feriados, finais de semana (sábado e domingo) e recessos coletivos. Pegando como base o ano de 2023, iríamos considerar como dia útil para o tribunal selecionado para a aplicação computacional todos os dias com excessão de:\n\nTodos os sábados e todos os domingos do ano;\nDias 01/01/2023 a 06/01/2023 - Recesso Forense;\nDias 20/02/2023 a 22/02/2023 - Carnaval & quarta-feira de cinzas;\nDias 5/04/2023 a 7/04/2023 - Quarta e quinta-feira Santa e Paixão de Cristo;\nDia 21/04/2023 - Tiradentes;\nDia 1/05/2023 - Dia do trabalhador;\nDia 08/06/2023 - Corpus Christi;\nDia 11/08/2023 - Dia do Advogado;\nDia 7/09/2023 - Independência;\nDia 12/10/2023 - Dia de Nossa Senhora Aparecida;\nDias 01/11/2023 e 02/11/2023 - Dia de Todos os Santos e Finados;\nDia 15/11/2023 - Proclamação da República;\nDia 08/12/2023 - Dia da Justiça;\nDias 20/12/2023 a 31/12/2023 - Recesso Forense.\n\nNote que feriados que se sobrepõe ou que são aos finais de semana, só foram anotados uma vez, para evitar confusão. Note ainda que é trivial inserir as férias individuais de juízes e ministros desta forma.\nPortanto, se fixado o ano, pode-se pensar no intervalo \\((0,t]\\) como sendo o primeiro instante do primeiro dia do ano até o último instante do último dia do ano, podemos ordenar os dias por índice, tal que o primeiro dia do ano (1º de janeiro) representa o dia 1, o dia 1º de Fevereiro representa o dia 32, até o dia 31 de dezembro, representando o dia 365. O restante dos dias são dias úteis.\nCom isso, teremos 134 dias que não são dias úteis no ano de 2023, sendo estes os dias de índice: 1, 2, 3, 4, 5, 6, 7, 8, 14, 15, 21, 22, 28, 29, 35, 36, 42, 43, 49, 50, 51, 52, 53, 56, 57, 63, 64, 70, 71, 77, 78, 84, 85, 91, 92, 95, 96, 97, 98, 99, 105, 106, 111, 112, 113, 119, 120, 121, 126, 127, 133, 134, 140, 141, 147, 148, 154, 155, 159, 161, 162, 168, 169, 175, 176, 182, 183, 189, 190, 196, 197, 203, 204, 210, 211, 217, 218, 223, 224, 225, 231, 232, 238, 239, 245, 246, 250, 252, 253, 259, 260, 266, 267, 273, 274, 280, 281, 285, 287, 288, 294, 295, 301, 302, 305, 306, 308, 309, 315, 316, 319, 322, 323, 329, 330, 336, 337, 342, 343, 344, 350, 351, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364 e 365. Iremos chamar o vetor que contém estes valores acima de \\(\\textbf{v}_{dnu}\\), sendo seu complementar \\(\\textbf{v}_{du}\\) o vetor que contém todos os dias de 1 a 365 não contidos no vetor acima, representando assim os dias úteis (\\(du\\))."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#processo-de-contagem",
+    "href": "presentations/estocasticos/estocasticos.html#processo-de-contagem",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Processo de contagem",
+    "text": "Processo de contagem\nUm processo de contagem, definido por DINCER;DEMIR;YALÇIN (2022 apud BAS,2019) , é um processo estocástico, em que \\(M(t),t \\geq 0\\) é não negativo, com suporte em \\(\\mathbb{Z}\\) não decrescente \\(\\forall t \\geq 0\\). \\(M(t)\\) é o número total de eventos que ocorrem até o tempo \\(t\\), e \\(M(t,t+h)=M(t+h)-M(t)\\) denota o número de eventos ocorridos no intervalo \\((t,t+h],h&gt;0\\). Além disso, um processo de contagem, em que o número de eventos ocorridos em intervalos de tempo disjuntos são independentes e tem incrementos independentes. Um processo de contagem tem incrementos estacionários se a distribuição de \\(M(t,t+h)\\) depende apenas do comprimento do intervalo de tempo."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#variável-aleatória-poisson",
+    "href": "presentations/estocasticos/estocasticos.html#variável-aleatória-poisson",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Variável aleatória Poisson",
+    "text": "Variável aleatória Poisson\nSe \\(M(t)\\) denota o número de eventos que ocorrem num intervalo de tempo específico, este é chamado variável aleatória Poisson. A variável aleatória Poisson possui função de massa de probabilidade:\n\\[\\begin{equation}\n    \\mathbb{P}(M(t)=k)=\\frac{e^{-\\lambda_t}\\lambda_t^k}{k!}\n\\end{equation}\\]\nonde \\(\\lambda_t\\) é o parâmetro da distribuição Poisson e representa a taxa de eventos que ocorrem no intervalo de tempo especificado, além de ser a variância e esperança de \\(M(t)\\) ser igual a \\(\\lambda_t\\)."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#processo-de-poisson",
+    "href": "presentations/estocasticos/estocasticos.html#processo-de-poisson",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Processo de Poisson",
+    "text": "Processo de Poisson\nUm processo de Poisson é definido por ROSS(2010) como:\n\\[\\begin{equation} \\label{eq1}\nN(t)  \\stackrel{}{\\sim} Poisson(m_(t)), i=1,2,...,n.\n\\end{equation}\\]\nE:\n\\[\\begin{equation}\n    \\mathbb{P}\\{N(t) = x\\} = \\frac{[m(t)]^{x}}{x!}e^{-m(t)}\n\\end{equation}\\]\nOnde \\(\\frac{o(h)}{h} \\rightarrow 0, h \\rightarrow 0\\)\n\nProcesso de Poisson homogêneo\nSe o processo de Poisson \\(M(t)\\) têm função de intensidade constante \\(\\lambda_t=\\lambda \\ \\forall \\ (t,t+s]\\), então este é chamado um processo de Poisson homogêneo. (DINCER;DEMIR;YALÇIN,2022) \n\n\nProcesso de Poisson não homogêneo\nSe o processo de Poisson \\(M(t)\\) tem função de intensidade variando com o tempo, este é um Processo de Poisson não homogêneo. A função massa de probabilidade deste processo é definida como:\n\\[\\begin{equation}\n    \\mathbb{P}(M(t,t+h)=x)=\\frac{\\left( \\int_t^{t+h}\\lambda(z)dz \\right)^x}{x!}e^{-\\int_t^{t+h}\\lambda(z)dz}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juiz-em-um-mês",
+    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juiz-em-um-mês",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Quantos processos são julgados por um juiz em um mês?",
+    "text": "Quantos processos são julgados por um juiz em um mês?\nTomando Janeiro de 2023 (dias 1 a 31) como exemplo, o número de processos julgados pelo i-ésimo juiz será uma variável aleatória Poisson, com média:\n\\[\\begin{equation} \\label{eq3}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=31}\\Lambda_i(s)ds \\ ; \\{s = 30\\} \\\\\n    = \\lambda_i\\int_{t=0}^{t=8}\\Lambda_{i(2)}ds \\\\ + \\ \\lambda_i\\int_{t=8}^{t=13}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=13}^{t=15}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=15}^{t=20}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=20}^{t=22}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=22}^{t=27}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=27}^{t=29}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=29}^{t=31}\\Lambda_{i(1)}ds\\\\\n\\end{split}\n\\end{equation}\\]\nNote que podemos chamar uma variável \\(z\\) para substituir \\(t\\) nos limites de integração, afim de não precisar respeitar a ordenação dos dias e considerar apenas a passagem de tempo, tal que:\n\\[\\begin{equation}\n\\begin{cases}\n    t = i \\rightarrow \\text{i-ésimo dia} \\\\\n    z = i \\rightarrow \\text{i-dias}\n\\end{cases}\n\\end{equation}\\]\nPortanto, teremos\n\\[\\begin{equation} \\label{eq4}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=31}\\lambda_i(s)ds &= \\lambda_i \\left( \\int_{z=0}^{z=17}\\Lambda_{i(1)}ds \\right) + \\lambda_i \\left( \\int_{z=17}^{z=31}\\Lambda_{i(2)}ds \\right)\\\\\n    &= \\lambda_i \\left[ \\left( \\int_{z=0}^{z=17}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=17}^{z=31}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juíz-em-um-ano",
+    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juíz-em-um-ano",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Quantos processos são julgados por um juíz em um ano?",
+    "text": "Quantos processos são julgados por um juíz em um ano?\nExpandindo o raciocínio empregado anteriormente, podemos dizer que a quantidade de processos julgados pelo i-ésimo juiz no ano de 2023, com tempo \\(t \\in \\textbf{v}_{du} \\cup \\textbf{v}_{dnu}\\) será Poisson com média:\n\\[\\begin{equation} \\label{eq5}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=365}\\lambda_i(s)ds\n    &= \\lambda_i \\left[ \\left( \\int_{z=0}^{z=231}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=231}^{z=365}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-em-um-tribunal-em-um-ano",
+    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-em-um-tribunal-em-um-ano",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Quantos processos são julgados em um tribunal em um ano?",
+    "text": "Quantos processos são julgados em um tribunal em um ano?\nFinalmente, podemos responder nossa pergunta inicial, aproveitando dos resultados das equações anteriores, temos que a quantidade de processos julgados em um tribunal (N(t=365)) será Poisson com média:\n\\[\\begin{equation} \\label{eq6}\n\\begin{split}\n    N(t=365) = \\sum_{i=1}^{n} \\lambda_i \\left[ \\left( \\int_{z=0}^{z=231}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=231}^{z=365}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#referências",
+    "href": "presentations/estocasticos/estocasticos.html#referências",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Referências",
+    "text": "Referências\n\nRoss, S. M. (2010). Introduction to Probability Models. Academic Press.\nDincer, E., Demir, S. M., & Yalçın, B. A. (2022). [Título do artigo]. [Nome da Revista/Congresso]."
   },
   {
     "objectID": "index.html",
