@@ -81,7 +81,7 @@
     "href": "presentations/random_forest/apresentacao.html#implementações",
     "title": "Técnica Random Forest em árvores de decisão",
     "section": "Implementações",
-    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[19,  0,  0],\n       [ 0, 12,  1],\n       [ 0,  2, 11]], dtype=int64)"
+    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[17,  0,  0],\n       [ 0, 11,  0],\n       [ 0,  2, 15]], dtype=int64)"
   },
   {
     "objectID": "presentations/random_forest/apresentacao.html#definições",
@@ -235,7 +235,7 @@
     "href": "presentations/estocasticos/estocasticos.html#referências",
     "title": "Processos de Poisson não homogêneos de n tipos",
     "section": "Referências",
-    "text": "Referências\n\nRoss, S. M. (2010). Introduction to Probability Models. Academic Press.\nDincer, E., Demir, S. M., & Yalçın, B. A. (2022). [Título do artigo]. [Nome da Revista/Congresso]."
+    "text": "Referências\n\nRoss, S. M. (2010). Introduction to Probability Models. Academic Press.\nDincer, E., Demir, S. M., & Yalçın, B. A. (2022)."
   },
   {
     "objectID": "index.html",
