@@ -263,4 +263,4 @@ Portanto, conclui-se que este pode ser um instrumento útil para modelagem proba
 ## Referências
 
 - Ross, S. M. (2010). Introduction to Probability Models. Academic Press.
-- Dincer, E., Demir, S. M., & Yalçın, B. A. (2022). [Título do artigo]. [Nome da Revista/Congresso].
+- Dincer, E., Demir, S. M., & Yalçın, B. A. (2022).
