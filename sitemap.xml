@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://penasta.github.io/presentations/random_forest/apresentacao.html</loc>
-    <lastmod>2024-07-17T17:35:56.942Z</lastmod>
+    <loc>https://penasta.github.io/presentations/xgboost_catboost/trabalho.html</loc>
+    <lastmod>2025-01-15T16:15:08.483Z</lastmod>
   </url>
   <url>
-    <loc>https://penasta.github.io/presentations/estocasticos/estocasticos.html</loc>
-    <lastmod>2024-12-17T19:21:47.276Z</lastmod>
+    <loc>https://penasta.github.io/presentations/nlp/index.html</loc>
+    <lastmod>2024-07-17T17:35:56.805Z</lastmod>
   </url>
   <url>
     <loc>https://penasta.github.io/index.html</loc>
     <lastmod>2024-12-15T15:21:49.862Z</lastmod>
   </url>
   <url>
-    <loc>https://penasta.github.io/presentations/nlp/index.html</loc>
-    <lastmod>2024-07-17T17:35:56.805Z</lastmod>
+    <loc>https://penasta.github.io/presentations/estocasticos/estocasticos.html</loc>
+    <lastmod>2024-12-17T19:21:47.276Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/presentations/random_forest/apresentacao.html</loc>
+    <lastmod>2024-07-17T17:35:56.942Z</lastmod>
   </url>
 </urlset>

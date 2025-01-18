@@ -1,5 +1,306 @@
 [
   {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#introdução",
+    "href": "presentations/xgboost_catboost/trabalho.html#introdução",
+    "title": "XGBoost/Catboost",
+    "section": "Introdução",
+    "text": "Introdução\nXGBoost (eXtreme Gradient Boosting) (Tianqi Chen, 2016) é uma das implementações de three ensembling baseada em gradient boosting mais populares, por ser otimizado para desempenho e eficiência.\nA ideia do algoritmo gradient boosting é realizar ensemble de M classificadores fracos para obter um modelo robusto que faça boas previsões. Estes classificadores serão árvores de decisão. Porém, diferentemente do AdaBoost estudado anteriormente, a regularização é feita a partir da minimização de uma função de perda diferenciável, e não pela atribuição de maior peso a instâncias classificadas erroneamente."
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#introdução-1",
+    "href": "presentations/xgboost_catboost/trabalho.html#introdução-1",
+    "title": "XGBoost/Catboost",
+    "section": "Introdução",
+    "text": "Introdução\nPor se tratar de um modelo sequencial, em que a árvore \\(i+2\\) necessitará da informação dos resíduos da árvore \\(i+1\\), também herda a restrição de paralelismo que outros modelos de three ensembling também contém. Porém, a implementação do algoritmo XGBoost busca paralelizar todas as rotinas necessárias para construção do modelo, tornando sequencial apenas o início da construção de cada árvore.\n\n\n\n\n\n\n\n\n\ngraph LR\n    A[Dados] --&gt; B[Modelo 1];\n    B --&gt; C[Modelo 2];\n    C --&gt; D[...];\n    D --&gt; E[Modelo m];\n    E --&gt; F[Ensembling dos modelos];\n    F --&gt; G[Modelo final];"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#gradient-boosting",
+    "href": "presentations/xgboost_catboost/trabalho.html#gradient-boosting",
+    "title": "XGBoost/Catboost",
+    "section": "Gradient Boosting",
+    "text": "Gradient Boosting\nO algoritmo base do XGBoost é o Gradient Boosting, no qual busca-se minimizar uma função de perda utilizando gradiente descendente. Esta otimização não será numérica, mas sim fornecida pela combinação das árvores geradas (boosting), que irão conduzir o gradiente para o mínimo global da função.\nCada um desses aprendizes fracos sequenciais irão focar nos resíduos da árvore anterior, buscando a divisão que minimize a função de perda definida (podendo ser default ou escolhida pelo usuário)."
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#gradient-boosting-1",
+    "href": "presentations/xgboost_catboost/trabalho.html#gradient-boosting-1",
+    "title": "XGBoost/Catboost",
+    "section": "Gradient Boosting",
+    "text": "Gradient Boosting\nSeja M o número de árvores fixadas para construção do modelo, o modelo final será dado pela fórmula \\[F_M(x) = F_0(x) +\\sum^M_{m=1}F_m(x)\\] Em que \\(F_M(x)\\) será o modelo final para predições, \\(F_0(x)\\) será um modelo inicial de árvore, \\(F_1(x)\\) será o modelo que minimiza os resíduos do modelo \\(F_0(x)\\); \\(F_2(x)\\) será o modelo que minimiza os resíduos do modelo \\(F_1(x)\\), e assim por diante até o modelo \\(F_{m}(x)\\). Portanto, a classificação da i-ésima instância será dada por:\\[\\hat{y_i} = F_M(x_i)\\]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#construção-das-árvores",
+    "href": "presentations/xgboost_catboost/trabalho.html#construção-das-árvores",
+    "title": "XGBoost/Catboost",
+    "section": "Construção das árvores",
+    "text": "Construção das árvores\nSalvo a primeira árvore, que será um chute inicial, iremos definir uma função objetivo com sendo\\[obj = \\sum^n_{i=1}l(y_i,\\hat{y}_i^{(t)})+\\sum^t_{i=1}\\Omega(f_i),\\] em que o termo \\(l(y_i,\\hat{y}_i^{(t)})\\) irá computar a perda relativa no t-ésimo passo, e \\(\\Omega(f_i)\\) será o t-ésimo termo de regularização, e \\(obj\\) será baseado nos resíduos da árvore anterior.\nO algoritmo escolhe a cada passo a árvore que minimiza \\(obj\\) com base nas features selecionadas automaticamente pelo modelo."
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#under-the-hood",
+    "href": "presentations/xgboost_catboost/trabalho.html#under-the-hood",
+    "title": "XGBoost/Catboost",
+    "section": "Under the hood",
+    "text": "Under the hood\nPara a seleção de features que irão minimizar a função objetivo, o algoritmo irá avaliar diversas possíveis divisões em diferentes features, construindo entre outras coisas histogramas para as features que ajudem a encontrar o melhor ponto de divisão. Para isso, o algoritmo utiliza do paralelismo, executando diversas divisões e encontrando a melhor possível de forma iterativa e rápida.\nDesta forma, apesar de se tratar de um modelo sequencial, o algoritmo implementado utiliza em todas as etapas que for possível da computação paralelizada, afim de aproveitar ao máximo o desempenho computacional e retornar um modelo que seja robusto e rápido\nPara maior aprofundamento teórico sobre o funcionamento do modelo, consulte XGBoost tutorial, seção 1.3"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#flow-do-modelo",
+    "href": "presentations/xgboost_catboost/trabalho.html#flow-do-modelo",
+    "title": "XGBoost/Catboost",
+    "section": "Flow do modelo",
+    "text": "Flow do modelo\nUma forma simplificada de mostrar o funcionamento do XGBoost pode ser representada pelo seguinte grafo:\n\n\n\n\n\n\ngraph TD\n\n    A[Entrada de dados] --&gt; B\n    B[Preparação dos Dados] --&gt; B1 & B2 & B3\n    B1[Limpeza dos Dados]\n    B2[Normalização]\n    B3[Divisão Treino/Teste]\n    B1 & B2 & B3 --&gt; B_Final[Dados Preparados]\n\n    B_Final --&gt; C[Entrada de Dados no Modelo]\n\n    C --&gt; D[Construção da Primeira Árvore]\n    D --&gt; D1 & D2 & D3\n    D1[Avaliação das Divisões]\n    D2[Construção dos Nós]\n    D3[Combinação das Previsões]\n    D1 & D2 & D3 --&gt; D_Final[Árvore Construída]\n    \n    D_Final --&gt; E[Entrada de Dados Residual para a Segunda Árvore]\n\n    E --&gt; F[Construção da Segunda Árvore]\n    F --&gt; F1 & F2 & F3\n    F1[Avaliação das Divisões]\n    F2[Construção dos Nós]\n    F3[Combinação das Previsões]\n    F1 & F2 & F3 --&gt; F_Final[Segunda Árvore Construída]\n\n    F_Final --&gt; G[Repetir o processo anterior m vezes]\n\n    G --&gt; H[Avaliação do Modelo]\n    \n    H --&gt; I[Ensembling das Árvores com Pesos Relativos]\n\n    I --&gt; J[Modelo final]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#implementação-xgboost",
+    "href": "presentations/xgboost_catboost/trabalho.html#implementação-xgboost",
+    "title": "XGBoost/Catboost",
+    "section": "Implementação XGBoost",
+    "text": "Implementação XGBoost\nVamos à prática!"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#exemplo-prático-xgboost-catboost-outros",
+    "href": "presentations/xgboost_catboost/trabalho.html#exemplo-prático-xgboost-catboost-outros",
+    "title": "XGBoost/Catboost",
+    "section": "Exemplo prático: XGBoost, CatBoost & outros",
+    "text": "Exemplo prático: XGBoost, CatBoost & outros\nExemplo prático"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#categorical-boost---catboost",
+    "href": "presentations/xgboost_catboost/trabalho.html#categorical-boost---catboost",
+    "title": "XGBoost/Catboost",
+    "section": "Categorical Boost - CatBoost",
+    "text": "Categorical Boost - CatBoost\n\nAlgoritmo de aprendizado de máquina\nModelo Ensemble\nÁrvores de decisão\nNão é necessário pré-processamento dos dados categóricos\nCada árvore reduz a perda comparada com a anterior\nRandom Permutations"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#target-encoding",
+    "href": "presentations/xgboost_catboost/trabalho.html#target-encoding",
+    "title": "XGBoost/Catboost",
+    "section": "Target Encoding",
+    "text": "Target Encoding\n\n\n\n\n\n\n\n\nTarget Encoding \\[\\frac {OptionCount+Prior}{n+1}\\]\nPrior: Palpite inicial arbitrário \nOption Count: número de vezes que alguém da mesma cor gostou de estatística anteriormente \nn: número de repetições da mesma cor já vistas"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas",
+    "href": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas",
+    "title": "XGBoost/Catboost",
+    "section": "Processando variáveis categóricas",
+    "text": "Processando variáveis categóricas\n\n\n\n\n\n\n\n\nTarget Encoding \\[\\frac {OptionCount+Prior}{n+1}\\]\nTarget Encoding \\[\\frac {0+0.05}{0+1} = 0.05\\]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-1",
+    "href": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-1",
+    "title": "XGBoost/Catboost",
+    "section": "Processando variáveis categóricas",
+    "text": "Processando variáveis categóricas\n\n\n\n\n\n\n\n\nTarget Encoding \\[\\frac {0+0.05}{1+1}\\]\nTarget Encoding \\[\\frac {0.05}{2} = 0.025\\]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-2",
+    "href": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-2",
+    "title": "XGBoost/Catboost",
+    "section": "Processando variáveis categóricas",
+    "text": "Processando variáveis categóricas\n\n\n\n\n\n\n\n\nTarget Encoding \\[\\frac {1+0.05}{1+1}\\]\nTarget Encoding \\[\\frac {1.05}{2} = 0.525\\]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-3",
+    "href": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-3",
+    "title": "XGBoost/Catboost",
+    "section": "Processando variáveis categóricas",
+    "text": "Processando variáveis categóricas\n\n\n\n\n\n\n\n\nTarget Encoding \\[\\frac {1+0.05}{1+1}\\]\nTarget Encoding \\[\\frac {1.05}{2} = 0.525\\]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-4",
+    "href": "presentations/xgboost_catboost/trabalho.html#processando-variáveis-categóricas-4",
+    "title": "XGBoost/Catboost",
+    "section": "Processando variáveis categóricas",
+    "text": "Processando variáveis categóricas\n\n\n\n\n\n\n\n\nTarget Encoding \\[\\frac {1+0.05}{2+1}\\]\nTarget Encoding \\[\\frac {1.05}{3} = 0.35\\]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#árvores-de-decisão-simétricas",
+    "href": "presentations/xgboost_catboost/trabalho.html#árvores-de-decisão-simétricas",
+    "title": "XGBoost/Catboost",
+    "section": "Árvores de decisão Simétricas",
+    "text": "Árvores de decisão Simétricas\n\nYoutube: CatBoost Parte 2: Construindo e Usando Árvores\nGera modelos mais fracos, porém mais simples\nGera previsões mais rapidamente"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#flow-do-modelo-catboost",
+    "href": "presentations/xgboost_catboost/trabalho.html#flow-do-modelo-catboost",
+    "title": "XGBoost/Catboost",
+    "section": "Flow do modelo CatBoost",
+    "text": "Flow do modelo CatBoost\nUma forma simplificada de mostrar o funcionamento do Catboost pode ser representada pelo seguinte grafo:\n\n\n\n\n\n\ngraph TD\n\n    A[Entrada de dados] --&gt; B\n    B[Preparação dos Dados] --&gt; B1 & B3\n    B1[Limpeza dos Dados]\n    B3[Divisão Treino/Teste]\n    B1 & B3 --&gt; B_Final[Dados Preparados]\n\n    B_Final --&gt; C[Entrada de Dados no Modelo]\n    \n    C[Entrada de Dados no Modelo] --&gt; K1[Random Permutations]\n    \n    K1[Random Permutations] --&gt; K2[Target Encoding]\n    \n    K2[Target Encoding] --&gt; D[Construção da Primeira Árvore]\n    D --&gt; D1 & D2 & D3\n    D1[Avaliação das Divisões]\n    D2[Construção dos Nós]\n    D3[Combinação das Previsões]\n    D1 & D2 & D3 --&gt; D_Final[Árvore Construída]\n    \n    D_Final --&gt; E[Entrada de Dados Residual para a Segunda Árvore]\n\n    E --&gt; F[Construção da Segunda Árvore]\n    F --&gt; F1 & F2 & F3\n    F1[Avaliação das Divisões]\n    F2[Construção dos Nós]\n    F3[Combinação das Previsões]\n    F1 & F2 & F3 --&gt; F_Final[Segunda Árvore Construída]\n\n    F_Final --&gt; G[Repetir o processo anterior m vezes]\n\n    G --&gt; H[Avaliação do Modelo]\n    \n    H --&gt; I[Ensembling das Árvores com Pesos Relativos]\n\n    I --&gt; J[Modelo final]"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#implementação-catboost",
+    "href": "presentations/xgboost_catboost/trabalho.html#implementação-catboost",
+    "title": "XGBoost/Catboost",
+    "section": "Implementação CatBoost",
+    "text": "Implementação CatBoost\nVamos à prática!"
+  },
+  {
+    "objectID": "presentations/xgboost_catboost/trabalho.html#referências",
+    "href": "presentations/xgboost_catboost/trabalho.html#referências",
+    "title": "XGBoost/Catboost",
+    "section": "Referências",
+    "text": "Referências\nDocumentação XGBoost.\nPinheiro, João Manoel Herrera. Um estudo sobre Algoritmos de Boosting e a Otimização de Hiperparâmetros Utilizando Optuna. São Carlos, SP. 2023.\nDocumetação CatBoost\nChepenko, Introduction to gradient boosting on decision trees with Catboost\nCatBoost Parte 1: Codificação de destino ordenada\nCatBoost Parte 2: Construindo e Usando Árvores\n\n\n\n\nDepartamento de estatística - UnB"
+  },
+  {
+    "objectID": "presentations/nlp/index.html#introdução",
+    "href": "presentations/nlp/index.html#introdução",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Introdução",
+    "text": "Introdução\n\n\nNo campo do direito, a aplicação de técnicas estatísticas vem sendo testada em diversos âmbitos, inclusive no Supremo Tribunal Federal do Brasil.\nÉ de interesse do tribunal a aplicação destas técnicas para agrupamento de processos. Um agrupador poderia ajudar a identificar processos semelhantes, trabalho este feito manualmente.\nEste trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado."
+  },
+  {
+    "objectID": "presentations/nlp/index.html#objetivos",
+    "href": "presentations/nlp/index.html#objetivos",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Objetivos",
+    "text": "Objetivos\n\nO objetivo deste trabalho é formular um agregador de processos de controle concentrado, que são processos que tratam da constitucionalidade de leis e atos normativos. Constituem o dito controle concentrado os processos do Supremo Tribunal Federal das seguintes classes:\n\n\nADI (Ação Direta de Inconstitucionalidade)\nADC (Ação Declaratória de Constitucionalidade)\nADPF (Arguição de Descumprimento de Preceito Fundamental)\nADO (Ação Direta de Inconstitucionalidade por Omissão)"
+  },
+  {
+    "objectID": "presentations/nlp/index.html#objetivos-1",
+    "href": "presentations/nlp/index.html#objetivos-1",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Objetivos",
+    "text": "Objetivos\n\nO agrupador fornecerá subsídios aos responsáveis pelo encaminhamento dos processos que chegam ao STF, visando reduzir o trabalho mecânico humano.\nDos objetivos específicos, espera-se:\n\n\nProcessar os dados utilizando técnicas de Processamento de Linguagem Natural (PLN), transformando petições iniciais de processos em vetores numéricos;\nComparar técnicas de agrupamento;\nAvaliar a similaridade entre processos em recortes temporais distintos;\nEstudar técnicas de PLN, análise multivariada e visualização de dados."
+  },
+  {
+    "objectID": "presentations/nlp/index.html#metodologia",
+    "href": "presentations/nlp/index.html#metodologia",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Metodologia",
+    "text": "Metodologia\nTendo os dados e o modelo pré-treinado para vetorização, os códigos Python e R para a vetorização dos textos, e posterior análise, são da seguinte forma:\n\n\n\n# Módulos\nimport polars\nimport gensim\nfrom gensim.models.doc2vec import Doc2Vec\n\n# Função\ndef infer_vector(text):\n    return model.infer_vector(text.split())\n\n# Modelo pré-treinado para Embedding\nmodel = gensim.models.Doc2Vec.load(\"modelo.model\")\n\n# Dados\ndf = polars.read_csv(\"dados.csv\",columns=[1,3,4])\n\n# Saída: DataFrame com duas colunas: Texto original e vetor Embedding correspondente.\ndf = df.with_columns_seq(polars.col(\"texto\").apply(infer_vector).alias(\"vetor\"))\n\n\n\n# Pacote\nlibrary(reticulate)\n\n# Definindo o ambiente virtual python\nreticulate::use_condaenv(\"TCC\")\n\n# Executando o script python\nreticulate::source_python(\"script.py\")\n\n# Ajustando o dataframe trazido do python para formato R mais adequado\ndf &lt;- as.data.frame(do.call(rbind, lapply(a, function(x) c(x[[1]], x[[2]]))), stringsAsFactors = FALSE)"
+  },
+  {
+    "objectID": "presentations/nlp/index.html#metodologia-1",
+    "href": "presentations/nlp/index.html#metodologia-1",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Metodologia",
+    "text": "Metodologia\n\nPassos para a construção do agregador:\n\n\n\n\n\nObtenção dos dados:\n\n\nOs dados foram disponibilizados pelo STF (mas estão disponíveis publicamente no Portal do STF.).\n\n\nVetorização (incluindo ocerização e processamento do texto PDF):\n\n\nEste módulo foi fornecido pelo STF (dados em formato CSV)"
+  },
+  {
+    "objectID": "presentations/nlp/index.html#metodologia-2",
+    "href": "presentations/nlp/index.html#metodologia-2",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Metodologia",
+    "text": "Metodologia\n\n\n\n\nDefinir recortes temporais para a agregação:\n\n\nPor conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática.\nSerá realizado o agrupamento com dados em recortes temporais distintos, e, em cada recorte, será avaliada a similaridade entre os processos em tramitação naquela data."
+  },
+  {
+    "objectID": "presentations/nlp/index.html#metodologia-3",
+    "href": "presentations/nlp/index.html#metodologia-3",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Metodologia",
+    "text": "Metodologia\n\n\n\n\nAplicação de medidas de distância para comparar a similaridade dos processos (distância euclidiana, distância do cosseno etc)."
+  },
+  {
+    "objectID": "presentations/nlp/index.html#metodologia-4",
+    "href": "presentations/nlp/index.html#metodologia-4",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Metodologia",
+    "text": "Metodologia\n\n\n\n\nPara a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.\n\n\nPara a visualização dos dados, serão estudadas técnicas como dendrogramas e t-SNE."
+  },
+  {
+    "objectID": "presentations/nlp/index.html#cronograma",
+    "href": "presentations/nlp/index.html#cronograma",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Cronograma",
+    "text": "Cronograma\n\n\nCronograma TCC 1\n\n\nAtividades\nMar\nAbr\nMai\nJun\nJul\n\n\n\n\nEscolha do tema a ser abordado.\n\n\n\n\n\n\n\nLevantamento de bibliografia relacionada ao tema.\n\n\n\n\n\n\n\nDefinição do recorte temporal com a AAJ do STF.\n\n\n\n\n\n\n\nSolicitação dos dados para a STI do STF.\n\n\n\n\n\n\n\nSolicitação dos algoritmos à STI do STF.\n\n\n\n\n\n\n\nRevisão de literatura.\n\n\n\n\n\n\n\nDesenvolvimento da proposta de projeto.\n\n\n\n\n\n\n\nAnálise preliminar do banco de dados.\n\n\n\n\n\n\n\nEntrega da proposta do projeto.\n\n\n\n\n\n\n\nElaboração da apresentação da proposta.\n\n\n\n\n\n\n\nManipulação do banco de dados.\n\n\n\n\n\n\n\nAnálise do banco de dados.\n\n\n\n\n\n\n\nElaboração do relatório parcial.\n\n\n\n\n\n\n\nEntrega do relatório parcial a Professora Orientadora.\n\n\n\n\n\n\n\nCorreção do relatório parcial.\n\n\n\n\n\n\n\nEntrega do relatório parcial a banca."
+  },
+  {
+    "objectID": "presentations/nlp/index.html#cronograma-1",
+    "href": "presentations/nlp/index.html#cronograma-1",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Cronograma",
+    "text": "Cronograma\n\n\nCronograma TCC 2\n\n\nAtividades\nAgo\nSet\nOut\nNov\nDez\n\n\n\n\nDesenvolvimento do modelo e da aplicação.\n\n\n\n\n\n\n\nElaboração do relatório final.\n\n\n\n\n\n\n\nEntrega do relatório final a Professora Orientadora.\n\n\n\n\n\n\n\nCorreção do relatório final.\n\n\n\n\n\n\n\nEntrega do relatório final para a banca."
+  },
+  {
+    "objectID": "presentations/nlp/index.html#referências",
+    "href": "presentations/nlp/index.html#referências",
+    "title": "Agrupador de processos de controle concentrado",
+    "section": "Referências",
+    "text": "Referências\n\nARTES, R.; BARROSO, L. P. Métodos multivariados de análise estatística. [S.l.]: São Paulo: Blucher, 2023.\nEVERITT, B.; SKRONDAL, A. The cambridge dictionary of statistics. [S.l.]: Cambridge University Press, 2010. v. 4.\nFREITAS, L. J. G. et al. Catboost algorithm application in legal texts and un 2030 agenda. Revista de Informatica Teórica e Aplicada - RITA - ISSN 2175-2745. Vol. 30, Num. 02 (2023) 51-58, 2023.\nFREITAS, L. J. G. et al. Text clustering applied to data augmentation in legal contexts. arXiv preprint arXiv:2404.08683, 2024.\nJOHNSON, R. A.; WICHERN, D. W. Applied Multivariate Statistical Analysis. [S.l.]: 6. ed.[S.l.]:Prentice Hall, 2007.\nKAUFMAN, L.; ROUSSEEUW, P. J. Finding groups in data: an introduction to cluster analysis. [S.l.]: John Wiley & Sons, 1990.\nLECUN, Y. et al. Gradient-based learning applied to document recognition. Proceedings of the IEEE, Ieee, v. 86, n. 11, p. 2278–2324, 1998.\nMAATEN, L. Van der; HINTON, G. Visualizing data using t-sne. Journal of machine learning research, v. 9, n. 11, 2008.\nMACQUEEN, J. et al. Some methods for classification and analysis of multivariate observations. [S.l.], 1967. v. 1. 281–297 p.\nMORETTIN, P. A.; SINGER, J. M. Estatística e Ciência de Dados. [S.l.]: LTC, 2021.\nRICARDO, B.-Y.; BERTHIER, R.-N. Modern information retrieval: the concepts and technology behind search. [S.l.]: New Jersey, USA: Addi-son-Wesley Professional, 2011.\nvon Borries, G.; WANG, H. Partition clustering of high dimensional low sample size data based on p-values. Computational statistics & data analysis, v. 53, n. 12, p. 3987-3998, 2009.\n\n\n\n\n\nDepartamento de estatística - UnB"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Bruno Gondim",
+    "section": "",
+    "text": "Estudante de graduação no bacharel de Estatística na Universidade de Brasília - UnB\nAqui estão aplicações pessoais de machine learning, ciência de dados e estatística. Me interesso também em programação, estrutura e modelagem de dados. Acredito em um mundo mais igualitário e justo."
+  },
+  {
+    "objectID": "index.html#formação",
+    "href": "index.html#formação",
+    "title": "Bruno Gondim",
+    "section": "Formação",
+    "text": "Formação\nUniversidade de Brasília (UnB) | Distrito Federal, Brasil | Bacharel em Estatística | Ago 2015 - presente"
+  },
+  {
+    "objectID": "index.html#experiência",
+    "href": "index.html#experiência",
+    "title": "Bruno Gondim",
+    "section": "Experiência",
+    "text": "Experiência\nGerente de projetos na ESTAT - Jan 2022 - Jan 2023\nEstagiário STF | Núcleo de análise de dados e estatística (NUADE) | Jul 2023 - presente"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html",
+    "href": "presentations/estocasticos/estocasticos.html",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "",
+    "text": "Modelagem de dados e previsão de eventos futuros tem sido o garantidor do mercado de trabalho em estatística estar aquecido. Este tipo de inteligência aplicada à negócios vem se tornando essencial em qualquer setor, inclusive no poder Judiciário. Apesar deste não depender de faturamento para sua existência por ser inalienável ao setor público, tem sido do interesse dos próprios tribunais saber indicadores e estatísticas relacionadas ao próprio tribunal. E a modelagem surge neste contexto para agregar valor às decisões estratégicas deste poder.\nBuscou-se trabalhos de temas semelhantes, que visam modelar a quantidade de decisões em processos em tribunais. Entretanto, não consegui localizar nenhum; motivo esse talvez por ser tema sensível, no sentido de poder levar indiretamente a comparação de rendimentos entre juízes em um tribunal, seja pela possível falta de pertinência do assunto, seja pela tentativa inédita de modelar algo do tipo.\nEntretando, buscou-se trabalhos que modelam outros tipos de contagem usando de processo de Poisson não homogêneo, como (DINCER;DEMIR;YALÇIN,2022).\nNa metodologia, com base no livro ROSS (2010), apresento toda a metodologia e suporte teórico adotado na seção de análises. Na seção aplicação computacional iremos trazer uma possível solução simulada do problema proposto, e na seção de resultados apresento as conclusões gerais."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#dia-útil",
+    "href": "presentations/estocasticos/estocasticos.html#dia-útil",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Dia útil",
+    "text": "Dia útil\nPor mais hiperbólico que pareça, não foi possível localizar uma definição fechada de dia útil. Portanto, consideraremos como dia útil, todos os dias do ano excetuado os feriados, finais de semana (sábado e domingo) e recessos coletivos. Pegando como base o ano de 2023, iríamos considerar como dia útil para o tribunal selecionado para a aplicação computacional todos os dias com excessão de:\n\nTodos os sábados e todos os domingos do ano;\nDias 01/01/2023 a 06/01/2023 - Recesso Forense;\nDias 20/02/2023 a 22/02/2023 - Carnaval & quarta-feira de cinzas;\nDias 5/04/2023 a 7/04/2023 - Quarta e quinta-feira Santa e Paixão de Cristo;\nDia 21/04/2023 - Tiradentes;\nDia 1/05/2023 - Dia do trabalhador;\nDia 08/06/2023 - Corpus Christi;\nDia 11/08/2023 - Dia do Advogado;\nDia 7/09/2023 - Independência;\nDia 12/10/2023 - Dia de Nossa Senhora Aparecida;\nDias 01/11/2023 e 02/11/2023 - Dia de Todos os Santos e Finados;\nDia 15/11/2023 - Proclamação da República;\nDia 08/12/2023 - Dia da Justiça;\nDias 20/12/2023 a 31/12/2023 - Recesso Forense.\n\nNote que feriados que se sobrepõe ou que são aos finais de semana, só foram anotados uma vez, para evitar confusão. Note ainda que é trivial inserir as férias individuais de juízes e ministros desta forma.\nPortanto, se fixado o ano, pode-se pensar no intervalo \\((0,t]\\) como sendo o primeiro instante do primeiro dia do ano até o último instante do último dia do ano, podemos ordenar os dias por índice, tal que o primeiro dia do ano (1º de janeiro) representa o dia 1, o dia 1º de Fevereiro representa o dia 32, até o dia 31 de dezembro, representando o dia 365. O restante dos dias são dias úteis.\nCom isso, teremos 134 dias que não são dias úteis no ano de 2023, sendo estes os dias de índice: 1, 2, 3, 4, 5, 6, 7, 8, 14, 15, 21, 22, 28, 29, 35, 36, 42, 43, 49, 50, 51, 52, 53, 56, 57, 63, 64, 70, 71, 77, 78, 84, 85, 91, 92, 95, 96, 97, 98, 99, 105, 106, 111, 112, 113, 119, 120, 121, 126, 127, 133, 134, 140, 141, 147, 148, 154, 155, 159, 161, 162, 168, 169, 175, 176, 182, 183, 189, 190, 196, 197, 203, 204, 210, 211, 217, 218, 223, 224, 225, 231, 232, 238, 239, 245, 246, 250, 252, 253, 259, 260, 266, 267, 273, 274, 280, 281, 285, 287, 288, 294, 295, 301, 302, 305, 306, 308, 309, 315, 316, 319, 322, 323, 329, 330, 336, 337, 342, 343, 344, 350, 351, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364 e 365. Iremos chamar o vetor que contém estes valores acima de \\(\\textbf{v}_{dnu}\\), sendo seu complementar \\(\\textbf{v}_{du}\\) o vetor que contém todos os dias de 1 a 365 não contidos no vetor acima, representando assim os dias úteis (\\(du\\))."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#processo-de-contagem",
+    "href": "presentations/estocasticos/estocasticos.html#processo-de-contagem",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Processo de contagem",
+    "text": "Processo de contagem\nUm processo de contagem, definido por DINCER;DEMIR;YALÇIN (2022 apud BAS,2019) , é um processo estocástico, em que \\(M(t),t \\geq 0\\) é não negativo, com suporte em \\(\\mathbb{Z}\\) não decrescente \\(\\forall t \\geq 0\\). \\(M(t)\\) é o número total de eventos que ocorrem até o tempo \\(t\\), e \\(M(t,t+h)=M(t+h)-M(t)\\) denota o número de eventos ocorridos no intervalo \\((t,t+h],h&gt;0\\). Além disso, um processo de contagem, em que o número de eventos ocorridos em intervalos de tempo disjuntos são independentes e tem incrementos independentes. Um processo de contagem tem incrementos estacionários se a distribuição de \\(M(t,t+h)\\) depende apenas do comprimento do intervalo de tempo."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#variável-aleatória-poisson",
+    "href": "presentations/estocasticos/estocasticos.html#variável-aleatória-poisson",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Variável aleatória Poisson",
+    "text": "Variável aleatória Poisson\nSe \\(M(t)\\) denota o número de eventos que ocorrem num intervalo de tempo específico, este é chamado variável aleatória Poisson. A variável aleatória Poisson possui função de massa de probabilidade:\n\\[\\begin{equation}\n    \\mathbb{P}(M(t)=k)=\\frac{e^{-\\lambda_t}\\lambda_t^k}{k!}\n\\end{equation}\\]\nonde \\(\\lambda_t\\) é o parâmetro da distribuição Poisson e representa a taxa de eventos que ocorrem no intervalo de tempo especificado, além de ser a variância e esperança de \\(M(t)\\) ser igual a \\(\\lambda_t\\)."
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#processo-de-poisson",
+    "href": "presentations/estocasticos/estocasticos.html#processo-de-poisson",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Processo de Poisson",
+    "text": "Processo de Poisson\nUm processo de Poisson é definido por ROSS(2010) como:\n\\[\\begin{equation} \\label{eq1}\nN(t)  \\stackrel{}{\\sim} Poisson(m_(t)), i=1,2,...,n.\n\\end{equation}\\]\nE:\n\\[\\begin{equation}\n    \\mathbb{P}\\{N(t) = x\\} = \\frac{[m(t)]^{x}}{x!}e^{-m(t)}\n\\end{equation}\\]\nOnde \\(\\frac{o(h)}{h} \\rightarrow 0, h \\rightarrow 0\\)\n\nProcesso de Poisson homogêneo\nSe o processo de Poisson \\(M(t)\\) têm função de intensidade constante \\(\\lambda_t=\\lambda \\ \\forall \\ (t,t+s]\\), então este é chamado um processo de Poisson homogêneo. (DINCER;DEMIR;YALÇIN,2022) \n\n\nProcesso de Poisson não homogêneo\nSe o processo de Poisson \\(M(t)\\) tem função de intensidade variando com o tempo, este é um Processo de Poisson não homogêneo. A função massa de probabilidade deste processo é definida como:\n\\[\\begin{equation}\n    \\mathbb{P}(M(t,t+h)=x)=\\frac{\\left( \\int_t^{t+h}\\lambda(z)dz \\right)^x}{x!}e^{-\\int_t^{t+h}\\lambda(z)dz}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juiz-em-um-mês",
+    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juiz-em-um-mês",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Quantos processos são julgados por um juiz em um mês?",
+    "text": "Quantos processos são julgados por um juiz em um mês?\nTomando Janeiro de 2023 (dias 1 a 31) como exemplo, o número de processos julgados pelo i-ésimo juiz será uma variável aleatória Poisson, com média:\n\\[\\begin{equation} \\label{eq3}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=31}\\Lambda_i(s)ds \\ ; \\{s = 30\\} \\\\\n    = \\lambda_i\\int_{t=0}^{t=8}\\Lambda_{i(2)}ds \\\\ + \\ \\lambda_i\\int_{t=8}^{t=13}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=13}^{t=15}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=15}^{t=20}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=20}^{t=22}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=22}^{t=27}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=27}^{t=29}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=29}^{t=31}\\Lambda_{i(1)}ds\\\\\n\\end{split}\n\\end{equation}\\]\nNote que podemos chamar uma variável \\(z\\) para substituir \\(t\\) nos limites de integração, afim de não precisar respeitar a ordenação dos dias e considerar apenas a passagem de tempo, tal que:\n\\[\\begin{equation}\n\\begin{cases}\n    t = i \\rightarrow \\text{i-ésimo dia} \\\\\n    z = i \\rightarrow \\text{i-dias}\n\\end{cases}\n\\end{equation}\\]\nPortanto, teremos\n\\[\\begin{equation} \\label{eq4}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=31}\\lambda_i(s)ds &= \\lambda_i \\left( \\int_{z=0}^{z=17}\\Lambda_{i(1)}ds \\right) + \\lambda_i \\left( \\int_{z=17}^{z=31}\\Lambda_{i(2)}ds \\right)\\\\\n    &= \\lambda_i \\left[ \\left( \\int_{z=0}^{z=17}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=17}^{z=31}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juíz-em-um-ano",
+    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juíz-em-um-ano",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Quantos processos são julgados por um juíz em um ano?",
+    "text": "Quantos processos são julgados por um juíz em um ano?\nExpandindo o raciocínio empregado anteriormente, podemos dizer que a quantidade de processos julgados pelo i-ésimo juiz no ano de 2023, com tempo \\(t \\in \\textbf{v}_{du} \\cup \\textbf{v}_{dnu}\\) será Poisson com média:\n\\[\\begin{equation} \\label{eq5}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=365}\\lambda_i(s)ds\n    &= \\lambda_i \\left[ \\left( \\int_{z=0}^{z=231}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=231}^{z=365}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-em-um-tribunal-em-um-ano",
+    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-em-um-tribunal-em-um-ano",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Quantos processos são julgados em um tribunal em um ano?",
+    "text": "Quantos processos são julgados em um tribunal em um ano?\nFinalmente, podemos responder nossa pergunta inicial, aproveitando dos resultados das equações anteriores, temos que a quantidade de processos julgados em um tribunal (N(t=365)) será Poisson com média:\n\\[\\begin{equation} \\label{eq6}\n\\begin{split}\n    N(t=365) = \\sum_{i=1}^{n} \\lambda_i \\left[ \\left( \\int_{z=0}^{z=231}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=231}^{z=365}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
+  },
+  {
+    "objectID": "presentations/estocasticos/estocasticos.html#referências",
+    "href": "presentations/estocasticos/estocasticos.html#referências",
+    "title": "Processos de Poisson não homogêneos de n tipos",
+    "section": "Referências",
+    "text": "Referências\n\nRoss, S. M. (2010). Introduction to Probability Models. Academic Press.\nDincer, E., Demir, S. M., & Yalçın, B. A. (2022)."
+  },
+  {
     "objectID": "presentations/random_forest/apresentacao.html#introdução",
     "href": "presentations/random_forest/apresentacao.html#introdução",
     "title": "Técnica Random Forest em árvores de decisão",
@@ -81,7 +382,7 @@
     "href": "presentations/random_forest/apresentacao.html#implementações",
     "title": "Técnica Random Forest em árvores de decisão",
     "section": "Implementações",
-    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[17,  0,  0],\n       [ 0, 11,  0],\n       [ 0,  2, 15]], dtype=int64)"
+    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[15,  0,  0],\n       [ 0, 13,  0],\n       [ 0,  0, 17]], dtype=int64)"
   },
   {
     "objectID": "presentations/random_forest/apresentacao.html#definições",
@@ -173,166 +474,5 @@
     "title": "Técnica Random Forest em árvores de decisão",
     "section": "Vantagens e desvantagens",
     "text": "Vantagens e desvantagens\n\nsobre classificação por florestas aleatórias:\n\n\n\nVantagens\n\n\nRobusto contra overfitting;\nTrabalha bem com dados de alta dimesão;\nConsegue captar relações não-lineares nos dados;\nFornece uma medida de importância;\nRobusto contra outliers e ruídos;\nConsegue lidar com dados faltantes.\n\n\n\nDesvantagens\n\n\nDificil interpretação;\nNão adequado para dados escassos;\nDemora para fazer predições;\nRequer ajuste de hiper-parâmetros."
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html",
-    "href": "presentations/estocasticos/estocasticos.html",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "",
-    "text": "Modelagem de dados e previsão de eventos futuros tem sido o garantidor do mercado de trabalho em estatística estar aquecido. Este tipo de inteligência aplicada à negócios vem se tornando essencial em qualquer setor, inclusive no poder Judiciário. Apesar deste não depender de faturamento para sua existência por ser inalienável ao setor público, tem sido do interesse dos próprios tribunais saber indicadores e estatísticas relacionadas ao próprio tribunal. E a modelagem surge neste contexto para agregar valor às decisões estratégicas deste poder.\nBuscou-se trabalhos de temas semelhantes, que visam modelar a quantidade de decisões em processos em tribunais. Entretanto, não consegui localizar nenhum; motivo esse talvez por ser tema sensível, no sentido de poder levar indiretamente a comparação de rendimentos entre juízes em um tribunal, seja pela possível falta de pertinência do assunto, seja pela tentativa inédita de modelar algo do tipo.\nEntretando, buscou-se trabalhos que modelam outros tipos de contagem usando de processo de Poisson não homogêneo, como (DINCER;DEMIR;YALÇIN,2022).\nNa metodologia, com base no livro ROSS (2010), apresento toda a metodologia e suporte teórico adotado na seção de análises. Na seção aplicação computacional iremos trazer uma possível solução simulada do problema proposto, e na seção de resultados apresento as conclusões gerais."
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#dia-útil",
-    "href": "presentations/estocasticos/estocasticos.html#dia-útil",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Dia útil",
-    "text": "Dia útil\nPor mais hiperbólico que pareça, não foi possível localizar uma definição fechada de dia útil. Portanto, consideraremos como dia útil, todos os dias do ano excetuado os feriados, finais de semana (sábado e domingo) e recessos coletivos. Pegando como base o ano de 2023, iríamos considerar como dia útil para o tribunal selecionado para a aplicação computacional todos os dias com excessão de:\n\nTodos os sábados e todos os domingos do ano;\nDias 01/01/2023 a 06/01/2023 - Recesso Forense;\nDias 20/02/2023 a 22/02/2023 - Carnaval & quarta-feira de cinzas;\nDias 5/04/2023 a 7/04/2023 - Quarta e quinta-feira Santa e Paixão de Cristo;\nDia 21/04/2023 - Tiradentes;\nDia 1/05/2023 - Dia do trabalhador;\nDia 08/06/2023 - Corpus Christi;\nDia 11/08/2023 - Dia do Advogado;\nDia 7/09/2023 - Independência;\nDia 12/10/2023 - Dia de Nossa Senhora Aparecida;\nDias 01/11/2023 e 02/11/2023 - Dia de Todos os Santos e Finados;\nDia 15/11/2023 - Proclamação da República;\nDia 08/12/2023 - Dia da Justiça;\nDias 20/12/2023 a 31/12/2023 - Recesso Forense.\n\nNote que feriados que se sobrepõe ou que são aos finais de semana, só foram anotados uma vez, para evitar confusão. Note ainda que é trivial inserir as férias individuais de juízes e ministros desta forma.\nPortanto, se fixado o ano, pode-se pensar no intervalo \\((0,t]\\) como sendo o primeiro instante do primeiro dia do ano até o último instante do último dia do ano, podemos ordenar os dias por índice, tal que o primeiro dia do ano (1º de janeiro) representa o dia 1, o dia 1º de Fevereiro representa o dia 32, até o dia 31 de dezembro, representando o dia 365. O restante dos dias são dias úteis.\nCom isso, teremos 134 dias que não são dias úteis no ano de 2023, sendo estes os dias de índice: 1, 2, 3, 4, 5, 6, 7, 8, 14, 15, 21, 22, 28, 29, 35, 36, 42, 43, 49, 50, 51, 52, 53, 56, 57, 63, 64, 70, 71, 77, 78, 84, 85, 91, 92, 95, 96, 97, 98, 99, 105, 106, 111, 112, 113, 119, 120, 121, 126, 127, 133, 134, 140, 141, 147, 148, 154, 155, 159, 161, 162, 168, 169, 175, 176, 182, 183, 189, 190, 196, 197, 203, 204, 210, 211, 217, 218, 223, 224, 225, 231, 232, 238, 239, 245, 246, 250, 252, 253, 259, 260, 266, 267, 273, 274, 280, 281, 285, 287, 288, 294, 295, 301, 302, 305, 306, 308, 309, 315, 316, 319, 322, 323, 329, 330, 336, 337, 342, 343, 344, 350, 351, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364 e 365. Iremos chamar o vetor que contém estes valores acima de \\(\\textbf{v}_{dnu}\\), sendo seu complementar \\(\\textbf{v}_{du}\\) o vetor que contém todos os dias de 1 a 365 não contidos no vetor acima, representando assim os dias úteis (\\(du\\))."
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#processo-de-contagem",
-    "href": "presentations/estocasticos/estocasticos.html#processo-de-contagem",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Processo de contagem",
-    "text": "Processo de contagem\nUm processo de contagem, definido por DINCER;DEMIR;YALÇIN (2022 apud BAS,2019) , é um processo estocástico, em que \\(M(t),t \\geq 0\\) é não negativo, com suporte em \\(\\mathbb{Z}\\) não decrescente \\(\\forall t \\geq 0\\). \\(M(t)\\) é o número total de eventos que ocorrem até o tempo \\(t\\), e \\(M(t,t+h)=M(t+h)-M(t)\\) denota o número de eventos ocorridos no intervalo \\((t,t+h],h&gt;0\\). Além disso, um processo de contagem, em que o número de eventos ocorridos em intervalos de tempo disjuntos são independentes e tem incrementos independentes. Um processo de contagem tem incrementos estacionários se a distribuição de \\(M(t,t+h)\\) depende apenas do comprimento do intervalo de tempo."
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#variável-aleatória-poisson",
-    "href": "presentations/estocasticos/estocasticos.html#variável-aleatória-poisson",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Variável aleatória Poisson",
-    "text": "Variável aleatória Poisson\nSe \\(M(t)\\) denota o número de eventos que ocorrem num intervalo de tempo específico, este é chamado variável aleatória Poisson. A variável aleatória Poisson possui função de massa de probabilidade:\n\\[\\begin{equation}\n    \\mathbb{P}(M(t)=k)=\\frac{e^{-\\lambda_t}\\lambda_t^k}{k!}\n\\end{equation}\\]\nonde \\(\\lambda_t\\) é o parâmetro da distribuição Poisson e representa a taxa de eventos que ocorrem no intervalo de tempo especificado, além de ser a variância e esperança de \\(M(t)\\) ser igual a \\(\\lambda_t\\)."
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#processo-de-poisson",
-    "href": "presentations/estocasticos/estocasticos.html#processo-de-poisson",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Processo de Poisson",
-    "text": "Processo de Poisson\nUm processo de Poisson é definido por ROSS(2010) como:\n\\[\\begin{equation} \\label{eq1}\nN(t)  \\stackrel{}{\\sim} Poisson(m_(t)), i=1,2,...,n.\n\\end{equation}\\]\nE:\n\\[\\begin{equation}\n    \\mathbb{P}\\{N(t) = x\\} = \\frac{[m(t)]^{x}}{x!}e^{-m(t)}\n\\end{equation}\\]\nOnde \\(\\frac{o(h)}{h} \\rightarrow 0, h \\rightarrow 0\\)\n\nProcesso de Poisson homogêneo\nSe o processo de Poisson \\(M(t)\\) têm função de intensidade constante \\(\\lambda_t=\\lambda \\ \\forall \\ (t,t+s]\\), então este é chamado um processo de Poisson homogêneo. (DINCER;DEMIR;YALÇIN,2022) \n\n\nProcesso de Poisson não homogêneo\nSe o processo de Poisson \\(M(t)\\) tem função de intensidade variando com o tempo, este é um Processo de Poisson não homogêneo. A função massa de probabilidade deste processo é definida como:\n\\[\\begin{equation}\n    \\mathbb{P}(M(t,t+h)=x)=\\frac{\\left( \\int_t^{t+h}\\lambda(z)dz \\right)^x}{x!}e^{-\\int_t^{t+h}\\lambda(z)dz}\n\\end{equation}\\]"
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juiz-em-um-mês",
-    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juiz-em-um-mês",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Quantos processos são julgados por um juiz em um mês?",
-    "text": "Quantos processos são julgados por um juiz em um mês?\nTomando Janeiro de 2023 (dias 1 a 31) como exemplo, o número de processos julgados pelo i-ésimo juiz será uma variável aleatória Poisson, com média:\n\\[\\begin{equation} \\label{eq3}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=31}\\Lambda_i(s)ds \\ ; \\{s = 30\\} \\\\\n    = \\lambda_i\\int_{t=0}^{t=8}\\Lambda_{i(2)}ds \\\\ + \\ \\lambda_i\\int_{t=8}^{t=13}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=13}^{t=15}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=15}^{t=20}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=20}^{t=22}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=22}^{t=27}\\Lambda_{i(1)}ds\\\\+ \\ \\lambda_i\\int_{t=27}^{t=29}\\Lambda_{i(2)}ds\\\\+ \\ \\lambda_i\\int_{t=29}^{t=31}\\Lambda_{i(1)}ds\\\\\n\\end{split}\n\\end{equation}\\]\nNote que podemos chamar uma variável \\(z\\) para substituir \\(t\\) nos limites de integração, afim de não precisar respeitar a ordenação dos dias e considerar apenas a passagem de tempo, tal que:\n\\[\\begin{equation}\n\\begin{cases}\n    t = i \\rightarrow \\text{i-ésimo dia} \\\\\n    z = i \\rightarrow \\text{i-dias}\n\\end{cases}\n\\end{equation}\\]\nPortanto, teremos\n\\[\\begin{equation} \\label{eq4}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=31}\\lambda_i(s)ds &= \\lambda_i \\left( \\int_{z=0}^{z=17}\\Lambda_{i(1)}ds \\right) + \\lambda_i \\left( \\int_{z=17}^{z=31}\\Lambda_{i(2)}ds \\right)\\\\\n    &= \\lambda_i \\left[ \\left( \\int_{z=0}^{z=17}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=17}^{z=31}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juíz-em-um-ano",
-    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-por-um-juíz-em-um-ano",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Quantos processos são julgados por um juíz em um ano?",
-    "text": "Quantos processos são julgados por um juíz em um ano?\nExpandindo o raciocínio empregado anteriormente, podemos dizer que a quantidade de processos julgados pelo i-ésimo juiz no ano de 2023, com tempo \\(t \\in \\textbf{v}_{du} \\cup \\textbf{v}_{dnu}\\) será Poisson com média:\n\\[\\begin{equation} \\label{eq5}\n\\begin{split}\n    \\lambda_i\\int_{t=0}^{t=365}\\lambda_i(s)ds\n    &= \\lambda_i \\left[ \\left( \\int_{z=0}^{z=231}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=231}^{z=365}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-em-um-tribunal-em-um-ano",
-    "href": "presentations/estocasticos/estocasticos.html#quantos-processos-são-julgados-em-um-tribunal-em-um-ano",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Quantos processos são julgados em um tribunal em um ano?",
-    "text": "Quantos processos são julgados em um tribunal em um ano?\nFinalmente, podemos responder nossa pergunta inicial, aproveitando dos resultados das equações anteriores, temos que a quantidade de processos julgados em um tribunal (N(t=365)) será Poisson com média:\n\\[\\begin{equation} \\label{eq6}\n\\begin{split}\n    N(t=365) = \\sum_{i=1}^{n} \\lambda_i \\left[ \\left( \\int_{z=0}^{z=231}\\Lambda_{i(1)}ds \\right)  + \\left( \\int_{z=231}^{z=365}\\Lambda_{i(2)}ds \\right) \\right]\n\\end{split}\n\\end{equation}\\]"
-  },
-  {
-    "objectID": "presentations/estocasticos/estocasticos.html#referências",
-    "href": "presentations/estocasticos/estocasticos.html#referências",
-    "title": "Processos de Poisson não homogêneos de n tipos",
-    "section": "Referências",
-    "text": "Referências\n\nRoss, S. M. (2010). Introduction to Probability Models. Academic Press.\nDincer, E., Demir, S. M., & Yalçın, B. A. (2022)."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Bruno Gondim",
-    "section": "",
-    "text": "Estudante de graduação no bacharel de Estatística na Universidade de Brasília - UnB\nAqui estão aplicações pessoais de machine learning, ciência de dados e estatística. Me interesso também em programação, estrutura e modelagem de dados. Acredito em um mundo mais igualitário e justo."
-  },
-  {
-    "objectID": "index.html#formação",
-    "href": "index.html#formação",
-    "title": "Bruno Gondim",
-    "section": "Formação",
-    "text": "Formação\nUniversidade de Brasília (UnB) | Distrito Federal, Brasil | Bacharel em Estatística | Ago 2015 - presente"
-  },
-  {
-    "objectID": "index.html#experiência",
-    "href": "index.html#experiência",
-    "title": "Bruno Gondim",
-    "section": "Experiência",
-    "text": "Experiência\nGerente de projetos na ESTAT - Jan 2022 - Jan 2023\nEstagiário STF | Núcleo de análise de dados e estatística (NUADE) | Jul 2023 - presente"
-  },
-  {
-    "objectID": "presentations/nlp/index.html#introdução",
-    "href": "presentations/nlp/index.html#introdução",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Introdução",
-    "text": "Introdução\n\n\nNo campo do direito, a aplicação de técnicas estatísticas vem sendo testada em diversos âmbitos, inclusive no Supremo Tribunal Federal do Brasil.\nÉ de interesse do tribunal a aplicação destas técnicas para agrupamento de processos. Um agrupador poderia ajudar a identificar processos semelhantes, trabalho este feito manualmente.\nEste trabalho busca estudar e aplicar algumas destas técnicas para o desenvolvimento de uma aplicação prática no STF, com objetivo de agrupar processos de controle concentrado."
-  },
-  {
-    "objectID": "presentations/nlp/index.html#objetivos",
-    "href": "presentations/nlp/index.html#objetivos",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Objetivos",
-    "text": "Objetivos\n\nO objetivo deste trabalho é formular um agregador de processos de controle concentrado, que são processos que tratam da constitucionalidade de leis e atos normativos. Constituem o dito controle concentrado os processos do Supremo Tribunal Federal das seguintes classes:\n\n\nADI (Ação Direta de Inconstitucionalidade)\nADC (Ação Declaratória de Constitucionalidade)\nADPF (Arguição de Descumprimento de Preceito Fundamental)\nADO (Ação Direta de Inconstitucionalidade por Omissão)"
-  },
-  {
-    "objectID": "presentations/nlp/index.html#objetivos-1",
-    "href": "presentations/nlp/index.html#objetivos-1",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Objetivos",
-    "text": "Objetivos\n\nO agrupador fornecerá subsídios aos responsáveis pelo encaminhamento dos processos que chegam ao STF, visando reduzir o trabalho mecânico humano.\nDos objetivos específicos, espera-se:\n\n\nProcessar os dados utilizando técnicas de Processamento de Linguagem Natural (PLN), transformando petições iniciais de processos em vetores numéricos;\nComparar técnicas de agrupamento;\nAvaliar a similaridade entre processos em recortes temporais distintos;\nEstudar técnicas de PLN, análise multivariada e visualização de dados."
-  },
-  {
-    "objectID": "presentations/nlp/index.html#metodologia",
-    "href": "presentations/nlp/index.html#metodologia",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Metodologia",
-    "text": "Metodologia\nTendo os dados e o modelo pré-treinado para vetorização, os códigos Python e R para a vetorização dos textos, e posterior análise, são da seguinte forma:\n\n\n\n# Módulos\nimport polars\nimport gensim\nfrom gensim.models.doc2vec import Doc2Vec\n\n# Função\ndef infer_vector(text):\n    return model.infer_vector(text.split())\n\n# Modelo pré-treinado para Embedding\nmodel = gensim.models.Doc2Vec.load(\"modelo.model\")\n\n# Dados\ndf = polars.read_csv(\"dados.csv\",columns=[1,3,4])\n\n# Saída: DataFrame com duas colunas: Texto original e vetor Embedding correspondente.\ndf = df.with_columns_seq(polars.col(\"texto\").apply(infer_vector).alias(\"vetor\"))\n\n\n\n# Pacote\nlibrary(reticulate)\n\n# Definindo o ambiente virtual python\nreticulate::use_condaenv(\"TCC\")\n\n# Executando o script python\nreticulate::source_python(\"script.py\")\n\n# Ajustando o dataframe trazido do python para formato R mais adequado\ndf &lt;- as.data.frame(do.call(rbind, lapply(a, function(x) c(x[[1]], x[[2]]))), stringsAsFactors = FALSE)"
-  },
-  {
-    "objectID": "presentations/nlp/index.html#metodologia-1",
-    "href": "presentations/nlp/index.html#metodologia-1",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Metodologia",
-    "text": "Metodologia\n\nPassos para a construção do agregador:\n\n\n\n\n\nObtenção dos dados:\n\n\nOs dados foram disponibilizados pelo STF (mas estão disponíveis publicamente no Portal do STF.).\n\n\nVetorização (incluindo ocerização e processamento do texto PDF):\n\n\nEste módulo foi fornecido pelo STF (dados em formato CSV)"
-  },
-  {
-    "objectID": "presentations/nlp/index.html#metodologia-2",
-    "href": "presentations/nlp/index.html#metodologia-2",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Metodologia",
-    "text": "Metodologia\n\n\n\n\nDefinir recortes temporais para a agregação:\n\n\nPor conta da natureza cíclica dos processos que compõem o acervo do STF, é necessário um sistema de atualização constante para uma aplicação prática.\nSerá realizado o agrupamento com dados em recortes temporais distintos, e, em cada recorte, será avaliada a similaridade entre os processos em tramitação naquela data."
-  },
-  {
-    "objectID": "presentations/nlp/index.html#metodologia-3",
-    "href": "presentations/nlp/index.html#metodologia-3",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Metodologia",
-    "text": "Metodologia\n\n\n\n\nAplicação de medidas de distância para comparar a similaridade dos processos (distância euclidiana, distância do cosseno etc)."
-  },
-  {
-    "objectID": "presentations/nlp/index.html#metodologia-4",
-    "href": "presentations/nlp/index.html#metodologia-4",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Metodologia",
-    "text": "Metodologia\n\n\n\n\nPara a formação dos agrupamentos, serão utilizadas técnicas de agrupamento hierárquico e não-hierárquico baseadas nas distâncias calculadas.\n\n\nPara a visualização dos dados, serão estudadas técnicas como dendrogramas e t-SNE."
-  },
-  {
-    "objectID": "presentations/nlp/index.html#cronograma",
-    "href": "presentations/nlp/index.html#cronograma",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Cronograma",
-    "text": "Cronograma\n\n\nCronograma TCC 1\n\n\nAtividades\nMar\nAbr\nMai\nJun\nJul\n\n\n\n\nEscolha do tema a ser abordado.\n\n\n\n\n\n\n\nLevantamento de bibliografia relacionada ao tema.\n\n\n\n\n\n\n\nDefinição do recorte temporal com a AAJ do STF.\n\n\n\n\n\n\n\nSolicitação dos dados para a STI do STF.\n\n\n\n\n\n\n\nSolicitação dos algoritmos à STI do STF.\n\n\n\n\n\n\n\nRevisão de literatura.\n\n\n\n\n\n\n\nDesenvolvimento da proposta de projeto.\n\n\n\n\n\n\n\nAnálise preliminar do banco de dados.\n\n\n\n\n\n\n\nEntrega da proposta do projeto.\n\n\n\n\n\n\n\nElaboração da apresentação da proposta.\n\n\n\n\n\n\n\nManipulação do banco de dados.\n\n\n\n\n\n\n\nAnálise do banco de dados.\n\n\n\n\n\n\n\nElaboração do relatório parcial.\n\n\n\n\n\n\n\nEntrega do relatório parcial a Professora Orientadora.\n\n\n\n\n\n\n\nCorreção do relatório parcial.\n\n\n\n\n\n\n\nEntrega do relatório parcial a banca."
-  },
-  {
-    "objectID": "presentations/nlp/index.html#cronograma-1",
-    "href": "presentations/nlp/index.html#cronograma-1",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Cronograma",
-    "text": "Cronograma\n\n\nCronograma TCC 2\n\n\nAtividades\nAgo\nSet\nOut\nNov\nDez\n\n\n\n\nDesenvolvimento do modelo e da aplicação.\n\n\n\n\n\n\n\nElaboração do relatório final.\n\n\n\n\n\n\n\nEntrega do relatório final a Professora Orientadora.\n\n\n\n\n\n\n\nCorreção do relatório final.\n\n\n\n\n\n\n\nEntrega do relatório final para a banca."
-  },
-  {
-    "objectID": "presentations/nlp/index.html#referências",
-    "href": "presentations/nlp/index.html#referências",
-    "title": "Agrupador de processos de controle concentrado",
-    "section": "Referências",
-    "text": "Referências\n\nARTES, R.; BARROSO, L. P. Métodos multivariados de análise estatística. [S.l.]: São Paulo: Blucher, 2023.\nEVERITT, B.; SKRONDAL, A. The cambridge dictionary of statistics. [S.l.]: Cambridge University Press, 2010. v. 4.\nFREITAS, L. J. G. et al. Catboost algorithm application in legal texts and un 2030 agenda. Revista de Informatica Teórica e Aplicada - RITA - ISSN 2175-2745. Vol. 30, Num. 02 (2023) 51-58, 2023.\nFREITAS, L. J. G. et al. Text clustering applied to data augmentation in legal contexts. arXiv preprint arXiv:2404.08683, 2024.\nJOHNSON, R. A.; WICHERN, D. W. Applied Multivariate Statistical Analysis. [S.l.]: 6. ed.[S.l.]:Prentice Hall, 2007.\nKAUFMAN, L.; ROUSSEEUW, P. J. Finding groups in data: an introduction to cluster analysis. [S.l.]: John Wiley & Sons, 1990.\nLECUN, Y. et al. Gradient-based learning applied to document recognition. Proceedings of the IEEE, Ieee, v. 86, n. 11, p. 2278–2324, 1998.\nMAATEN, L. Van der; HINTON, G. Visualizing data using t-sne. Journal of machine learning research, v. 9, n. 11, 2008.\nMACQUEEN, J. et al. Some methods for classification and analysis of multivariate observations. [S.l.], 1967. v. 1. 281–297 p.\nMORETTIN, P. A.; SINGER, J. M. Estatística e Ciência de Dados. [S.l.]: LTC, 2021.\nRICARDO, B.-Y.; BERTHIER, R.-N. Modern information retrieval: the concepts and technology behind search. [S.l.]: New Jersey, USA: Addi-son-Wesley Professional, 2011.\nvon Borries, G.; WANG, H. Partition clustering of high dimensional low sample size data based on p-values. Computational statistics & data analysis, v. 53, n. 12, p. 3987-3998, 2009.\n\n\n\n\n\nDepartamento de estatística - UnB"
   }
 ]
