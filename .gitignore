@@ -59,6 +59,8 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
+README_BRUNO.txt
+
 
 /_site/
 /.quarto/
