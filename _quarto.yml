@@ -16,6 +16,8 @@ website:
             text: Técnicas de Random Forest em árvores de decisão  
           - href: presentations/estocasticos/estocasticos.qmd
             text: Processos de Poisson não homogêneos de n tipos
+          - href: presentations/xgboost_catboost/trabalho.qmd
+            text: XGBoost e Catboost
     logo: cup-hot
     tools:
       - icon: linkedin
