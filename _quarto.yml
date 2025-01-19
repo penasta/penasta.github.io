@@ -18,6 +18,8 @@ website:
             text: Processos de Poisson não homogêneos de n tipos
           - href: presentations/xgboost_catboost/trabalho.qmd
             text: XGBoost e Catboost
+          - href: presentations/classificacao_salario/trabalho.qmd
+            text: Classificação com tidymodels
     logo: cup-hot
     tools:
       - icon: linkedin

@@ -1,0 +1,655 @@
+---
+title: "Classificação salarial via algorítmos de Machine Learning"
+subtitle: "Tópicos 2 — Modelagem com apoio computacional"
+author:
+  - name: Bruno Gondim Toledo
+    url: https://github.com/penasta
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: auto
+    scrollable: true
+    logo: unb.jpg
+    theme: serif
+    width: 1500
+    css: styles.css
+    footer: Departamento de estatística - UnB
+resources:
+  - demo.pdf
+editor_options: 
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    dev: png
+    dev.args:
+      bg: transparent
+---
+
+## Introdução
+
+```{css, echo = FALSE}
+.center {
+  text-align: center !important
+}
+```
+
+Neste trabalho, buscou-se estudar um conjunto censitário sintético com diversas características demográficas, com objetivo fim de entender a relação entre covariáveis o salário — variável esta que se encontra binarizada no conjunto de dados, sendo
+
+* 0: Renda anual de até 50.000 dólares
+* 1: Renda anual acima de 50.000 dólares
+
+Os dados são públicos e podem ser acessados em [Kaggle](https://www.kaggle.com/datasets/isathyam31/adult-income-prediction-classification/data).
+
+## Preparação
+
+Os dados disponíveis no Kaggle já haviam passado por algumas etapas de transformações, mas para o objetivo deste trabalho achei pertinente realizar mais algumas rotinas de transformações nas covariáveis
+
+
+```{r}
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, readxl, janitor,xgboost,tidymodels,vip,rpart.plot,
+               conflicted,tictoc,finetune,doParallel,DataExplorer,future,glmnet,
+               data.table,summarytools,knitr,compareGroups,bonsai,discrim,
+               baguette,naivebayes)
+
+registerDoParallel(cores = parallel::detectCores())
+
+tidymodels_prefer()
+df = read_csv("data.csv")
+```
+
+```{r, cache=TRUE}
+#| echo: true
+
+df$salary = factor(df$salary)
+df = clean_names(df)
+
+df$fnlwgt = df$fnlwgt/sum(df$fnlwgt)
+
+df = df %>%
+  mutate(marital_status = factor(marital_status),
+         relationship = factor(relationship),
+         race = factor(race),
+         sex = factor(sex),
+         country = factor(ifelse(country == 'United-States',country,'Others')),
+         education = case_when(
+           education %in% c("Bachelors","Masters","Assoc-acdm",
+                            "Assoc-voc","Doctorate","Prof-school") ~ "high_education",
+           .default = "low_education"),
+         education = factor(education),
+         occupation = case_when(
+           occupation %in% c("Adm-clerical", "Exec-managerial", "Prof-specialty", "Tech-support", "Sales") ~ "white_collar", # Ocupações que geralmente envolvem trabalho em escritório ou administrativo.
+           occupation %in% c("Craft-repair", "Farming-fishing", "Handlers-cleaners", "Machine-op-inspct", "Transport-moving") ~ "blue_collar", # Ocupações que envolvem trabalho manual ou técnico.
+           occupation %in% c("Other-service", "Priv-house-serv", "Protective-serv") ~ "services", # Ocupações no setor de serviços.
+           occupation %in% c("Armed-Forces","?") ~ "Others"),
+         occupation = factor(occupation),
+         civil_status = ifelse(marital_status %in% c('Never-married','Divorced','Separated', 'Widowed') | relationship %in% c('Not-in-family','Unmarried'),"Single","Non-single"),
+         civil_status = factor(civil_status),
+         workclass = case_when(
+           workclass %in% c("Federal-gov", "Local-gov", "State-gov") ~ "government",
+           workclass == "Private" ~ "private",
+           workclass %in% c("Self-emp-inc", "Self-emp-not-inc") ~ "self_employed",
+           workclass %in% c("Never-worked", "Without-pay") ~ "not_working",
+           workclass == "?" ~ "unknown"),
+         workclass = factor(workclass)
+  ) %>%
+  select(-marital_status,-relationship)
+```
+
+##
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+* Análise exploratória
+
+Após as transformações, observamos em nossos dados 12 covariáveis de aspectos demográficos dos grupos populacionais bastante heterogêneos e de tamanhos desiguais, quando separado nos grupos de salário até 50 mil dólares anuais e acima de 50 mil dólares anuais.
+
+::: 
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+
+# Análise descritiva ----
+data = df %>% mutate(salary = factor(ifelse(salary == 0,"<50k",">50k")))
+# Tabela geral
+comp = compareGroups(salary ~ . -fnlwgt, data=data, method = 4)
+table = createTable(comp)
+export2md(table,
+          strip=TRUE,
+          first.strip=TRUE,
+          format='html',
+          size = 10,
+          caption = "")
+rm(data)
+```
+
+::: 
+
+::::
+
+## Covariáveis numéricas
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
+#| echo: false
+
+df %>% 
+  select(age, education_num, capital_gain, capital_loss, hours_per_week) %>%
+  gather() %>%
+  ggplot(aes(value)) +
+  geom_histogram(bins = 30) +
+  facet_wrap(~key, scales = 'free_x') +
+  labs(x = '', y = 'Frequência', title = 'Histogramas das Covariáveis Numéricas') +
+  theme_minimal()
+
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
+#| echo: false
+
+df %>% 
+  select(salary, age, education_num, capital_gain, capital_loss, hours_per_week) %>%
+  gather(key = "variable", value = "value", -salary) %>%
+  ggplot(aes(x = factor(salary), y = value)) +
+  geom_boxplot() +
+  facet_wrap(~variable, scales = 'free_y') +
+  labs(x = 'Salary (0: <50k, 1: >50k)', y = 'Valor', title = 'Boxplot das Variáveis Numéricas por Faixa de Salário') +
+  theme_minimal()
+
+```
+
+:::
+
+::::
+
+```{r, cache=TRUE}
+kable(summary(select(df, age, education_num, capital_gain, capital_loss, hours_per_week)))
+```
+
+## Covariáveis categóricas
+
+:::{.center}
+
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
+#| echo: false
+
+df %>%
+  select(salary, workclass, education, civil_status, occupation, sex, race, country) %>%
+  gather(key = "variable", value = "value", -salary) %>%
+  mutate(variable = factor(variable, levels = c("workclass", "education", "civil_status", "occupation", "sex", "race", "country"))) %>%
+  ggplot(aes(x = value, fill = factor(salary))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~variable, scales = 'free_x') +
+  labs(x = '', y = '', fill = 'Salário (0: <50k, 1: >50k)', title = '') +
+  scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+  theme_minimal()
+
+```
+
+:::
+
+## Modelagem
+
+Num contexto em que temos tantas covariáveis, tantas observações e, apesar de alguns indicativos observados na análise exploratória, não é possível observar um padrão óbvio que indique o salário do indivíduo. Para isso, utilizei do recurso da modelagem com apoio computacional afim de tornar possível esta análise.
+Um diferencial deste trabalho é a utilização do *framework tidymodels*, que é bastante verborrágico e permite uma compreensão das etapas do modelo pela leitura do código, além de eficiência e praticidade
+
+## Parâmetros gerais
+
+Irei testar diversos modelos e fazer comparação de resultados destes, mas utilizarei a mesma "receita" para todos 
+
+```{r, cache=TRUE}
+#| echo: TRUE
+
+set.seed(150167636)
+split = initial_split(df, prop = .8, strata = salary)
+train = training(split)
+test = testing(split)
+
+cv_folds <- vfold_cv(train, 
+                     v = 5, 
+                     strata = salary)
+
+recipe <- recipe(salary ~ .,
+                 data = train) %>% 
+  update_role(fnlwgt, new_role = "case_weight") %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_interact(terms = ~ starts_with("occupation"):starts_with("race") + 
+                  starts_with("occupation"):starts_with("sex") +
+                  starts_with("hours_per_week"):starts_with("sex"))
+
+dados_preparados <- recipe %>% 
+  prep() %>% 
+  juice()
+head(dados_preparados)
+```
+
+## Modelo 1: Regressão logística
+
+Como a variável resposta é binária, o primeiro modelo que podemos tentar seria o logístico
+
+```{r, cache=TRUE}
+#| echo: TRUE
+
+glm_spec <- logistic_reg() %>%
+  set_engine("glm")
+
+glm_wf <- workflow() %>%
+  add_recipe(recipe) %>%
+  add_model(glm_spec)
+
+glm_fit <- glm_wf %>%
+  fit(data = train)
+
+glm_fit %>%
+  extract_fit_parsnip() %>%
+  tidy() %>%
+  print(n=Inf)
+
+```
+
+## Importâncias para o modelo logístico
+
+Podemos observar as covariáveis de maior importância para este modelo, assim como sua matriz de confusão
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
+#| fig.width: 30
+#| fig.height: 20
+
+glm_fit %>%
+  extract_fit_parsnip() %>%
+  vip(geom = "col") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 34),
+                          axis.text.y = element_text(size = 20),
+                          axis.title.x = element_text(size = 16),
+                          axis.title.y = element_text(size = 16),
+                          plot.title = element_text(size = 18, hjust = 0.5))
+
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+#| echo: TRUE
+
+predictions <- glm_fit %>%
+  predict(new_data = test)
+
+results <- bind_cols(test, predictions)
+
+results %>%
+  conf_mat(salary,.pred_class)
+
+```
+
+```{r, cache=TRUE}
+
+metrics <- metric_set(accuracy, specificity, sensitivity)
+
+resultados_logit = augment(glm_fit, new_data = test) %>%
+  metrics(truth = salary, estimate = .pred_class) %>%
+  select(.metric,.estimate)
+
+```
+
+:::
+
+::::
+
+## Modelo 2: Regressão Lasso
+
+Como observado na receita do modelo, existem 38 covariáveis nesta modelagem. Diversas abordagens podem ser utilizadas para selecionar as covariáveis de maior importância, sendo uma dessas a regressão lasso, que penaliza coeficientes e torna-os 0 em caso de insignificância.
+
+Este é um modelo que contém um hiperparâmetro, portanto iremos ajustar um grid para escolher o melhor possível.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+#| echo: TRUE
+
+lasso_spec <- logistic_reg(penalty = tune(),
+                           mixture = 1) %>%
+  set_engine("glmnet")
+
+lasso_wf <- workflow() %>%
+  add_recipe(recipe) %>%
+  add_model(lasso_spec)
+
+grid <- grid_regular(penalty(),
+                     levels = 100)
+
+plan(multisession)
+set.seed(150167636)
+lasso_res <- lasso_wf %>%
+  tune_grid(resamples = cv_folds,
+            grid = grid,
+            metrics = metric_set(roc_auc))
+
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
+lasso_res %>%
+  collect_metrics() %>%
+  filter(.metric == "roc_auc") %>%
+  select(mean, penalty) %>%
+  pivot_longer(penalty,
+               names_to = "hiperparâmetro",
+               values_to = "valor") %>%
+  ggplot(aes(valor, mean)) +
+  geom_point()+
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 10),
+                          axis.text.y = element_text(size = 10),
+                          axis.title.x = element_text(size = 10),
+                          axis.title.y = element_text(size = 10),
+                          plot.title = element_text(size = 10, hjust = 0.5))+
+  labs(x="",y="")
+```
+
+Podemos ver que um menor valor de penalização é benéfico ao modelo, visto a importância relativa das covariáveis serem altas neste caso
+
+:::
+
+::::
+
+## Estimativa dos parâmetros para o modelo Lasso
+
+```{r}
+#| echo: TRUE
+
+best_params = lasso_res %>%
+  select_best(metric = "roc_auc")
+
+best_wf = finalize_workflow(lasso_wf, best_params)
+
+final_fit <- best_wf %>%
+  fit(data = train)
+
+final_fit %>%
+  extract_fit_parsnip() %>%
+  tidy() %>%
+  print(n=Inf)
+```
+
+## Importâncias para o modelo Lasso
+
+Podemos observar as covariáveis de maior importância para este modelo, assim como sua matriz de confusão
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
+#| fig.width: 30
+#| fig.height: 20
+
+final_fit %>%
+  extract_fit_parsnip() %>%
+  vip(geom = "col") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 34),
+                          axis.text.y = element_text(size = 20),
+                          axis.title.x = element_text(size = 16),
+                          axis.title.y = element_text(size = 16),
+                          plot.title = element_text(size = 18, hjust = 0.5))
+
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+#| echo: TRUE
+
+predictions <- final_fit %>%
+  predict(new_data = test)
+
+results <- bind_cols(test, predictions)
+
+results %>%
+  conf_mat(salary,.pred_class)
+
+```
+
+```{r, cache=TRUE}
+
+metrics <- metric_set(accuracy, specificity, sensitivity)
+
+resultados_lasso = augment(final_fit, new_data = test) %>%
+  metrics(truth = salary, estimate = .pred_class) %>%
+  select(.metric,.estimate)
+
+```
+
+:::
+
+::::
+
+## Modelo 3: XGBoost
+
+O XGBoost é um modelo de *Gradient boosting* baseado em árvores, que costuma performar bem em tarefas como esta, de classificação com diversas covariáveis
+
+Este é um modelo de *Boosting*, ou seja, o "encaixe" de diversos modelos fracos afim da construção de um modelo robusto a partir da combinação destes resultados.
+
+:::{.center}
+```{mermaid}
+graph LR
+    A[Dados] --> B[Modelo 1];
+    B --> C[Modelo 2];
+    C --> D[...];
+    D --> E[Modelo m];
+    E --> F[Ensembling dos modelos];
+    F --> G[Modelo final];
+```
+:::
+
+## Ajuste do XGBoost
+
+Também iremos realizar o *fine tuning* de alguns hiperparâmetros deste modelo, no caso o número de árvores e a profundidade destas, afim de obter o melhor modelo.
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+#| echo: TRUE
+
+model = boost_tree(mode = "classification",
+                   trees = tune(),
+                   tree_depth = tune()
+                   ) %>%
+  set_engine("xgboost")
+
+wf = workflow() %>%
+  add_recipe(recipe) %>%
+  add_model(model)
+
+grid = wf %>%
+  extract_parameter_set_dials() %>%
+  grid_regular(levels = 3)
+
+plan(multisession)
+set.seed(150167636)
+tune_res = tune_grid( 
+  wf,
+  resamples = cv_folds,
+  grid = grid,
+  metrics = metric_set(accuracy, roc_auc, sens,spec)
+  )
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+tune_res %>%
+  collect_metrics() %>%
+  filter(.metric == "roc_auc") %>%
+  select(mean, trees:tree_depth) %>%
+  pivot_longer(trees:tree_depth,
+               names_to = "hiperparâmetro",
+               values_to = "valor") %>%
+  ggplot(aes(valor, mean, color = hiperparâmetro)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~hiperparâmetro, scales = "free_x") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 10),
+                          axis.text.y = element_text(size = 10),
+                          axis.title.x = element_text(size = 10),
+                          axis.title.y = element_text(size = 10),
+                          plot.title = element_text(size = 10, hjust = 0.5))+
+  labs(x="",y="")
+```
+
+```{r, cache=TRUE}
+best_params = tune_res %>%
+  select_best(metric = "roc_auc")
+best_params
+```
+
+Vemos que a melhor combinação de hiperparâmetros encontrada é utilizando 2000 árvores de tamanho 1
+
+:::
+
+::::
+
+## Importâncias para o XGBoost
+
+Podemos observar as covariáveis de maior importância para este modelo, assim como sua matriz de confusão
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+best_wf = finalize_workflow(wf, best_params)
+
+final_fit <- best_wf %>%
+  fit(data = train)
+```
+
+
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
+#| fig.width: 30
+#| fig.height: 20
+
+final_fit %>%
+  extract_fit_parsnip() %>%
+  vip(geom = "col") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 34),
+                          axis.text.y = element_text(size = 20),
+                          axis.title.x = element_text(size = 16),
+                          axis.title.y = element_text(size = 16),
+                          plot.title = element_text(size = 18, hjust = 0.5))
+
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r, cache=TRUE}
+#| echo: TRUE
+
+predictions <- final_fit %>%
+  predict(new_data = test)
+
+results <- bind_cols(test, predictions)
+
+results %>%
+  conf_mat(salary,.pred_class)
+
+```
+
+```{r, cache=TRUE}
+
+metrics <- metric_set(accuracy, specificity, sensitivity)
+
+resultados_xgboost = augment(final_fit, new_data = test) %>%
+  metrics(truth = salary, estimate = .pred_class) %>%
+  select(.metric,.estimate)
+
+```
+
+:::
+
+::::
+
+## Comparando desempenho dos modelos
+
+:::: {.columns}
+
+::: {.column width="33%"}
+
+Modelo logístico
+
+```{r, cache=TRUE}
+kable(resultados_logit)
+```
+
+
+:::
+
+::: {.column width="33%"}
+
+Lasso
+
+```{r, cache=TRUE}
+kable(resultados_lasso)
+```
+
+:::
+
+::: {.column width="33%"}
+
+XGBoost
+
+```{r, cache=TRUE}
+kable(resultados_xgboost)
+```
+
+:::
+
+::::
+
+O maior desafio para estes dados era capturar a especificidade (salário >50k). Vemos que todos os modelos tiveram dificuldade com esta métrica, porém houve um ganho sensível do modelo de árvore em relação aos modelos baseados em regressão.
+
+## Referências
+
+[Fonte dos dados.](https://www.kaggle.com/datasets/isathyam31/adult-income-prediction-classification/data)
+
+[https://www.tidymodels.org](https://www.tidymodels.org)
+
+[Documentação XGBoost.](https://xgboost.readthedocs.io/_/downloads/en/release_0.80/pdf/)
+
+[Pinheiro, João Manoel Herrera. Um estudo sobre Algoritmos de Boosting e a Otimização de Hiperparâmetros Utilizando Optuna. São Carlos, SP. 2023.](https://bdta.abcd.usp.br/directbitstream/6962846b-66bd-4bd6-9f74-2b18bff03234/Pinheiro_JoãoManoelHerrera_tcc.pdf)
