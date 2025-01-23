@@ -20,6 +20,8 @@ website:
             text: XGBoost e Catboost
           - href: presentations/classificacao_salario/trabalho.qmd
             text: Classificação com tidymodels
+          - href: presentations/birnbaum/seminario.qmd
+            text: Modelo de regressão Birnbaum-Saunders reparametrizado pela média
     logo: cup-hot
     tools:
       - icon: linkedin
