@@ -465,10 +465,11 @@
 <section id="regressão-bs-reparametrizada-pela-média" class="slide level2">
 <h2>Regressão BS reparametrizada pela média</h2>
 <p>Sendo <span class="math inline">\(RBS(\mu,\delta)\)</span> a reparametrização pela média da distribuição Birnbaum-Saunders original, Leiva et al.&nbsp;(2014) propõe um modelo de regressão em que, seja <span class="math inline">\(Y \sim RBS(\mu,\delta)\)</span>, a média de <span class="math inline">\(Y_i\)</span> satisfaz a relação: <span class="math display">\[h(\mu_i)=\mathbf{x}_i^T\mathbf{\beta}, i=1,...,n,\]</span> em que <span class="math inline">\(\mathbf{\beta}=(\beta_1,...,\beta_p)^T,p&lt;n\)</span> é vetor de coeficientes de regressão a serem estimados, e <span class="math inline">\(\mathbf{x}_i=(x_{i1},x_{i2},...,x_{ip})^T\)</span> são observações de p regressores, e <span class="math inline">\(\mu_i=h^{-1}(\mathbf{x}_i^T\mathbf{\beta}),\)</span> com <span class="math inline">\(h(.)\)</span> sendo uma função de ligação positiva e duas vezes diferenciável.</p>
+<p>Sob a distribuição RBS, <span class="math inline">\(\mathbb{E}(Y)=\mu\)</span> e <span class="math inline">\(Var(Y) = \mu^2 CV(Y)^2\)</span>, onde <span class="math inline">\(CV(Y) = \frac{\sqrt{2\delta+5}}{(\delta+1)}\in (0,\sqrt{5})\)</span> é o coeficiente de variação de Y.</p>
 <p>A variância de <span class="math inline">\(Y_i\)</span> é função de <span class="math inline">\(\mu_i\)</span>, logo estaremos modelando também a variância.</p>
 </section>
-<section id="vantagens-e-desvantagens" class="slide level2">
-<h2>Vantagens e desvantagens</h2>
+<section id="vantagens-e-desvantagens-dos-modelos-bs" class="slide level2">
+<h2>Vantagens e desvantagens dos modelos BS</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>Vantagens</p>
@@ -495,118 +496,73 @@
 </section>
 <section id="aplicação" class="slide level2">
 <h2>Aplicação</h2>
+<p>Utilizarei o conjunto de dados cpd do pacote faraway, referente a projeção de vendas e o verdadeiro número de vendas de 20 produtos</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(gamlss)</span>
+<span id="cb1-3"><a></a><span class="fu">data</span>(cpd,<span class="at">package=</span><span class="st">'faraway'</span>)</span>
+<span id="cb1-4"><a></a><span class="fu">attach</span>(cpd)</span>
+<span id="cb1-5"><a></a>p1 <span class="ot">=</span> cpd <span class="sc">%&gt;%</span> </span>
+<span id="cb1-6"><a></a>  <span class="fu">gather</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value)) <span class="sc">+</span></span>
+<span id="cb1-8"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb1-9"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>key, <span class="at">scales =</span> <span class="st">'free_x'</span>) <span class="sc">+</span></span>
+<span id="cb1-10"><a></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>, <span class="at">title =</span> <span class="st">''</span>) <span class="sc">+</span></span>
+<span id="cb1-11"><a></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="seminario_files/figure-revealjs/unnamed-chunk-3-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Vemos que tanto a variável resposta, actual, quanto a covariável explicativa, projected, são obviamente positivas, e também assimétricas à direta.</p>
+</section>
+<section id="primeiro-ajuste" class="slide level2">
+<h2>Primeiro ajuste</h2>
+<p>Veremos qual distribuição o pacote gamlss recomenda para melhor ajuste aos dados</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>mod <span class="ot">=</span> <span class="fu">fitDist</span>(actual, <span class="at">type=</span><span class="st">"realplus"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>mod<span class="sc">$</span>fits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      IG     BCPE   IGAMMA   LOGNO2    LOGNO      GIG       GG    BCCGo 
+319.7223 320.9136 320.9552 321.5667 321.5667 321.7220 322.8726 323.0453 
+    BCCG      EXP  PARETO2       GP PARETO2o      GB2      WEI     WEI2 
+323.0453 323.5004 324.1676 324.1676 324.1676 324.8727 324.9636 324.9636 
+    WEI3     BCTo       GA   exGAUS 
+324.9636 325.0453 325.3356 352.5137 </code></pre>
+</div>
+</div>
+<p>Vemos que o pacote GAMLSS oferece diversas opções de ajuste para este conjunto de dados. Entretanto, estamos especialmente interessados em tentar ajustar os dados utilizando o modelo RBS</p>
+</section>
+<section id="ajuste-rbs" class="slide level2">
+<h2>Ajuste RBS</h2>
 <p>Primeiramente, é necessário baixar e instalar o pacote <em>RBS</em>, que não está disponível no CRAN, utilizando o comando</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"santosneto/RBS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"santosneto/RBS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Primeiramente, veremos qual distribuição o pacote gamlss recomenda para melhor ajuste aos dados</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(gamlss)</span>
-<span id="cb2-2"><a></a><span class="fu">data</span>(cpd,<span class="at">package=</span><span class="st">'faraway'</span>)</span>
-<span id="cb2-3"><a></a><span class="fu">attach</span>(cpd)</span>
-<span id="cb2-4"><a></a><span class="fu">fitDist</span>(actual, <span class="at">type=</span><span class="st">"realplus"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |===                                                                   |   4%
-  |                                                                            
-  |======                                                                |   9%
-  |                                                                            
-  |=========                                                             |  13%
-  |                                                                            
-  |============                                                          |  17%
-  |                                                                            
-  |===============                                                       |  22%
-  |                                                                            
-  |==================                                                    |  26%
-  |                                                                            
-  |=====================                                                 |  30%
-  |                                                                            
-  |========================                                              |  35%
-  |                                                                            
-  |===========================                                           |  39%
-  |                                                                            
-  |==============================                                        |  43%
-  |                                                                            
-  |=================================                                     |  48%
-  |                                                                            
-  |=====================================                                 |  52%
-  |                                                                            
-  |========================================                              |  57%
-  |                                                                            
-  |===========================================                           |  61%
-  |                                                                            
-  |==============================================                        |  65%Error in solve.default(oout$hessian) : 
-  Lapack routine dgesv: system is exactly singular: U[3,3] = 0
-
-  |                                                                            
-  |=================================================                     |  70%
-  |                                                                            
-  |====================================================                  |  74%
-  |                                                                            
-  |=======================================================               |  78%
-  |                                                                            
-  |==========================================================            |  83%Error in solve.default(oout$hessian) : 
-  Lapack routine dgesv: system is exactly singular: U[4,4] = 0
-
-  |                                                                            
-  |=============================================================         |  87%
-  |                                                                            
-  |================================================================      |  91%</code></pre>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">library</span>(RBS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-  |                                                                            
-  |===================================================================   |  96%</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Error in solve.default(oout$hessian) : 
-  Lapack routine dgesv: system is exactly singular: U[4,4] = 0
-
-  |                                                                            
-  |======================================================================| 100%</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Family:  c("IG", "Inverse Gaussian") 
-Fitting method: "nlminb" 
-
-Call:  gamlssML(formula = y, family = DIST[i]) 
-
-Mu Coefficients:
-[1]  7.038
-Sigma Coefficients:
-[1]  -3.102
-
- Degrees of Freedom for the fit: 2 Residual Deg. of Freedom   18 
-Global Deviance:     315.722 
-            AIC:     319.722 
-            SBC:     321.714 </code></pre>
-</div>
-</div>
-</section>
-<section id="rbs" class="slide level2">
-<h2>RBS</h2>
 <p>Agora, tentaremos o ajuste utilizando a distribuição RBS, e aproveitando da sintaxe e funcionalidades do pacote gamlss</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p>Ajustando o modelo completo</p>
+<p>Ajustando o modelo</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(RBS)</span>
-<span id="cb7-2"><a></a>model0 <span class="ot">=</span> gamlss<span class="sc">::</span><span class="fu">gamlss</span>(actual <span class="sc">~</span> projected, <span class="at">family=</span><span class="fu">RBS</span>(<span class="at">mu.link=</span><span class="st">"identity"</span>),<span class="at">method=</span><span class="fu">CG</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>GAMLSS-CG iteration 1: Global Deviance = 291.8511 
-GAMLSS-CG iteration 2: Global Deviance = 275.9743 
-GAMLSS-CG iteration 3: Global Deviance = 261.4322 
-GAMLSS-CG iteration 4: Global Deviance = 251.6307 
-GAMLSS-CG iteration 5: Global Deviance = 248.1151 
-GAMLSS-CG iteration 6: Global Deviance = 247.7583 
-GAMLSS-CG iteration 7: Global Deviance = 247.755 
-GAMLSS-CG iteration 8: Global Deviance = 247.755 </code></pre>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>model0 <span class="ot">=</span> gamlss<span class="sc">::</span><span class="fu">gamlss</span>(actual <span class="sc">~</span> projected, <span class="at">family=</span><span class="fu">RBS</span>(<span class="at">mu.link=</span><span class="st">"identity"</span>),<span class="at">method=</span><span class="fu">CG</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">summary</span>(model0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">summary</span>(model0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>******************************************************************
 Family:  c("RBS", "BirnbaumSaunders") 
@@ -647,55 +603,49 @@ Global Deviance:     247.755
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<p>Como o intercepto não foi significativo, reajustaremos sem ele</p>
+<p>Modelando também a variância</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>model <span class="ot">=</span> gamlss<span class="sc">::</span><span class="fu">gamlss</span>(actual <span class="sc">~</span> <span class="dv">0</span><span class="sc">+</span>projected, <span class="at">family=</span><span class="fu">RBS</span>(<span class="at">mu.link=</span><span class="st">"identity"</span>),<span class="at">method=</span><span class="fu">CG</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>GAMLSS-CG iteration 1: Global Deviance = 292.6863 
-GAMLSS-CG iteration 2: Global Deviance = 277.0667 
-GAMLSS-CG iteration 3: Global Deviance = 262.3263 
-GAMLSS-CG iteration 4: Global Deviance = 252.1095 
-GAMLSS-CG iteration 5: Global Deviance = 248.2255 
-GAMLSS-CG iteration 6: Global Deviance = 247.7842 
-GAMLSS-CG iteration 7: Global Deviance = 247.7792 
-GAMLSS-CG iteration 8: Global Deviance = 247.7791 </code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>model <span class="ot">=</span> gamlss<span class="sc">::</span><span class="fu">gamlss</span>(actual <span class="sc">~</span> projected, <span class="at">sigma.formula =</span> <span class="sc">~</span>projected, <span class="at">family=</span><span class="fu">RBS</span>(<span class="at">mu.link=</span><span class="st">"identity"</span>),<span class="at">method=</span><span class="fu">CG</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>******************************************************************
 Family:  c("RBS", "BirnbaumSaunders") 
 
 Call:  
-gamlss::gamlss(formula = actual ~ 0 + projected, family = RBS(mu.link = "identity"),  
-    method = CG()) 
+gamlss::gamlss(formula = actual ~ projected, sigma.formula = ~projected,  
+    family = RBS(mu.link = "identity"), method = CG()) 
 
 Fitting method: CG() 
 
 ------------------------------------------------------------------
 Mu link function:  identity
 Mu Coefficients:
-          Estimate Std. Error t value Pr(&gt;|t|)    
-projected   1.0890     0.0492   22.13 1.66e-14 ***
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 34.81320   21.00592   1.657    0.117    
+projected    0.95759    0.01903  50.318   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ------------------------------------------------------------------
 Sigma link function:  log
 Sigma Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   3.9008     0.3162   12.34 3.23e-10 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 3.1348243  0.4749559   6.600  6.1e-06 ***
+projected   0.0010326  0.0003238   3.189   0.0057 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ------------------------------------------------------------------
 No. of observations in the fit:  20 
-Degrees of Freedom for the fit:  2
-      Residual Deg. of Freedom:  18 
-                      at cycle:  8 
+Degrees of Freedom for the fit:  4
+      Residual Deg. of Freedom:  16 
+                      at cycle:  20 
  
-Global Deviance:     247.7791 
-            AIC:     251.7791 
-            SBC:     253.7706 
+Global Deviance:     241.0335 
+            AIC:     249.0335 
+            SBC:     253.0165 
 ******************************************************************</code></pre>
 </div>
 </div>
@@ -708,33 +658,33 @@ Global Deviance:     247.7791
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">wp</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">wp</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="seminario_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
+<p><img data-src="seminario_files/figure-revealjs/unnamed-chunk-12-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">plot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">plot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="seminario_files/figure-revealjs/unnamed-chunk-7-1.png" width="960"></p>
+<p><img data-src="seminario_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>******************************************************************
           Summary of the Quantile Residuals
-                           mean   =  -0.0006106514 
-                       variance   =  1.052626 
-               coef. of skewness  =  0.1060238 
-               coef. of kurtosis  =  2.679421 
-Filliben correlation coefficient  =  0.9846107 
+                           mean   =  0.2395729 
+                       variance   =  1.024173 
+               coef. of skewness  =  -0.1452511 
+               coef. of kurtosis  =  1.76144 
+Filliben correlation coefficient  =  0.9877058 
 ******************************************************************</code></pre>
 </div>
 </div>
