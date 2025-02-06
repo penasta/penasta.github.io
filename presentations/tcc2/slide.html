@@ -31,6 +31,71 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto.css">
   <link rel="stylesheet" href="styles.css">
@@ -326,6 +391,9 @@
       margin-right: 0; 
     }
   </style>
+  <script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+  <script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+  <link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 <meta property="og:title" content="Bruno Gondim - Similaridade de Processos Judiciários Utilizando Processamento de Linguagem Natural">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="Bruno Gondim">
@@ -363,7 +431,6 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 <div style="margin-top: 1.5em; font-size: 1em">
 <ul>
 <li><p>Introdução</p></li>
-<li><p>Motivação</p></li>
 <li><p>Conjunto de dados</p></li>
 <li><p>Referencial teórico</p></li>
 <li><p>Resultados</p></li>
@@ -375,31 +442,88 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 <section id="introdução" class="slide level2">
 <h2>Introdução</h2>
 <div>
+<div class="columns">
+<div class="column fragment" style="width:60%;">
+<div style="font-size: 80%;">
 <ul>
-<li class="fragment"><p>No campo do direito, a aplicação de técnicas estatísticas vem sendo utilizada em diversos âmbitos, inclusive no Supremo Tribunal Federal do Brasil.</p></li>
-<li class="fragment"><p>É de interesse do Tribunal a aplicação destas técnicas para entendimento holístico dos procesos, e também para apoio com a rotina de trabalho.</p></li>
+<li class="fragment"><p>O Ministro Luís Roberto Barroso assumiu a presidência do Tribunal em 2023, e estipulou como uma de suas metas de gestão a diminuição do acervo de processos de controle concentrado em 20%.</p></li>
+<li class="fragment"><p>A tarefa de busca de processos similares no acervo de controle concentrado é feita hoje manualmente. Portanto, a identificação automatizada possibilita reduzir o tempo e o esforço manual na busca de processos similares.</p></li>
 <li class="fragment"><p>Nesse trabalho, buscou-se aplicar técnicas de processamento de linguagem natural (NLP) para detecção de processos semelhantes no acervo de processos de controle concentrado do Tribunal.</p></li>
 </ul>
 </div>
-</section>
-<section id="motivação" class="slide level2">
-<h2>Motivação</h2>
+</div><div class="column fragment" style="width:40%;">
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
 <div>
-<ul>
-<li class="fragment"><p>O Ministro Luís Roberto Barroso assumiu a presidência do Tribunal em 2023, e estipulou como uma de suas metas de gestão a diminuição do acervo de processos de controle concentrado em 20%.</p></li>
-<li class="fragment"><p>A identificação automatizada de processos similares possibilita reduzir o tempo e o esforço manual na busca de processos similares.</p></li>
-<li class="fragment"><p>Essa abordagem pode facilitar o trâmite desses processos perante o Tribunal, contribuindo assim para a meta da gestão do Ministro Presidente.</p></li>
-</ul>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">graph TD
+    A[Recebimento] --&gt; B{Triagem Inicial};
+    B --&gt; C[Distribuição];
+    B --&gt; T1[...];
+    T1 --&gt; T2[Busca por similaridade com \n outros processos do acervo];
+    T2 --&gt; T3[...];
+    T3 --&gt; B;
+    C --&gt; D[...];
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="conjunto-de-dados" class="slide level2">
 <h2>Conjunto de dados</h2>
+<div>
+<div class="columns">
+<div class="column fragment" style="width:60%;">
+<div style="font-size: 80%;">
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Descrição</a></li><li><a href="#tabset-1-2">Comparação</a></li><li><a href="#tabset-1-3">Quantidade</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
 <div>
 <ul>
 <li class="fragment"><p>Os dados utilizados para esta análise são as petições iniciais dos processos de controle concentrado. Este é o primeiro documento que chega no Tribunal tratando de um processo.</p></li>
 <li class="fragment"><p>Desta forma, o desafio é encontrar similaridades entre processos na sua fase inicial de tramitação, tal que esta ferramenta seja desbravadora na busca de similaridades antes de outros encaminhamentos internos no Tribunal.</p></li>
 <li class="fragment"><p>As petições iniciais são um dado público, e podem ser obtidas no <a href="https://portal.stf.jus.br/processos/">Portal do STF</a>.</p></li>
 </ul>
+</div>
+</div>
+<div id="tabset-1-2">
+<div>
+<ul>
+<li class="fragment"><p>Para realizar a busca por similaridades, necessitamos fixar um processo, que chamaremos de paradigma.</p></li>
+<li class="fragment"><p>Os processos paradigmas selecionados foram aqueles que tiveram pauta ou decisão conjunta pelo Tribunal com outros processos.</p></li>
+<li class="fragment"><p>Desta forma, buscou-se encontrar técnicas que apontassem a similaridade desses processos já em suas petições iniciais.</p></li>
+</ul>
+</div>
+</div>
+<div id="tabset-1-3">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slide_files/figure-revealjs/unnamed-chunk-3-1.svg" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="column fragment" style="width:40%;">
+<embed src="adpf857.pdf" width="500px" height="500px">
+<div style="font-size: 70%;">
+<p>Exemplo de uma petição inicial — ADPF 857</p>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="referencial-teórico-vetorização" class="slide level2">
@@ -410,12 +534,12 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 <div class="columns">
 <div class="column fragment" style="width:50%;">
 <div class="panel-tabset">
-<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1"><em>Bag of Words</em></a></li><li><a href="#tabset-1-2">Nota</a></li></ul>
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1"><em>Bag of Words</em></a></li><li><a href="#tabset-2-2">Nota</a></li></ul>
 <div class="tab-content">
-<div id="tabset-1-1">
+<div id="tabset-2-1">
 <p><img data-src="BoW.png" style="width:80.0%"></p>
 </div>
-<div id="tabset-1-2">
+<div id="tabset-2-2">
 <div style="font-size: 80%;">
 <p>Esta é uma das formas mais simples de vetorizar um texto. Iremos simplesmente tabelar a frequência de utilização de cada um dos termos presentes no texto.</p>
 </div>
@@ -424,12 +548,12 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 </div>
 </div><div class="column fragment" style="width:50%;">
 <div class="panel-tabset">
-<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1"><em>Doc2vec</em></a></li><li><a href="#tabset-2-2">Nota</a></li></ul>
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1"><em>Doc2vec</em></a></li><li><a href="#tabset-3-2">Nota</a></li></ul>
 <div class="tab-content">
-<div id="tabset-2-1">
+<div id="tabset-3-1">
 <p><img data-src="doc2vec.png" style="width:80.0%"></p>
 </div>
-<div id="tabset-2-2">
+<div id="tabset-3-2">
 <div style="font-size: 80%;">
 <p>Esta é uma das formas mais sofisticadas para vetorização de texto. Nela, iremos obter o vetor numérico que representa o texto pelo treinamento de uma rede neural. Os parâmetros deste modelo são atualizados buscando prever a próxima palavra dado o seu contexto e dado um vetor de palavras que formam coletivamente o texto (Freitas et al.&nbsp;,2024).</p>
 </div>
@@ -447,12 +571,12 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 <div class="columns">
 <div class="column fragment" style="width:50%;">
 <div class="panel-tabset">
-<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Distância do Cosseno</a></li><li><a href="#tabset-3-2">Nota</a></li></ul>
+<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Distância do Cosseno</a></li><li><a href="#tabset-4-2">Nota</a></li></ul>
 <div class="tab-content">
-<div id="tabset-3-1">
+<div id="tabset-4-1">
 <p><img data-src="cosseno.png"></p>
 </div>
-<div id="tabset-3-2">
+<div id="tabset-4-2">
 <div style="font-size: 60%;">
 <p>Pela Lei dos cossenos:</p>
 <p><span class="math display">\[\begin{equation}
@@ -468,12 +592,12 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 </div>
 </div><div class="column fragment" style="width:50%;">
 <div class="panel-tabset">
-<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Divergência de Jensen</a></li><li><a href="#tabset-4-2">Nota</a></li></ul>
+<ul id="tabset-5" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-5-1">Divergência de Jensen</a></li><li><a href="#tabset-5-2">Nota</a></li></ul>
 <div class="tab-content">
-<div id="tabset-4-1">
-<p><img data-src="js.png"></p>
+<div id="tabset-5-1">
+<p><img data-src="js.png" style="width:90.0%"></p>
 </div>
-<div id="tabset-4-2">
+<div id="tabset-5-2">
 <div style="font-size: 60%;">
 <p>Uma outra métrica popular na área de <em>Machine Learning</em>, podemos calcular o complementar da divergência de Jensen-Shannon definida por:</p>
 <p><span class="math display">\[\begin{equation}
@@ -488,15 +612,53 @@ JSD(P||Q) = \\
 </div>
 </div>
 </section>
+<section id="referencial-teórico-impe" class="slide level2">
+<h2>Referencial teórico — IMPE</h2>
+<div style="font-size: 80%;">
+<p>Uma terceira métrica foi proposta para a medição da similaridade entre os processos, a qual se chamou Interseção mínima de probabilidade empírica (IMPE).</p>
+</div>
+<div class="panel-tabset">
+<ul id="tabset-6" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-6-1">Definição</a></li><li><a href="#tabset-6-2">Implementação</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1">
+<div style="font-size: 60%;">
+<ul>
+<li><p>Esta métrica foi construída inspirada no índice de Tversky.</p></li>
+<li><p>Nela, consideraremos os vetores dos textos como distribuições de probabilidade empírica. Destes, tomaremos um menos a soma das diferenças dos absolutos das frequência relativa de um termo entre dois textos, tal que <span class="math display">\[\begin{equation}
+  \text{IMPE}(\textbf{A},\textbf{B}) = 1 - \sum_{w \in A \cap B} |f_A(w) - f_B(w)|.
+\end{equation}\]</span></p></li>
+<li><p>Por somar os menores valores, esta métrica foi construída para ser conservadora, apenas acusando similaridade entre textos muito parecidos.</p></li>
+<li><p><span class="math inline">\(IMPE(\textbf{A},\textbf{B}) \in (0,1)\)</span>, em que <span class="math inline">\(IMPE(\textbf{A},\textbf{B}) = 1 \rightarrow\)</span> textos idênticos.</p></li>
+</ul>
+</div>
+</div>
+<div id="tabset-6-2">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># Calcular interseção mínima de probabilidade empírica entre dois documentos ----</span></span>
+<span id="cb1-2"><a></a><span class="co"># Entrada: 2 df n x 2, coluna 1 "word" coluna 2 "freq"</span></span>
+<span id="cb1-3"><a></a></span>
+<span id="cb1-4"><a></a>IMPE <span class="ot">&lt;-</span> <span class="cf">function</span>(df1, df2) {</span>
+<span id="cb1-5"><a></a>  df1<span class="sc">$</span>relative_freq <span class="ot">&lt;-</span> df1<span class="sc">$</span>freq <span class="sc">/</span> <span class="fu">sum</span>(df1<span class="sc">$</span>freq)</span>
+<span id="cb1-6"><a></a>  df2<span class="sc">$</span>relative_freq <span class="ot">&lt;-</span> df2<span class="sc">$</span>freq <span class="sc">/</span> <span class="fu">sum</span>(df2<span class="sc">$</span>freq)</span>
+<span id="cb1-7"><a></a>  common_words <span class="ot">&lt;-</span> <span class="fu">merge</span>(df1, df2, <span class="at">by =</span> <span class="st">"word"</span>, <span class="at">suffixes =</span> <span class="fu">c</span>(<span class="st">"_df1"</span>, <span class="st">"_df2"</span>))</span>
+<span id="cb1-8"><a></a>  common_words<span class="sc">$</span>dissimilaridade <span class="ot">&lt;-</span> <span class="fu">abs</span>(common_words<span class="sc">$</span>relative_freq_df1 <span class="sc">-</span> common_words<span class="sc">$</span>relative_freq_df2)</span>
+<span id="cb1-9"><a></a>  similaridade <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(common_words<span class="sc">$</span>dissimilaridade)</span>
+<span id="cb1-10"><a></a>  <span class="fu">return</span>(similaridade)</span>
+<span id="cb1-11"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
 <section id="resultados" class="slide level2">
 <h2>Resultados</h2>
 <div style="font-size: 50%;">
 <p>Foram realizados estudos de casos, onde se comparou a combinação de cada técnica de vetorização com cada métrica de similaridade para casos onde se sabia os processos que deveriam ser identificados como mais parecidos. Estes foram os resultados:</p>
 </div>
 <div class="panel-tabset">
-<ul id="tabset-5" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-5-1">Caso 1</a></li><li><a href="#tabset-5-2">Caso 2</a></li><li><a href="#tabset-5-3">Caso 3</a></li><li><a href="#tabset-5-4">Caso 4</a></li><li><a href="#tabset-5-5">Caso 5</a></li></ul>
+<ul id="tabset-7" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-7-1">Caso 1</a></li><li><a href="#tabset-7-2">Caso 2</a></li><li><a href="#tabset-7-3">Caso 3</a></li><li><a href="#tabset-7-4">Caso 4</a></li><li><a href="#tabset-7-5">Caso 5</a></li></ul>
 <div class="tab-content">
-<div id="tabset-5-1">
+<div id="tabset-7-1">
 <div style="font-size: 60%;">
 <div>
 
@@ -581,7 +743,7 @@ JSD(P||Q) = \\
 </div>
 </div>
 </div>
-<div id="tabset-5-2">
+<div id="tabset-7-2">
 <div style="font-size: 60%;">
 <div>
 
@@ -665,7 +827,7 @@ JSD(P||Q) = \\
 </div>
 </div>
 </div>
-<div id="tabset-5-3">
+<div id="tabset-7-3">
 <div style="font-size: 60%;">
 <div>
 
@@ -749,7 +911,7 @@ JSD(P||Q) = \\
 </div>
 </div>
 </div>
-<div id="tabset-5-4">
+<div id="tabset-7-4">
 <div style="font-size: 60%;">
 <div>
 
@@ -833,7 +995,7 @@ JSD(P||Q) = \\
 </div>
 </div>
 </div>
-<div id="tabset-5-5">
+<div id="tabset-7-5">
 <div style="font-size: 60%;">
 <div>
 
