@@ -221,7 +221,7 @@
     "href": "presentations/random_forest/apresentacao.html#implementações",
     "title": "Técnica Random Forest em árvores de decisão",
     "section": "Implementações",
-    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[17,  0,  0],\n       [ 0, 13,  2],\n       [ 0,  0, 13]], dtype=int64)"
+    "text": "Implementações\n\nUma rotina de classificação via Random forest poderia ser executada de forma análoga em python da seguinte forma:\n\n\n\n\nlibrary(reticulate)\n\n\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import datasets\n\niris = datasets.load_iris()\ndados = pd.DataFrame(data=iris.data, columns=iris.feature_names)\n\n\nX = dados\ny = iris.target\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\n\n\nmodel = RandomForestClassifier()\nmodel.fit(X_train, y_train)\n\nRandomForestClassifier()In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.RandomForestClassifierRandomForestClassifier()\n\ny_pred = model.predict(X_test)\nconfusion_matrix(y_test, y_pred)\n\narray([[18,  0,  0],\n       [ 0, 16,  1],\n       [ 0,  0, 10]], dtype=int64)"
   },
   {
     "objectID": "presentations/random_forest/apresentacao.html#definições",
@@ -378,6 +378,202 @@
     "text": "Referências\n\nRoss, S. M. (2010). Introduction to Probability Models. Academic Press.\nDincer, E., Demir, S. M., & Yalçın, B. A. (2022)."
   },
   {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "",
+    "text": "Show the code\nif (!require(\"pacman\")) install.packages(\"pacman\")\npacman::p_load(tidyverse, readxl, janitor,xgboost,tidymodels,vip,rpart.plot,\n               conflicted,tictoc,finetune,doParallel,DataExplorer,future,glmnet,\n               data.table,summarytools,knitr,compareGroups,bonsai,discrim,\n               baguette,naivebayes)\n\nregisterDoParallel(cores = parallel::detectCores())\n\ntidymodels_prefer()\ndf = read_csv(\"data.csv\")"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelagem",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelagem",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Modelagem",
+    "text": "Modelagem\nNum contexto em que temos tantas covariáveis, tantas observações e, apesar de alguns indicativos observados na análise exploratória, não é possível observar um padrão óbvio que indique o salário do indivíduo. Para isso, utilizei do recurso da modelagem com apoio computacional afim de tornar possível esta análise. Um diferencial deste trabalho é a utilização do framework tidymodels, que é bastante verborrágico e permite uma compreensão das etapas do modelo pela leitura do código, além de eficiência e praticidade."
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#parâmetros-gerais",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#parâmetros-gerais",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Parâmetros gerais",
+    "text": "Parâmetros gerais\nIrei testar diversos modelos e fazer comparação de resultados destes, mas utilizarei a mesma receita para todos.\n\n\nShow the code\nset.seed(150167636)\nsplit = initial_split(df, prop = .8, strata = salary)\ntrain = training(split)\ntest = testing(split)\n\ncv_folds &lt;- vfold_cv(train, \n                     v = 5, \n                     strata = salary)\n\nrecipe &lt;- recipe(salary ~ .,\n                 data = train) %&gt;% \n  update_role(fnlwgt, new_role = \"case_weight\") %&gt;%\n  step_normalize(all_numeric_predictors()) %&gt;%\n  step_dummy(all_nominal_predictors()) %&gt;%\n  step_interact(terms = ~ starts_with(\"occupation\"):starts_with(\"race\") + \n                  starts_with(\"occupation\"):starts_with(\"sex\") +\n                  starts_with(\"hours_per_week\"):starts_with(\"sex\"))\n\ndados_preparados &lt;- recipe %&gt;% \n  prep() %&gt;% \n  juice()\nkable(head(dados_preparados))\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nage\nfnlwgt\neducation_num\ncapital_gain\ncapital_loss\nhours_per_week\nsalary\nworkclass_not_working\nworkclass_private\nworkclass_self_employed\nworkclass_unknown\neducation_low_education\noccupation_Others\noccupation_services\noccupation_white_collar\nrace_Asian.Pac.Islander\nrace_Black\nrace_Other\nrace_White\nsex_Male\ncountry_United.States\ncivil_status_Single\noccupation_Others_x_race_Asian.Pac.Islander\noccupation_Others_x_race_Black\noccupation_Others_x_race_Other\noccupation_Others_x_race_White\noccupation_services_x_race_Asian.Pac.Islander\noccupation_services_x_race_Black\noccupation_services_x_race_Other\noccupation_services_x_race_White\noccupation_white_collar_x_race_Asian.Pac.Islander\noccupation_white_collar_x_race_Black\noccupation_white_collar_x_race_Other\noccupation_white_collar_x_race_White\noccupation_Others_x_sex_Male\noccupation_services_x_sex_Male\noccupation_white_collar_x_sex_Male\nsex_Male_x_hours_per_week\n\n\n\n\n0.0314592\n1.25e-05\n1.1354862\n0.1510791\n-0.2161513\n-0.0353722\n0\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n0\n1\n1\n1\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n1\n-0.0353722\n\n\n0.8376443\n1.35e-05\n1.1354862\n-0.1461666\n-0.2161513\n-2.2198774\n0\n0\n0\n1\n0\n0\n0\n0\n1\n0\n0\n0\n1\n1\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n1\n-2.2198774\n\n\n-0.0418303\n3.49e-05\n-0.4209394\n-0.1461666\n-0.2161513\n-0.0353722\n0\n0\n1\n0\n0\n1\n0\n0\n0\n0\n0\n0\n1\n1\n1\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n-0.0353722\n\n\n-0.7747258\n5.48e-05\n1.1354862\n-0.1461666\n-0.2161513\n-0.0353722\n0\n0\n1\n0\n0\n0\n0\n0\n1\n0\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n0\n0\n0\n0.0000000\n\n\n0.7643547\n2.59e-05\n-1.9773649\n-0.1461666\n-0.2161513\n-1.9771546\n0\n0\n1\n0\n0\n1\n0\n1\n0\n0\n1\n0\n0\n0\n0\n1\n0\n0\n0\n0\n0\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0.0000000\n\n\n-1.1411735\n1.98e-05\n1.1354862\n-0.1461666\n-0.2161513\n-0.8444482\n0\n0\n1\n0\n0\n0\n0\n0\n1\n0\n0\n0\n1\n0\n1\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n0\n0.0000000\n\n\n\n\n\nPodemos ver um pedaço da forma geral dos dados preparados para serem inseridos no modelo."
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelo-1-regressão-logística",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelo-1-regressão-logística",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Modelo 1: Regressão logística",
+    "text": "Modelo 1: Regressão logística\nComo a variável resposta é binária, o primeiro modelo que podemos tentar seria o logístico\n\n\nShow the code\nglm_spec &lt;- logistic_reg() %&gt;%\n  set_engine(\"glm\")\n\nglm_wf &lt;- workflow() %&gt;%\n  add_recipe(recipe) %&gt;%\n  add_model(glm_spec)\n\nglm_fit &lt;- glm_wf %&gt;%\n  fit(data = train)\n\nglm_fit %&gt;%\n  extract_fit_parsnip() %&gt;%\n  tidy() %&gt;%\n  kable()\n\n\n\n\n\n\n\n\n\n\n\n\nterm\nestimate\nstd.error\nstatistic\np.value\n\n\n\n\n(Intercept)\n-1.7372041\n0.4866916\n-3.5694143\n0.0003578\n\n\nage\n0.4055276\n0.0227845\n17.7984123\n0.0000000\n\n\neducation_num\n0.8441476\n0.0438024\n19.2717200\n0.0000000\n\n\ncapital_gain\n2.2344546\n0.0800493\n27.9134654\n0.0000000\n\n\ncapital_loss\n0.2691885\n0.0165243\n16.2904180\n0.0000000\n\n\nhours_per_week\n0.3348932\n0.0455127\n7.3582312\n0.0000000\n\n\nworkclass_not_working\n-11.7789355\n117.4336842\n-0.1003029\n0.9201039\n\n\nworkclass_private\n-0.0699743\n0.0559738\n-1.2501244\n0.2112541\n\n\nworkclass_self_employed\n-0.3486299\n0.0730037\n-4.7755074\n0.0000018\n\n\nworkclass_unknown\n-0.5554042\n1.8010975\n-0.3083699\n0.7578009\n\n\neducation_low_education\n0.1502829\n0.0759029\n1.9799356\n0.0477108\n\n\noccupation_Others\n0.1946984\n2.0025527\n0.0972251\n0.9225476\n\n\noccupation_services\n0.8077583\n0.8054694\n1.0028417\n0.3159372\n\n\noccupation_white_collar\n0.4311601\n0.5736424\n0.7516183\n0.4522806\n\n\nrace_Asian.Pac.Islander\n0.7500891\n0.5035234\n1.4896806\n0.1363082\n\n\nrace_Black\n0.4686787\n0.4650463\n1.0078109\n0.3135452\n\n\nrace_Other\n0.1107415\n0.6625542\n0.1671433\n0.8672573\n\n\nrace_White\n0.5799804\n0.4454281\n1.3020741\n0.1928910\n\n\nsex_Male\n0.1722064\n0.1804855\n0.9541286\n0.3400185\n\n\ncountry_United.States\n0.2594948\n0.0762643\n3.4025743\n0.0006675\n\n\ncivil_status_Single\n-2.4131329\n0.0517315\n-46.6472524\n0.0000000\n\n\noccupation_Others_x_race_Asian.Pac.Islander\n-1.1841893\n1.4582220\n-0.8120775\n0.4167472\n\n\noccupation_Others_x_race_Black\n-0.4225307\n1.3041276\n-0.3239949\n0.7459419\n\n\noccupation_Others_x_race_Other\n1.4529448\n1.6820682\n0.8637847\n0.3877062\n\n\noccupation_Others_x_race_White\n0.0266894\n1.2087874\n0.0220795\n0.9823846\n\n\noccupation_services_x_race_Asian.Pac.Islander\n-1.2872096\n0.8711872\n-1.4775350\n0.1395323\n\n\noccupation_services_x_race_Black\n-1.1793043\n0.8168805\n-1.4436680\n0.1488324\n\n\noccupation_services_x_race_Other\n-1.0749159\n1.4074752\n-0.7637192\n0.4450346\n\n\noccupation_services_x_race_White\n-1.1017327\n0.7831182\n-1.4068537\n0.1594708\n\n\noccupation_white_collar_x_race_Asian.Pac.Islander\n-0.3004502\n0.6078681\n-0.4942687\n0.6211164\n\n\noccupation_white_collar_x_race_Black\n0.0860022\n0.5730514\n0.1500777\n0.8807033\n\n\noccupation_white_collar_x_race_Other\n-0.3731938\n0.8639278\n-0.4319734\n0.6657608\n\n\noccupation_white_collar_x_race_White\n0.1513841\n0.5481445\n0.2761755\n0.7824132\n\n\noccupation_Others_x_sex_Male\n-0.3821967\n0.3098797\n-1.2333712\n0.2174373\n\n\noccupation_services_x_sex_Male\n0.2564560\n0.2581336\n0.9935012\n0.3204658\n\n\noccupation_white_collar_x_sex_Male\n0.1581810\n0.1879843\n0.8414584\n0.4000912\n\n\nsex_Male_x_hours_per_week\n0.0586262\n0.0513488\n1.1417232\n0.2535691"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#importâncias-para-o-modelo-logístico",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#importâncias-para-o-modelo-logístico",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Importâncias para o modelo logístico",
+    "text": "Importâncias para o modelo logístico\nPodemos observar as covariáveis de maior importância para este modelo, assim como sua matriz de confusão\n\n\nShow the code\nglm_fit %&gt;%\n  extract_fit_parsnip() %&gt;%\n  vip(geom = \"col\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(size = 34),\n                          axis.text.y = element_text(size = 20),\n                          axis.title.x = element_text(size = 16),\n                          axis.title.y = element_text(size = 16),\n                          plot.title = element_text(size = 18, hjust = 0.5))\n\n\n\n\n\n\n\n\n\n\n\nShow the code\npredictions &lt;- glm_fit %&gt;%\n  predict(new_data = test)\n\nresults &lt;- bind_cols(test, predictions)\n\nresults %&gt;%\n  conf_mat(salary,.pred_class)\n\n\n          Truth\nPrediction    0    1\n         0 4556  649\n         1  388  920\n\n\n\n\nShow the code\nmetrics &lt;- metric_set(accuracy, specificity, sensitivity)\n\nresultados_logit = augment(glm_fit, new_data = test) %&gt;%\n  metrics(truth = salary, estimate = .pred_class) %&gt;%\n  select(.metric,.estimate)"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelo-2-regressão-lasso",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelo-2-regressão-lasso",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Modelo 2: Regressão Lasso",
+    "text": "Modelo 2: Regressão Lasso\nComo observado na receita do modelo, existem 38 covariáveis nesta modelagem. Diversas abordagens podem ser utilizadas para selecionar as covariáveis de maior importância, sendo uma dessas a regressão lasso, que penaliza coeficientes e torna-os 0 em caso de insignificância.\nEste é um modelo que contém um hiperparâmetro, portanto iremos ajustar um grid para escolher o melhor possível.\n\n\nShow the code\nlasso_spec &lt;- logistic_reg(penalty = tune(),\n                           mixture = 1) %&gt;%\n  set_engine(\"glmnet\")\n\nlasso_wf &lt;- workflow() %&gt;%\n  add_recipe(recipe) %&gt;%\n  add_model(lasso_spec)\n\ngrid &lt;- grid_regular(penalty(),\n                     levels = 100)\n\nplan(multisession)\nset.seed(150167636)\nlasso_res &lt;- lasso_wf %&gt;%\n  tune_grid(resamples = cv_folds,\n            grid = grid,\n            metrics = metric_set(roc_auc))\n\n\n\n\nShow the code\nlasso_res %&gt;%\n  collect_metrics() %&gt;%\n  filter(.metric == \"roc_auc\") %&gt;%\n  select(mean, penalty) %&gt;%\n  pivot_longer(penalty,\n               names_to = \"hiperparâmetro\",\n               values_to = \"valor\") %&gt;%\n  ggplot(aes(valor, mean)) +\n  geom_point()+\n  theme_minimal() +\n  theme(axis.text.x = element_text(size = 10),\n                          axis.text.y = element_text(size = 10),\n                          axis.title.x = element_text(size = 10),\n                          axis.title.y = element_text(size = 10),\n                          plot.title = element_text(size = 10, hjust = 0.5))+\n  labs(x=\"\",y=\"\")\n\n\n\n\n\n\n\n\n\nPodemos ver que um menor valor de penalização é benéfico ao modelo, visto a importância relativa das covariáveis serem altas neste caso"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#estimativa-dos-parâmetros-para-o-modelo-lasso",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#estimativa-dos-parâmetros-para-o-modelo-lasso",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Estimativa dos parâmetros para o modelo Lasso",
+    "text": "Estimativa dos parâmetros para o modelo Lasso\n\n\nShow the code\nbest_params = lasso_res %&gt;%\n  select_best(metric = \"roc_auc\")\n\nbest_wf = finalize_workflow(lasso_wf, best_params)\n\nfinal_fit &lt;- best_wf %&gt;%\n  fit(data = train)\n\nfinal_fit %&gt;%\n  extract_fit_parsnip() %&gt;%\n  tidy() %&gt;%\n  kable()\n\n\n\n\n\n\n\n\n\n\nterm\nestimate\npenalty\n\n\n\n\n(Intercept)\n-1.1948793\n0.0007391\n\n\nage\n0.3943655\n0.0007391\n\n\neducation_num\n0.7870445\n0.0007391\n\n\ncapital_gain\n2.1066124\n0.0007391\n\n\ncapital_loss\n0.2622005\n0.0007391\n\n\nhours_per_week\n0.3315385\n0.0007391\n\n\nworkclass_not_working\n-1.9072610\n0.0007391\n\n\nworkclass_private\n-0.0252262\n0.0007391\n\n\nworkclass_self_employed\n-0.2793742\n0.0007391\n\n\nworkclass_unknown\n-0.1482158\n0.0007391\n\n\neducation_low_education\n0.0470209\n0.0007391\n\n\noccupation_Others\n-0.1167739\n0.0007391\n\n\noccupation_services\n-0.0488290\n0.0007391\n\n\noccupation_white_collar\n0.3271691\n0.0007391\n\n\nrace_Asian.Pac.Islander\n0.0246369\n0.0007391\n\n\nrace_Black\n0.0000000\n0.0007391\n\n\nrace_Other\n-0.2075199\n0.0007391\n\n\nrace_White\n0.0681928\n0.0007391\n\n\nsex_Male\n0.1888269\n0.0007391\n\n\ncountry_United.States\n0.2273567\n0.0007391\n\n\ncivil_status_Single\n-2.3832942\n0.0007391\n\n\noccupation_Others_x_race_Asian.Pac.Islander\n-0.5597923\n0.0007391\n\n\noccupation_Others_x_race_Black\n-0.1860392\n0.0007391\n\n\noccupation_Others_x_race_Other\n0.5816320\n0.0007391\n\n\noccupation_Others_x_race_White\n0.0000000\n0.0007391\n\n\noccupation_services_x_race_Asian.Pac.Islander\n0.0000000\n0.0007391\n\n\noccupation_services_x_race_Black\n-0.0567795\n0.0007391\n\n\noccupation_services_x_race_Other\n0.0000000\n0.0007391\n\n\noccupation_services_x_race_White\n0.0000000\n0.0007391\n\n\noccupation_white_collar_x_race_Asian.Pac.Islander\n0.0000000\n0.0007391\n\n\noccupation_white_collar_x_race_Black\n0.1298919\n0.0007391\n\n\noccupation_white_collar_x_race_Other\n-0.2649066\n0.0007391\n\n\noccupation_white_collar_x_race_White\n0.2695555\n0.0007391\n\n\noccupation_Others_x_sex_Male\n-0.3617209\n0.0007391\n\n\noccupation_services_x_sex_Male\n0.0000000\n0.0007391\n\n\noccupation_white_collar_x_sex_Male\n0.1420720\n0.0007391\n\n\nsex_Male_x_hours_per_week\n0.0511361\n0.0007391"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#importâncias-para-o-modelo-lasso",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#importâncias-para-o-modelo-lasso",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Importâncias para o modelo Lasso",
+    "text": "Importâncias para o modelo Lasso\nPodemos observar as covariáveis de maior importância para este modelo, assim como sua matriz de confusão\n\n\nShow the code\nfinal_fit %&gt;%\n  extract_fit_parsnip() %&gt;%\n  vip(geom = \"col\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(size = 34),\n                          axis.text.y = element_text(size = 20),\n                          axis.title.x = element_text(size = 16),\n                          axis.title.y = element_text(size = 16),\n                          plot.title = element_text(size = 18, hjust = 0.5))\n\n\n\n\n\n\n\n\n\n\n\nShow the code\npredictions &lt;- final_fit %&gt;%\n  predict(new_data = test)\n\nresults &lt;- bind_cols(test, predictions)\n\nresults %&gt;%\n  conf_mat(salary,.pred_class)\n\n\n          Truth\nPrediction    0    1\n         0 4571  652\n         1  373  917\n\n\n\n\nShow the code\nmetrics &lt;- metric_set(accuracy, specificity, sensitivity)\n\nresultados_lasso = augment(final_fit, new_data = test) %&gt;%\n  metrics(truth = salary, estimate = .pred_class) %&gt;%\n  select(.metric,.estimate)"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelo-3-xgboost",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#modelo-3-xgboost",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Modelo 3: XGBoost",
+    "text": "Modelo 3: XGBoost\nO XGBoost é um modelo de Gradient boosting baseado em árvores, que costuma performar bem em tarefas como esta, de classificação com diversas covariáveis\nEste é um modelo de Boosting, ou seja, o “encaixe” de diversos modelos fracos afim da construção de um modelo robusto a partir da combinação destes resultados.\n\n\n\n\n\n\ngraph LR\n    A[Dados] --&gt; B[Modelo 1];\n    B --&gt; C[Modelo 2];\n    C --&gt; D[...];\n    D --&gt; E[Modelo m];\n    E --&gt; F[Ensembling dos modelos];\n    F --&gt; G[Modelo final];"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#ajuste-do-xgboost",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#ajuste-do-xgboost",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Ajuste do XGBoost",
+    "text": "Ajuste do XGBoost\nTambém iremos realizar o fine tuning de alguns hiperparâmetros deste modelo, no caso o número de árvores e a profundidade destas, afim de obter o melhor modelo.\n\n\nShow the code\nmodel = boost_tree(mode = \"classification\",\n                   trees = tune(),\n                   tree_depth = tune()\n                   ) %&gt;%\n  set_engine(\"xgboost\")\n\nwf = workflow() %&gt;%\n  add_recipe(recipe) %&gt;%\n  add_model(model)\n\ngrid = wf %&gt;%\n  extract_parameter_set_dials() %&gt;%\n  grid_regular(levels = 3)\n\nplan(multisession)\nset.seed(150167636)\ntune_res = tune_grid( \n  wf,\n  resamples = cv_folds,\n  grid = grid,\n  metrics = metric_set(accuracy, roc_auc, sens,spec)\n  )\n\n\n\n\nShow the code\ntune_res %&gt;%\n  collect_metrics() %&gt;%\n  filter(.metric == \"roc_auc\") %&gt;%\n  select(mean, trees:tree_depth) %&gt;%\n  pivot_longer(trees:tree_depth,\n               names_to = \"hiperparâmetro\",\n               values_to = \"valor\") %&gt;%\n  ggplot(aes(valor, mean, color = hiperparâmetro)) +\n  geom_point(show.legend = FALSE) +\n  facet_wrap(~hiperparâmetro, scales = \"free_x\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(size = 10),\n                          axis.text.y = element_text(size = 10),\n                          axis.title.x = element_text(size = 10),\n                          axis.title.y = element_text(size = 10),\n                          plot.title = element_text(size = 10, hjust = 0.5))+\n  labs(x=\"\",y=\"\")\n\n\n\n\n\n\n\n\n\n\n\nShow the code\nbest_params = tune_res %&gt;%\n  select_best(metric = \"roc_auc\")\nbest_params\n\n\n# A tibble: 1 × 3\n  trees tree_depth .config             \n  &lt;int&gt;      &lt;int&gt; &lt;chr&gt;               \n1  2000          1 Preprocessor1_Model3\n\n\nVemos que a melhor combinação de hiperparâmetros encontrada é utilizando 2000 árvores de tamanho 1"
+  },
+  {
+    "objectID": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#importâncias-para-o-xgboost",
+    "href": "presentations/classificacao_salario_relatorio/trabalho_bruno.html#importâncias-para-o-xgboost",
+    "title": "Classificação salarial via algorítmos de Machine Learning",
+    "section": "Importâncias para o XGBoost",
+    "text": "Importâncias para o XGBoost\nPodemos observar as covariáveis de maior importância para este modelo, assim como sua matriz de confusão\n\n\nShow the code\nbest_wf = finalize_workflow(wf, best_params)\n\nfinal_fit &lt;- best_wf %&gt;%\n  fit(data = train)\n\n\n\n\nShow the code\nfinal_fit %&gt;%\n  extract_fit_parsnip() %&gt;%\n  vip(geom = \"col\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(size = 34),\n                          axis.text.y = element_text(size = 20),\n                          axis.title.x = element_text(size = 16),\n                          axis.title.y = element_text(size = 16),\n                          plot.title = element_text(size = 18, hjust = 0.5))\n\n\n\n\n\n\n\n\n\n\n\nShow the code\npredictions &lt;- final_fit %&gt;%\n  predict(new_data = test)\n\nresults &lt;- bind_cols(test, predictions)\n\nresults %&gt;%\n  conf_mat(salary,.pred_class)\n\n\n          Truth\nPrediction    0    1\n         0 4636  584\n         1  308  985\n\n\n\n\nShow the code\nmetrics &lt;- metric_set(accuracy, specificity, sensitivity)\n\nresultados_xgboost = augment(final_fit, new_data = test) %&gt;%\n  metrics(truth = salary, estimate = .pred_class) %&gt;%\n  select(.metric,.estimate)"
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#introdução",
+    "href": "presentations/birnbaum/seminario.html#introdução",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Introdução",
+    "text": "Introdução\n\n\n\n\nA distribuição Birnbaum-Saunders (Birnbaum and Saunders, 1969) é utilizada para descrever tempo de vida por fadiga (exposição cumulativa a danos, vibrações, etc) de materiais expostos à ciclos homogêneos. O processo de fadiga descrito pelos autores é:\n\nUm material sujeito a ciclo de cargas repetitivos, que produzem desgaste no material;\nA falha no material dar-se-á quando a magnitude do desgaste excede um limite \\(\\omega\\);\nOs ciclos são homogêneos (a sequência de estresse aplicada ao material é sempre a mesma);\nA extensão da fissura (\\(X_i\\)) causada pela carga \\(l_i\\) é uma variável aleatória com dependência nas cargas e fissuras acumuladas até o i-ésimo ciclo;\nO tamanho total da fissura causados no j-ésimo ciclo (\\(Y_j\\)) também é uma variável aleatória com média \\(\\mu\\) e variância \\(\\sigma^2 &lt; \\infty\\);\nO tamanho das fissuras \\(Y_j\\) em diferentes ciclos são independentes."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#a-distribuição-birnbaum-saunders",
+    "href": "presentations/birnbaum/seminario.html#a-distribuição-birnbaum-saunders",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "A distribuição Birnbaum-Saunders",
+    "text": "A distribuição Birnbaum-Saunders\nPara este problema, os autores definem que: Seja T o tempo total até a ocorrência da falha e cumprida as condições de regularidade, podemos dizer que T segue distribuição Birnbaum-Saunders (BS), tal que \\(T \\sim BS(\\alpha,\\beta)\\), e \\[T = \\beta\\biggl(\\frac{\\alpha}{2}Z+\\sqrt{(\\frac{\\alpha}{2}Z)^2+1} \\biggl),\\] onde \\(\\alpha\\) é um parâmetro de forma, \\(\\beta\\) é parâmetro de localização (mediana), e \\(Z\\) é uma variável aleatória com distribuição normal padrão.\nEm uma aplicação, os parâmetros \\(\\alpha\\) e \\(\\beta\\) devem ser estimados."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#reparametrização-da-birnbaum-saunders",
+    "href": "presentations/birnbaum/seminario.html#reparametrização-da-birnbaum-saunders",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Reparametrização da Birnbaum-Saunders",
+    "text": "Reparametrização da Birnbaum-Saunders\nEm geral, iremos trabalhar com uma reparametrização da distribuição Birnbaum-Saunders, especialmente para regressão. Rieck e Nedelman (1991) mostram a relação da distribuição Birnbaum-Saunders com a distribuição seno hiperbólico normal.\nSeja \\(T \\sim BS(\\alpha,\\beta)\\), então \\(Y \\sim SHN(\\alpha,log(\\beta),\\sigma=2)\\), onde \\(\\alpha\\) é parâmetro de forma, \\(\\beta\\) é parâmetro de localização, e \\(\\sigma\\) é parâmetro de de escala fixo.\nDesta forma, a distribuição seno hiperbólica normal pode também ser chamada de distribuição log-Birnbaum-Saunders (LBS)."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#regressão-birnbaum-saunders",
+    "href": "presentations/birnbaum/seminario.html#regressão-birnbaum-saunders",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Regressão Birnbaum-Saunders",
+    "text": "Regressão Birnbaum-Saunders\nAssumindo \\(T_i\\) variável resposta, podemos construir um modelo de regressão Birbaum-Saunders, tal que: \\[T_i = \\beta_i\\varphi_i = exp(\\mu_i)\\varphi_i=exp(\\mathbf{x}_i^T\\mathbf{\\eta})\\varphi_i, i = 1,2,...,n.\\] onde \\(T_i\\) e \\(\\beta_i = exp(\\mu_i)\\) são a variável resposta e a mediana para a i-ésima observação; \\(\\mathbf{\\eta} = (\\eta_0,\\eta_1,...,\\eta_p)^T\\) é o vetor de parâmetros desconhecidos a serem estimados pela regressão, \\(\\mathbf{x}_i^T=(1,x_{i1},...,x_{ip})\\) são os valores das \\(p\\) variáveis explicativas, e \\(\\varphi_i \\sim BS(\\alpha,1)\\) é o erro do modelo, tal que \\(T_i \\sim BS(\\alpha,\\beta)\\)."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#função-de-verossimilhança",
+    "href": "presentations/birnbaum/seminario.html#função-de-verossimilhança",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Função de verossimilhança",
+    "text": "Função de verossimilhança\nPara construir a função de verossimilhança, será necessário reparametrizar a distribuição \\(T_i \\sim BS(\\alpha,\\beta_i)\\) para \\(Y_i = log(T_i) \\sim LBS(\\alpha,log(\\beta_i))\\), tal que \\[log(T_i) = Y_i = \\mu_i + \\epsilon_i = \\mathbf{x}_i^T\\mathbf{\\eta}+\\epsilon_i, i=1,...,n.\\]\nDesta forma, a função de verossimilhança para \\(\\mathbf{\\theta}=(\\alpha,\\mathbf{\\eta}^T)^T\\) não terá solução analítica, sendo necessário estimar o vetor de parâmetros \\(\\mathbf{\\eta}\\) utilizando métodos iterativos de otimização não linear.\nDesta estimativa obtida, podemos obter a estimativa de máxima verossimilhança do parâmetro \\(\\alpha\\), tal que: \\[\\hat{\\alpha} = \\sqrt{\\frac{4}{n}\\sum_{i=1}^nsinh^2\\biggl(\\frac{y_i-\\mathbf{x}_i^T\\mathbf{\\hat{\\eta}}}{2}\\biggl)}.\\]"
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#estimador-de-mínimos-quadrados",
+    "href": "presentations/birnbaum/seminario.html#estimador-de-mínimos-quadrados",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Estimador de mínimos quadrados",
+    "text": "Estimador de mínimos quadrados\nPodemos também utilizar o estimador de mínimos quadrados para \\(\\mathbf{\\eta}\\), da forma \\[\\hat{\\mathbf{\\eta}}=(\\mathbf{X}^T\\mathbf{X})^{-1}\\mathbf{X}^T\\mathbf{y},\\] onde \\(\\mathbf{y}\\) é o vetor de observações, e \\(\\mathbf{X}\\) é a matriz de desenho do modelo. Entretanto, este método é menos eficiente que o estimador de máxima verossimilhança, conforme observado por Rieck e Nedelman (1991)."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#distribuição-bs-reparametrizada-pela-média",
+    "href": "presentations/birnbaum/seminario.html#distribuição-bs-reparametrizada-pela-média",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Distribuição BS reparametrizada pela média",
+    "text": "Distribuição BS reparametrizada pela média\nSantos-Neto et al. (2012) propuseram uma reparametrização da distribuição Birnbaum-Saunders, sendo: \\(\\alpha=\\frac{2}{\\delta},\\beta=\\frac{\\delta\\mu}{\\delta+1},\\) tal que \\(\\delta=\\frac{2}{\\alpha^2},\\mu=\\beta\\Bigl(1+\\frac{\\alpha^2}{2}\\Bigl)\\), sendo \\(\\delta&gt;0,\\mu&gt;0\\) parâmetros de forma e média, respectivamente.\nNesta parametrização, a função de densidade de probabilidade fica definida por: \\[f_Y(y|\\mu,\\delta)=\\frac{exp(\\frac{\\delta}{2}\\sqrt{\\delta+1})}{\\sqrt{16\\pi\\mu}y^{\\frac{3}{2}}}\\Bigl(y+\\frac{\\delta\\mu}{\\delta+1}\\Bigl)exp\\Biggl(-\\frac{\\delta}{4}\\Biggl[\\frac{y(\\delta+1)}{\\delta\\mu}+\\frac{\\delta\\mu}{y(\\delta+1)}\\Biggl]\\Biggl)\\]"
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#regressão-bs-reparametrizada-pela-média",
+    "href": "presentations/birnbaum/seminario.html#regressão-bs-reparametrizada-pela-média",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Regressão BS reparametrizada pela média",
+    "text": "Regressão BS reparametrizada pela média\nSendo \\(RBS(\\mu,\\delta)\\) a reparametrização pela média da distribuição Birnbaum-Saunders original, Leiva et al. (2014) propõe um modelo de regressão em que, seja \\(Y \\sim RBS(\\mu,\\delta)\\), a média de \\(Y_i\\) satisfaz a relação: \\[h(\\mu_i)=\\mathbf{x}_i^T\\mathbf{\\beta}, i=1,...,n,\\] em que \\(\\mathbf{\\beta}=(\\beta_1,...,\\beta_p)^T,p&lt;n\\) é vetor de coeficientes de regressão a serem estimados, e \\(\\mathbf{x}_i=(x_{i1},x_{i2},...,x_{ip})^T\\) são observações de p regressores, e \\(\\mu_i=h^{-1}(\\mathbf{x}_i^T\\mathbf{\\beta}),\\) com \\(h(.)\\) sendo uma função de ligação positiva e duas vezes diferenciável.\nSob a distribuição RBS, \\(\\mathbb{E}(Y)=\\mu\\) e \\(Var(Y) = \\mu^2 CV(Y)^2\\), onde \\(CV(Y) = \\frac{\\sqrt{2\\delta+5}}{(\\delta+1)}\\in (0,\\sqrt{5})\\) é o coeficiente de variação de Y.\nA variância de \\(Y_i\\) é função de \\(\\mu_i\\), logo estaremos modelando também a variância."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#vantagens-e-desvantagens-dos-modelos-bs",
+    "href": "presentations/birnbaum/seminario.html#vantagens-e-desvantagens-dos-modelos-bs",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Vantagens e desvantagens dos modelos BS",
+    "text": "Vantagens e desvantagens dos modelos BS\n\n\nVantagens\n\n\nMais uma família para obter um ajuste melhor aos dados;\nPode ser utilizada para dados censurados;\nResultados do modelo têm interpretação fácil;\nImplementado no R!\n\n\n\nDesvantagens\n\n\nDistribuição pouco conhecida;\nLimitações conceituais e práticas;\nDefinição matemática complexa;\nPouco material prático disponível de forma fácil."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#aplicação",
+    "href": "presentations/birnbaum/seminario.html#aplicação",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Aplicação",
+    "text": "Aplicação\nUtilizarei o conjunto de dados cpd do pacote faraway, referente a projeção de vendas e o verdadeiro número de vendas de 20 produtos\n\n\n\nlibrary(tidyverse)\nlibrary(gamlss)\ndata(cpd,package='faraway')\nattach(cpd)\np1 = cpd %&gt;% \n  gather() %&gt;%\n  ggplot(aes(value)) +\n  geom_histogram(bins = 30) +\n  facet_wrap(~key, scales = 'free_x') +\n  labs(x = '', y = '', title = '') +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\n\n\nVemos que tanto a variável resposta, actual, quanto a covariável explicativa, projected, são obviamente positivas, e também assimétricas à direta."
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#primeiro-ajuste",
+    "href": "presentations/birnbaum/seminario.html#primeiro-ajuste",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Primeiro ajuste",
+    "text": "Primeiro ajuste\nVeremos qual distribuição o pacote gamlss recomenda para melhor ajuste aos dados\n\nmod = fitDist(actual, type=\"realplus\") \n\n\nmod$fits\n\n      IG     BCPE   IGAMMA   LOGNO2    LOGNO      GIG       GG    BCCGo \n319.7223 320.9136 320.9552 321.5667 321.5667 321.7220 322.8726 323.0453 \n    BCCG      EXP  PARETO2       GP PARETO2o      GB2      WEI     WEI2 \n323.0453 323.5004 324.1676 324.1676 324.1676 324.8727 324.9636 324.9636 \n    WEI3     BCTo       GA   exGAUS \n324.9636 325.0453 325.3356 352.5137 \n\n\nVemos que o pacote GAMLSS oferece diversas opções de ajuste para este conjunto de dados. Entretanto, estamos especialmente interessados em tentar ajustar os dados utilizando o modelo RBS"
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#ajuste-rbs",
+    "href": "presentations/birnbaum/seminario.html#ajuste-rbs",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Ajuste RBS",
+    "text": "Ajuste RBS\nPrimeiramente, é necessário baixar e instalar o pacote RBS, que não está disponível no CRAN, utilizando o comando\n\ndevtools::install_github(\"santosneto/RBS\")\n\n\nlibrary(RBS)\n\nAgora, tentaremos o ajuste utilizando a distribuição RBS, e aproveitando da sintaxe e funcionalidades do pacote gamlss\n\n\nAjustando o modelo\n\nmodel0 = gamlss::gamlss(actual ~ projected, family=RBS(mu.link=\"identity\"),method=CG())\n\n\nsummary(model0)\n\n******************************************************************\nFamily:  c(\"RBS\", \"BirnbaumSaunders\") \n\nCall:  \ngamlss::gamlss(formula = actual ~ projected, family = RBS(mu.link = \"identity\"),  \n    method = CG()) \n\nFitting method: CG() \n\n------------------------------------------------------------------\nMu link function:  identity\nMu Coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  2.80360   18.08128   0.155    0.879    \nprojected    1.08047    0.07339  14.722 4.16e-11 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nSigma link function:  log\nSigma Coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)   3.9020     0.3162   12.34 6.56e-10 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nNo. of observations in the fit:  20 \nDegrees of Freedom for the fit:  3\n      Residual Deg. of Freedom:  17 \n                      at cycle:  8 \n \nGlobal Deviance:     247.755 \n            AIC:     253.755 \n            SBC:     256.7422 \n******************************************************************\n\n\n\nModelando também a variância\n\nmodel = gamlss::gamlss(actual ~ projected, sigma.formula = ~projected, family=RBS(mu.link=\"identity\"),method=CG())\n\n\nsummary(model)\n\n******************************************************************\nFamily:  c(\"RBS\", \"BirnbaumSaunders\") \n\nCall:  \ngamlss::gamlss(formula = actual ~ projected, sigma.formula = ~projected,  \n    family = RBS(mu.link = \"identity\"), method = CG()) \n\nFitting method: CG() \n\n------------------------------------------------------------------\nMu link function:  identity\nMu Coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 34.81320   21.00592   1.657    0.117    \nprojected    0.95759    0.01903  50.318   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nSigma link function:  log\nSigma Coefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 3.1348243  0.4749559   6.600  6.1e-06 ***\nprojected   0.0010326  0.0003238   3.189   0.0057 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nNo. of observations in the fit:  20 \nDegrees of Freedom for the fit:  4\n      Residual Deg. of Freedom:  16 \n                      at cycle:  20 \n \nGlobal Deviance:     241.0335 \n            AIC:     249.0335 \n            SBC:     253.0165 \n******************************************************************"
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#diagnósticos",
+    "href": "presentations/birnbaum/seminario.html#diagnósticos",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Diagnósticos",
+    "text": "Diagnósticos\nPodemos realizar a rotina normal de análise de diagnósticos do modelo, utilizando as funcionalidades do pacote gamlss\n\n\n\nwp(model)\n\n\n\n\n\n\n\n\n\n\nplot(model)\n\n\n\n\n\n\n\n\n******************************************************************\n          Summary of the Quantile Residuals\n                           mean   =  0.2395729 \n                       variance   =  1.024173 \n               coef. of skewness  =  -0.1452511 \n               coef. of kurtosis  =  1.76144 \nFilliben correlation coefficient  =  0.9877058 \n******************************************************************"
+  },
+  {
+    "objectID": "presentations/birnbaum/seminario.html#referências",
+    "href": "presentations/birnbaum/seminario.html#referências",
+    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
+    "section": "Referências",
+    "text": "Referências\nBirnbaum, Z. and Saunders, S. (1969). A new family of life distributions. Journal of Applied Probability, 6:319–327.\nSantos-Neto, M., Cysneiros, F., Leiva, V., and Ahmed, S. (2012). On new parameterizations of the Birnbaum-Saunders distribution. Pakistan Journal of Statistics, 28:1–26.\nSantos-Neto, M., Cysneiros, F., Leiva, V., and Barros, M. (2014). On new parameterizations of the Birnbaum-Saunders distribution and its moments, estimation and application. Revstat Statistical Journal, 12:247–272.\nLeiva, V., Santos-Neto, M., Cysneiros, F., and Barros, M. (2014). BirnbaumSaunders statistical modelling: a new approach. Statistical Modelling, 14:21–48.\nRieck, J. and Nedelman, J. (1991). A log-linear model for the Birnbaum-Saunders distribution. Technometrics, 3:51–60.\nNotas de aula do Prof. Helton Saulo. Disciplina Tópicos em Estatística 2 — Modelagem com apoio computacional. UnB, 2º/2024.\n\n\n\n\nDepartamento de estatística - UnB"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Bruno Gondim",
+    "section": "",
+    "text": "Estudante de graduação no bacharel de Estatística na Universidade de Brasília - UnB\nAqui estão aplicações pessoais de machine learning, ciência de dados e estatística. Me interesso também em programação, estrutura e modelagem de dados. Acredito em um mundo mais igualitário e justo."
+  },
+  {
+    "objectID": "index.html#formação",
+    "href": "index.html#formação",
+    "title": "Bruno Gondim",
+    "section": "Formação",
+    "text": "Formação\nUniversidade de Brasília (UnB) | Distrito Federal, Brasil | Bacharel em Estatística | Ago 2015 - presente"
+  },
+  {
+    "objectID": "index.html#experiência",
+    "href": "index.html#experiência",
+    "title": "Bruno Gondim",
+    "section": "Experiência",
+    "text": "Experiência\nGerente de projetos na ESTAT - Jan 2022 - Jan 2023\nEstagiário STF | Núcleo de análise de dados e estatística (NUADE) | Jul 2023 - presente"
+  },
+  {
     "objectID": "presentations/classificacao_salario/trabalho.html#introdução",
     "href": "presentations/classificacao_salario/trabalho.html#introdução",
     "title": "Classificação salarial via algorítmos de Machine Learning",
@@ -495,125 +691,6 @@
     "title": "Classificação salarial via algorítmos de Machine Learning",
     "section": "Referências",
     "text": "Referências\nFonte dos dados.\nhttps://www.tidymodels.org\nDocumentação XGBoost.\nPinheiro, João Manoel Herrera. Um estudo sobre Algoritmos de Boosting e a Otimização de Hiperparâmetros Utilizando Optuna. São Carlos, SP. 2023.\n\n\n\n\nDepartamento de estatística - UnB"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Bruno Gondim",
-    "section": "",
-    "text": "Estudante de graduação no bacharel de Estatística na Universidade de Brasília - UnB\nAqui estão aplicações pessoais de machine learning, ciência de dados e estatística. Me interesso também em programação, estrutura e modelagem de dados. Acredito em um mundo mais igualitário e justo."
-  },
-  {
-    "objectID": "index.html#formação",
-    "href": "index.html#formação",
-    "title": "Bruno Gondim",
-    "section": "Formação",
-    "text": "Formação\nUniversidade de Brasília (UnB) | Distrito Federal, Brasil | Bacharel em Estatística | Ago 2015 - presente"
-  },
-  {
-    "objectID": "index.html#experiência",
-    "href": "index.html#experiência",
-    "title": "Bruno Gondim",
-    "section": "Experiência",
-    "text": "Experiência\nGerente de projetos na ESTAT - Jan 2022 - Jan 2023\nEstagiário STF | Núcleo de análise de dados e estatística (NUADE) | Jul 2023 - presente"
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#introdução",
-    "href": "presentations/birnbaum/seminario.html#introdução",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Introdução",
-    "text": "Introdução\n\n\n\n\nA distribuição Birnbaum-Saunders (Birnbaum and Saunders, 1969) é utilizada para descrever tempo de vida por fadiga (exposição cumulativa a danos, vibrações, etc) de materiais expostos à ciclos homogêneos. O processo de fadiga descrito pelos autores é:\n\nUm material sujeito a ciclo de cargas repetitivos, que produzem desgaste no material;\nA falha no material dar-se-á quando a magnitude do desgaste excede um limite \\(\\omega\\);\nOs ciclos são homogêneos (a sequência de estresse aplicada ao material é sempre a mesma);\nA extensão da fissura (\\(X_i\\)) causada pela carga \\(l_i\\) é uma variável aleatória com dependência nas cargas e fissuras acumuladas até o i-ésimo ciclo;\nO tamanho total da fissura causados no j-ésimo ciclo (\\(Y_j\\)) também é uma variável aleatória com média \\(\\mu\\) e variância \\(\\sigma^2 &lt; \\infty\\);\nO tamanho das fissuras \\(Y_j\\) em diferentes ciclos são independentes."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#a-distribuição-birnbaum-saunders",
-    "href": "presentations/birnbaum/seminario.html#a-distribuição-birnbaum-saunders",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "A distribuição Birnbaum-Saunders",
-    "text": "A distribuição Birnbaum-Saunders\nPara este problema, os autores definem que: Seja T o tempo total até a ocorrência da falha e cumprida as condições de regularidade, podemos dizer que T segue distribuição Birnbaum-Saunders (BS), tal que \\(T \\sim BS(\\alpha,\\beta)\\), e \\[T = \\beta\\biggl(\\frac{\\alpha}{2}Z+\\sqrt{(\\frac{\\alpha}{2}Z)^2+1} \\biggl),\\] onde \\(\\alpha\\) é um parâmetro de forma, \\(\\beta\\) é parâmetro de localização (mediana), e \\(Z\\) é uma variável aleatória com distribuição normal padrão.\nEm uma aplicação, os parâmetros \\(\\alpha\\) e \\(\\beta\\) devem ser estimados."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#reparametrização-da-birnbaum-saunders",
-    "href": "presentations/birnbaum/seminario.html#reparametrização-da-birnbaum-saunders",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Reparametrização da Birnbaum-Saunders",
-    "text": "Reparametrização da Birnbaum-Saunders\nEm geral, iremos trabalhar com uma reparametrização da distribuição Birnbaum-Saunders, especialmente para regressão. Rieck e Nedelman (1991) mostram a relação da distribuição Birnbaum-Saunders com a distribuição seno hiperbólico normal.\nSeja \\(T \\sim BS(\\alpha,\\beta)\\), então \\(Y \\sim SHN(\\alpha,log(\\beta),\\sigma=2)\\), onde \\(\\alpha\\) é parâmetro de forma, \\(\\beta\\) é parâmetro de localização, e \\(\\sigma\\) é parâmetro de de escala fixo.\nDesta forma, a distribuição seno hiperbólica normal pode também ser chamada de distribuição log-Birnbaum-Saunders (LBS)."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#regressão-birnbaum-saunders",
-    "href": "presentations/birnbaum/seminario.html#regressão-birnbaum-saunders",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Regressão Birnbaum-Saunders",
-    "text": "Regressão Birnbaum-Saunders\nAssumindo \\(T_i\\) variável resposta, podemos construir um modelo de regressão Birbaum-Saunders, tal que: \\[T_i = \\beta_i\\varphi_i = exp(\\mu_i)\\varphi_i=exp(\\mathbf{x}_i^T\\mathbf{\\eta})\\varphi_i, i = 1,2,...,n.\\] onde \\(T_i\\) e \\(\\beta_i = exp(\\mu_i)\\) são a variável resposta e a mediana para a i-ésima observação; \\(\\mathbf{\\eta} = (\\eta_0,\\eta_1,...,\\eta_p)^T\\) é o vetor de parâmetros desconhecidos a serem estimados pela regressão, \\(\\mathbf{x}_i^T=(1,x_{i1},...,x_{ip})\\) são os valores das \\(p\\) variáveis explicativas, e \\(\\varphi_i \\sim BS(\\alpha,1)\\) é o erro do modelo, tal que \\(T_i \\sim BS(\\alpha,\\beta)\\)."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#função-de-verossimilhança",
-    "href": "presentations/birnbaum/seminario.html#função-de-verossimilhança",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Função de verossimilhança",
-    "text": "Função de verossimilhança\nPara construir a função de verossimilhança, será necessário reparametrizar a distribuição \\(T_i \\sim BS(\\alpha,\\beta_i)\\) para \\(Y_i = log(T_i) \\sim LBS(\\alpha,log(\\beta_i))\\), tal que \\[log(T_i) = Y_i = \\mu_i + \\epsilon_i = \\mathbf{x}_i^T\\mathbf{\\eta}+\\epsilon_i, i=1,...,n.\\]\nDesta forma, a função de verossimilhança para \\(\\mathbf{\\theta}=(\\alpha,\\mathbf{\\eta}^T)^T\\) não terá solução analítica, sendo necessário estimar o vetor de parâmetros \\(\\mathbf{\\eta}\\) utilizando métodos iterativos de otimização não linear.\nDesta estimativa obtida, podemos obter a estimativa de máxima verossimilhança do parâmetro \\(\\alpha\\), tal que: \\[\\hat{\\alpha} = \\sqrt{\\frac{4}{n}\\sum_{i=1}^nsinh^2\\biggl(\\frac{y_i-\\mathbf{x}_i^T\\mathbf{\\hat{\\eta}}}{2}\\biggl)}.\\]"
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#estimador-de-mínimos-quadrados",
-    "href": "presentations/birnbaum/seminario.html#estimador-de-mínimos-quadrados",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Estimador de mínimos quadrados",
-    "text": "Estimador de mínimos quadrados\nPodemos também utilizar o estimador de mínimos quadrados para \\(\\mathbf{\\eta}\\), da forma \\[\\hat{\\mathbf{\\eta}}=(\\mathbf{X}^T\\mathbf{X})^{-1}\\mathbf{X}^T\\mathbf{y},\\] onde \\(\\mathbf{y}\\) é o vetor de observações, e \\(\\mathbf{X}\\) é a matriz de desenho do modelo. Entretanto, este método é menos eficiente que o estimador de máxima verossimilhança, conforme observado por Rieck e Nedelman (1991)."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#distribuição-bs-reparametrizada-pela-média",
-    "href": "presentations/birnbaum/seminario.html#distribuição-bs-reparametrizada-pela-média",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Distribuição BS reparametrizada pela média",
-    "text": "Distribuição BS reparametrizada pela média\nSantos-Neto et al. (2012) propuseram uma reparametrização da distribuição Birnbaum-Saunders, sendo: \\(\\alpha=\\frac{2}{\\delta},\\beta=\\frac{\\delta\\mu}{\\delta+1},\\) tal que \\(\\delta=\\frac{2}{\\alpha^2},\\mu=\\beta\\Bigl(1+\\frac{\\alpha^2}{2}\\Bigl)\\), sendo \\(\\delta&gt;0,\\mu&gt;0\\) parâmetros de forma e média, respectivamente.\nNesta parametrização, a função de densidade de probabilidade fica definida por: \\[f_Y(y|\\mu,\\delta)=\\frac{exp(\\frac{\\delta}{2}\\sqrt{\\delta+1})}{\\sqrt{16\\pi\\mu}y^{\\frac{3}{2}}}\\Bigl(y+\\frac{\\delta\\mu}{\\delta+1}\\Bigl)exp\\Biggl(-\\frac{\\delta}{4}\\Biggl[\\frac{y(\\delta+1)}{\\delta\\mu}+\\frac{\\delta\\mu}{y(\\delta+1)}\\Biggl]\\Biggl)\\]"
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#regressão-bs-reparametrizada-pela-média",
-    "href": "presentations/birnbaum/seminario.html#regressão-bs-reparametrizada-pela-média",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Regressão BS reparametrizada pela média",
-    "text": "Regressão BS reparametrizada pela média\nSendo \\(RBS(\\mu,\\delta)\\) a reparametrização pela média da distribuição Birnbaum-Saunders original, Leiva et al. (2014) propõe um modelo de regressão em que, seja \\(Y \\sim RBS(\\mu,\\delta)\\), a média de \\(Y_i\\) satisfaz a relação: \\[h(\\mu_i)=\\mathbf{x}_i^T\\mathbf{\\beta}, i=1,...,n,\\] em que \\(\\mathbf{\\beta}=(\\beta_1,...,\\beta_p)^T,p&lt;n\\) é vetor de coeficientes de regressão a serem estimados, e \\(\\mathbf{x}_i=(x_{i1},x_{i2},...,x_{ip})^T\\) são observações de p regressores, e \\(\\mu_i=h^{-1}(\\mathbf{x}_i^T\\mathbf{\\beta}),\\) com \\(h(.)\\) sendo uma função de ligação positiva e duas vezes diferenciável.\nSob a distribuição RBS, \\(\\mathbb{E}(Y)=\\mu\\) e \\(Var(Y) = \\mu^2 CV(Y)^2\\), onde \\(CV(Y) = \\frac{\\sqrt{2\\delta+5}}{(\\delta+1)}\\in (0,\\sqrt{5})\\) é o coeficiente de variação de Y.\nA variância de \\(Y_i\\) é função de \\(\\mu_i\\), logo estaremos modelando também a variância."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#vantagens-e-desvantagens-dos-modelos-bs",
-    "href": "presentations/birnbaum/seminario.html#vantagens-e-desvantagens-dos-modelos-bs",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Vantagens e desvantagens dos modelos BS",
-    "text": "Vantagens e desvantagens dos modelos BS\n\n\nVantagens\n\n\nMais uma família para obter um ajuste melhor aos dados;\nPode ser utilizada para dados censurados;\nResultados do modelo têm interpretação fácil;\nImplementado no R!\n\n\n\nDesvantagens\n\n\nDistribuição pouco conhecida;\nLimitações conceituais e práticas;\nDefinição matemática complexa;\nPouco material prático disponível de forma fácil."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#aplicação",
-    "href": "presentations/birnbaum/seminario.html#aplicação",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Aplicação",
-    "text": "Aplicação\nUtilizarei o conjunto de dados cpd do pacote faraway, referente a projeção de vendas e o verdadeiro número de vendas de 20 produtos\n\n\n\nlibrary(tidyverse)\nlibrary(gamlss)\ndata(cpd,package='faraway')\nattach(cpd)\np1 = cpd %&gt;% \n  gather() %&gt;%\n  ggplot(aes(value)) +\n  geom_histogram(bins = 30) +\n  facet_wrap(~key, scales = 'free_x') +\n  labs(x = '', y = '', title = '') +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\n\n\nVemos que tanto a variável resposta, actual, quanto a covariável explicativa, projected, são obviamente positivas, e também assimétricas à direta."
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#primeiro-ajuste",
-    "href": "presentations/birnbaum/seminario.html#primeiro-ajuste",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Primeiro ajuste",
-    "text": "Primeiro ajuste\nVeremos qual distribuição o pacote gamlss recomenda para melhor ajuste aos dados\n\nmod = fitDist(actual, type=\"realplus\") \n\n\nmod$fits\n\n      IG     BCPE   IGAMMA   LOGNO2    LOGNO      GIG       GG    BCCGo \n319.7223 320.9136 320.9552 321.5667 321.5667 321.7220 322.8726 323.0453 \n    BCCG      EXP  PARETO2       GP PARETO2o      GB2      WEI     WEI2 \n323.0453 323.5004 324.1676 324.1676 324.1676 324.8727 324.9636 324.9636 \n    WEI3     BCTo       GA   exGAUS \n324.9636 325.0453 325.3356 352.5137 \n\n\nVemos que o pacote GAMLSS oferece diversas opções de ajuste para este conjunto de dados. Entretanto, estamos especialmente interessados em tentar ajustar os dados utilizando o modelo RBS"
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#ajuste-rbs",
-    "href": "presentations/birnbaum/seminario.html#ajuste-rbs",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Ajuste RBS",
-    "text": "Ajuste RBS\nPrimeiramente, é necessário baixar e instalar o pacote RBS, que não está disponível no CRAN, utilizando o comando\n\ndevtools::install_github(\"santosneto/RBS\")\n\n\nlibrary(RBS)\n\nAgora, tentaremos o ajuste utilizando a distribuição RBS, e aproveitando da sintaxe e funcionalidades do pacote gamlss\n\n\nAjustando o modelo\n\nmodel0 = gamlss::gamlss(actual ~ projected, family=RBS(mu.link=\"identity\"),method=CG())\n\n\nsummary(model0)\n\n******************************************************************\nFamily:  c(\"RBS\", \"BirnbaumSaunders\") \n\nCall:  \ngamlss::gamlss(formula = actual ~ projected, family = RBS(mu.link = \"identity\"),  \n    method = CG()) \n\nFitting method: CG() \n\n------------------------------------------------------------------\nMu link function:  identity\nMu Coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  2.80360   18.08128   0.155    0.879    \nprojected    1.08047    0.07339  14.722 4.16e-11 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nSigma link function:  log\nSigma Coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)   3.9020     0.3162   12.34 6.56e-10 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nNo. of observations in the fit:  20 \nDegrees of Freedom for the fit:  3\n      Residual Deg. of Freedom:  17 \n                      at cycle:  8 \n \nGlobal Deviance:     247.755 \n            AIC:     253.755 \n            SBC:     256.7422 \n******************************************************************\n\n\n\nModelando também a variância\n\nmodel = gamlss::gamlss(actual ~ projected, sigma.formula = ~projected, family=RBS(mu.link=\"identity\"),method=CG())\n\n\nsummary(model)\n\n******************************************************************\nFamily:  c(\"RBS\", \"BirnbaumSaunders\") \n\nCall:  \ngamlss::gamlss(formula = actual ~ projected, sigma.formula = ~projected,  \n    family = RBS(mu.link = \"identity\"), method = CG()) \n\nFitting method: CG() \n\n------------------------------------------------------------------\nMu link function:  identity\nMu Coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 34.81320   21.00592   1.657    0.117    \nprojected    0.95759    0.01903  50.318   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nSigma link function:  log\nSigma Coefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 3.1348243  0.4749559   6.600  6.1e-06 ***\nprojected   0.0010326  0.0003238   3.189   0.0057 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n------------------------------------------------------------------\nNo. of observations in the fit:  20 \nDegrees of Freedom for the fit:  4\n      Residual Deg. of Freedom:  16 \n                      at cycle:  20 \n \nGlobal Deviance:     241.0335 \n            AIC:     249.0335 \n            SBC:     253.0165 \n******************************************************************"
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#diagnósticos",
-    "href": "presentations/birnbaum/seminario.html#diagnósticos",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Diagnósticos",
-    "text": "Diagnósticos\nPodemos realizar a rotina normal de análise de diagnósticos do modelo, utilizando as funcionalidades do pacote gamlss\n\n\n\nwp(model)\n\n\n\n\n\n\n\n\n\n\nplot(model)\n\n\n\n\n\n\n\n\n******************************************************************\n          Summary of the Quantile Residuals\n                           mean   =  0.2395729 \n                       variance   =  1.024173 \n               coef. of skewness  =  -0.1452511 \n               coef. of kurtosis  =  1.76144 \nFilliben correlation coefficient  =  0.9877058 \n******************************************************************"
-  },
-  {
-    "objectID": "presentations/birnbaum/seminario.html#referências",
-    "href": "presentations/birnbaum/seminario.html#referências",
-    "title": "Modelo de regressão Birnbaum-Saunders reparametrizado pela média",
-    "section": "Referências",
-    "text": "Referências\nBirnbaum, Z. and Saunders, S. (1969). A new family of life distributions. Journal of Applied Probability, 6:319–327.\nSantos-Neto, M., Cysneiros, F., Leiva, V., and Ahmed, S. (2012). On new parameterizations of the Birnbaum-Saunders distribution. Pakistan Journal of Statistics, 28:1–26.\nSantos-Neto, M., Cysneiros, F., Leiva, V., and Barros, M. (2014). On new parameterizations of the Birnbaum-Saunders distribution and its moments, estimation and application. Revstat Statistical Journal, 12:247–272.\nLeiva, V., Santos-Neto, M., Cysneiros, F., and Barros, M. (2014). BirnbaumSaunders statistical modelling: a new approach. Statistical Modelling, 14:21–48.\nRieck, J. and Nedelman, J. (1991). A log-linear model for the Birnbaum-Saunders distribution. Technometrics, 3:51–60.\nNotas de aula do Prof. Helton Saulo. Disciplina Tópicos em Estatística 2 — Modelagem com apoio computacional. UnB, 2º/2024.\n\n\n\n\nDepartamento de estatística - UnB"
   },
   {
     "objectID": "presentations/classificação binária de decisões/trabalho_final.html",
