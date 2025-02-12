@@ -441,15 +441,16 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 </section>
 <section id="introdução" class="slide level2">
 <h2>Introdução</h2>
-<div>
 <div class="columns">
-<div class="column fragment" style="width:60%;">
+<div class="column" style="width:60%;">
 <div style="font-size: 80%;">
+<div>
 <ul>
 <li class="fragment"><p>O Ministro Luís Roberto Barroso assumiu a presidência do Tribunal em 2023, e estipulou como uma de suas metas de gestão a diminuição do acervo de processos de controle concentrado em 20%.</p></li>
 <li class="fragment"><p>A tarefa de busca de processos similares no acervo de controle concentrado é feita hoje manualmente. Portanto, a identificação automatizada possibilita reduzir o tempo e o esforço manual na busca de processos similares.</p></li>
 <li class="fragment"><p>Nesse trabalho, buscou-se aplicar técnicas de processamento de linguagem natural (NLP) para detecção de processos semelhantes no acervo de processos de controle concentrado do Tribunal.</p></li>
 </ul>
+</div>
 </div>
 </div><div class="column fragment" style="width:40%;">
 <div class="cell" data-reveal="true" data-layout-align="default">
@@ -474,34 +475,28 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 </div>
 </div>
 </div>
-</div>
 </section>
 <section id="conjunto-de-dados" class="slide level2">
 <h2>Conjunto de dados</h2>
-<div>
 <div class="columns">
-<div class="column fragment" style="width:60%;">
+<div class="column" style="width:60%;">
 <div style="font-size: 80%;">
 <div class="panel-tabset">
 <ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Descrição</a></li><li><a href="#tabset-1-2">Comparação</a></li><li><a href="#tabset-1-3">Quantidade</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
-<div>
 <ul>
-<li class="fragment"><p>Os dados utilizados para esta análise são as petições iniciais dos processos de controle concentrado. Este é o primeiro documento que chega no Tribunal tratando de um processo.</p></li>
-<li class="fragment"><p>Desta forma, o desafio é encontrar similaridades entre processos na sua fase inicial de tramitação, tal que esta ferramenta seja desbravadora na busca de similaridades antes de outros encaminhamentos internos no Tribunal.</p></li>
-<li class="fragment"><p>As petições iniciais são um dado público, e podem ser obtidas no <a href="https://portal.stf.jus.br/processos/">Portal do STF</a>.</p></li>
+<li><p>Os dados utilizados para esta análise são as petições iniciais dos processos de controle concentrado. Este é o primeiro documento que chega no Tribunal tratando de um processo.</p></li>
+<li><p>Desta forma, o desafio é encontrar similaridades entre processos na sua fase inicial de tramitação, tal que esta ferramenta seja desbravadora na busca de similaridades antes de outros encaminhamentos internos no Tribunal.</p></li>
+<li><p>As petições iniciais são um dado público, e podem ser obtidas no <a href="https://portal.stf.jus.br/processos/">Portal do STF</a>.</p></li>
 </ul>
-</div>
 </div>
 <div id="tabset-1-2">
-<div>
 <ul>
-<li class="fragment"><p>Para realizar a busca por similaridades, necessitamos fixar um processo, que chamaremos de paradigma.</p></li>
-<li class="fragment"><p>Os processos paradigmas selecionados foram aqueles que tiveram pauta ou decisão conjunta pelo Tribunal com outros processos.</p></li>
-<li class="fragment"><p>Desta forma, buscou-se encontrar técnicas que apontassem a similaridade desses processos já em suas petições iniciais.</p></li>
+<li><p>Para realizar a busca por similaridades, necessitamos fixar um processo, que chamaremos de paradigma.</p></li>
+<li><p>Os processos paradigmas selecionados foram aqueles que tiveram pauta ou decisão conjunta pelo Tribunal com outros processos.</p></li>
+<li><p>Desta forma, buscou-se encontrar técnicas que apontassem a similaridade desses processos já em suas petições iniciais.</p></li>
 </ul>
-</div>
 </div>
 <div id="tabset-1-3">
 <div class="cell">
@@ -521,7 +516,6 @@ Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
 <embed src="adpf857.pdf" width="500px" height="500px">
 <div style="font-size: 70%;">
 <p>Exemplo de uma petição inicial — ADPF 857</p>
-</div>
 </div>
 </div>
 </div>
