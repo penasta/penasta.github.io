@@ -1,0 +1,868 @@
+---
+title: "Similaridade de Processos Judiciários Utilizando Processamento de Linguagem Natural"
+subtitle: ""
+author:
+  - name: Bruno Gondim Toledo
+    affiliation: 
+      - name: Estudante
+    url: https://github.com/penasta
+  - name: Prof.ª Dr.ª Thais Carvalho Valadares Rodrigues
+    affiliation: 
+      - name: Orientadora
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: auto
+    scrollable: true
+    logo: unb.jpg
+    theme: serif
+    width: 1500
+    css: styles.css
+    footer: Departamento de estatística - UnB
+resources:
+  - demo.pdf
+editor_options: 
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    dev: png
+    dev.args:
+      bg: transparent
+---
+
+```{r, include=FALSE}
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(tidyverse,knitr,ggdendro,dendextend,gridExtra,cluster,reticulate,
+               dslabs,Rtsne,ggrepel)
+
+```
+
+
+# Sumário
+
+::: {style="margin-top: 1.5em; font-size: 1em"}
+
+- Introdução
+
+- Conjunto de dados
+
+- Referencial teórico
+
+- Resultados
+
+- Conclusão
+
+- Referências
+
+:::
+
+## Introdução
+
+:::: columns
+
+::: {.column width="60%"}
+
+::: {style="font-size: 80%;"}
+
+::: incremental
+
+- O Ministro Luís Roberto Barroso assumiu a presidência do Tribunal em 2023, e estipulou como uma de suas metas de gestão a diminuição do acervo de processos de controle concentrado em 20%.
+
+- A tarefa de busca de processos similares no acervo de controle concentrado é feita hoje manualmente. Portanto, a identificação automatizada possibilita reduzir o tempo e o esforço manual na busca de processos similares.
+
+- Nesse trabalho, buscou-se aplicar técnicas de processamento de linguagem natural (NLP) para detecção de processos semelhantes no acervo de processos de controle concentrado do Tribunal.
+
+:::
+
+:::
+
+:::
+
+::: {.column width="40%" .fragment}
+
+```{mermaid}
+graph TD
+    A[Recebimento] --> B{Triagem Inicial};
+    B --> C[Distribuição];
+    B --> T1[...];
+    T1 --> T2[Busca por similaridade com \n outros processos do acervo];
+    T2 --> T3[...];
+    T3 --> B;
+    C --> D[...];
+
+```
+
+:::
+
+::::
+
+
+## Conjunto de dados
+
+
+:::: columns
+
+::: {.column width="60%"}
+
+::: {style="font-size: 80%;"}
+
+::: {.panel-tabset}
+
+### Descrição
+
+- Os dados utilizados para esta análise são as petições iniciais dos processos de controle concentrado. Este é o primeiro documento que chega no Tribunal tratando de um processo.
+
+- Desta forma, o desafio é encontrar similaridades entre processos na sua fase inicial de tramitação, tal que esta ferramenta seja desbravadora na busca de similaridades antes de outros encaminhamentos internos no Tribunal.
+
+- As petições iniciais são um dado público, e podem ser obtidas no [Portal do STF](https://portal.stf.jus.br/processos/).
+
+### Comparação
+
+- Para realizar a busca por similaridades, necessitamos fixar um processo, que chamaremos de paradigma.
+
+- Os processos paradigmas selecionados foram aqueles que tiveram pauta ou decisão conjunta pelo Tribunal com outros processos.
+
+- Desta forma, buscou-se encontrar técnicas que apontassem a similaridade desses processos já em suas petições iniciais.
+
+### Quantidade
+
+```{r, dev='svg', dev.args=list(bg="transparent")}
+library(ggplot2)
+
+
+dados <- data.frame(
+  Ano = 2016:2025,
+  Valor = c(2216, 2310, 2239, 2070, 1738, 1783, 1509, 1241, 1109, 1104)
+)
+
+ggplot(dados, aes(x = Ano, y = Valor)) +
+  geom_line(color = "#006eab", size = 1) +
+  geom_point(color = "#003d5f", size = 3) +
+  geom_text(aes(label = Valor), vjust = -1, color = "black", size = 4) +
+  labs(subtitle = "Acervo de processos de controle concentrado", x = "Ano", y = "") +
+  theme_classic() +
+  scale_x_continuous(breaks = 2016:2025) +
+  ylim(0,2500) +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        #axis.text.x = element_blank(),
+        axis.ticks.y= element_blank(),
+        axis.ticks.x= element_blank(),
+        text = element_text(size = 10),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill='transparent'),
+        legend.box.background = element_rect(fill='transparent')) 
+```
+
+:::
+
+:::
+
+:::
+
+::: {.column width="40%" .fragment}
+
+```{=html}
+<embed src="adpf857.pdf" width="500px" height="500px" />
+```
+
+::: {style="font-size: 70%;"}
+
+Exemplo de uma petição inicial — ADPF 857
+
+:::
+
+:::
+
+::::
+
+## Referencial teórico — Vetorização {.r-fit-text}
+
+::: {style="font-size: 80%;"}
+
+Por se tratar de um dado textual, é necessário aplicar técnicas de vetorização ao texto.
+
+:::
+
+:::: columns
+
+::: {.column width="50%" .fragment}
+
+::: {.panel-tabset}
+
+### *Bag of Words*
+
+![](BoW.png){width=80%}
+
+### Nota
+
+::: {style="font-size: 80%;"}
+
+Esta é uma das formas mais simples de vetorizar um texto. Iremos simplesmente tabelar a frequência de utilização de cada um dos termos presentes no texto.
+
+:::
+
+:::
+
+:::
+
+::: {.column width="50%" .fragment}
+
+::: {.panel-tabset}
+
+### *Doc2vec*
+
+![](doc2vec.png){width=80%}
+
+### Nota
+
+::: {style="font-size: 80%;"}
+
+Esta é uma das formas mais sofisticadas para vetorização de texto. Nela, iremos obter o vetor numérico que representa o texto pelo treinamento de uma rede neural. Os parâmetros deste modelo são atualizados buscando prever a próxima palavra dado o seu contexto e dado um vetor de palavras que formam coletivamente o texto (Freitas et al. ,2024).
+
+:::
+
+:::
+
+:::
+
+::::
+
+## Referencial teórico — Métricas de similaridade  {.r-fit-text}
+
+::: {style="font-size: 80%;"}
+
+Para comparar os vetores criados, necessitamos de métricas de distância estatística
+
+:::
+
+:::: columns
+
+::: {.column width="50%" .fragment}
+
+::: {.panel-tabset}
+
+### Distância do Cosseno
+
+![](cosseno.png){}
+
+### Nota
+
+::: {style="font-size: 60%;"}
+
+Pela Lei dos cossenos:
+
+\begin{equation}
+\mathbf{A} \cdot \mathbf{B} = | \mathbf{A}|| \mathbf{B}|\cos\theta.
+\end{equation}
+
+Podemos utilizar, para avaliar o grau de similaridade entre os vetores $\mathbf{A}$ e $\mathbf{B}$, a correlação entre eles. E para quantificar esta correlação, podemos utilizar o cosseno do ângulo entre estes vetores, tal que:
+
+\begin{equation}\text{sim}(\mathbf{A,B}) = \cos\theta = \frac{\mathbf{A} \cdot \mathbf{B}}{|\mathbf{A}|| \mathbf{B}|}.
+\end{equation}
+
+Esta é possivelmente a métrica mais utilizada no paradigma de NLP.
+
+:::
+
+::: 
+
+:::
+
+::: {.column width="50%" .fragment}
+
+::: {.panel-tabset}
+
+### Divergência de Jensen {.r-fit-text}
+
+![](js.png){width=90%}
+
+### Nota
+
+::: {style="font-size: 60%;"}
+
+Uma outra métrica popular na área de *Machine Learning*, podemos calcular o complementar da divergência de Jensen-Shannon definida por:
+
+\begin{equation}
+JSD(P||Q) = \\
+\frac{1}{2}(KL(P||R)+KL(Q||R)),
+\end{equation}
+
+como sendo uma medida de similaridade entre duas distribuições de probabilidade. No caso, tomamos os vetores como distribuições de probabilidade empírica. Esta é uma alternativa interessante a distância do cosseno, visto que esta métrica respeita a desigualdade triangular.
+
+:::
+
+:::
+
+:::
+
+::::
+
+## Referencial teórico — IMPE {.r-fit-text}
+
+::: {style="font-size: 80%;"}
+
+Uma terceira métrica foi proposta para a medição da similaridade entre os processos, a qual se chamou Interseção mínima de probabilidade empírica (IMPE).
+
+::: 
+
+
+::: {.panel-tabset}
+
+### Definição
+
+::: {style="font-size: 60%;"}
+
+- Esta métrica foi construída inspirada no índice de Tversky.
+
+- Nela, consideraremos os vetores dos textos como distribuições de probabilidade empírica. Destes, tomaremos um menos a soma das diferenças dos absolutos das frequência relativa de um termo entre dois textos, tal que \begin{equation}
+    \text{IMPE}(\textbf{A},\textbf{B}) = 1 - \sum_{w \in A \cap B} |f_A(w) - f_B(w)|.
+\end{equation}
+
+- Por somar os menores valores, esta métrica foi construída para ser conservadora, apenas acusando similaridade entre textos muito parecidos.
+
+- $IMPE(\textbf{A},\textbf{B}) \in (0,1)$, em que $IMPE(\textbf{A},\textbf{B}) = 1 \rightarrow$ textos idênticos.
+
+::: 
+
+### Implementação
+
+```{r}
+#| echo: true
+
+# Calcular interseção mínima de probabilidade empírica entre dois documentos ----
+# Entrada: 2 df n x 2, coluna 1 "word" coluna 2 "freq"
+
+IMPE <- function(df1, df2) {
+  df1$relative_freq <- df1$freq / sum(df1$freq)
+  df2$relative_freq <- df2$freq / sum(df2$freq)
+  common_words <- merge(df1, df2, by = "word", suffixes = c("_df1", "_df2"))
+  common_words$dissimilaridade <- abs(common_words$relative_freq_df1 - common_words$relative_freq_df2)
+  similaridade <- 1 - sum(common_words$dissimilaridade)
+  return(similaridade)
+}
+```
+
+:::
+
+## Resultados
+
+::: {style="font-size: 50%;"}
+
+Foram realizados estudos de casos, onde se comparou a combinação de cada técnica de vetorização com cada métrica de similaridade para casos onde se sabia os processos que deveriam ser identificados como mais parecidos. Estes foram os resultados:
+
+:::
+
+::: {.panel-tabset}
+
+### Caso 1
+
+::: {style="font-size: 60%;"}
+
+```{=html}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Similaridades</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <caption>Similaridades entre ADI6931 e ADI6921.</caption>
+    <thead>
+        <tr>
+            <th>Vetorização</th>
+            <th>Métrica de similaridade</th>
+            <th>Proximidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>doc2vec</em></td>
+            <td>Distância do cosseno</td>
+            <td>8º mais similar</td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> completo</td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>65º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>3º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> reduzido</td>
+            <td>Distância do cosseno</td>
+            <td>7º mais similar</td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td><strong>4º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td>72º mais similar</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+
+```
+
+:::
+
+### Caso 2
+
+::: {style="font-size: 60%;"}
+
+```{=html}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Similaridades</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <caption>Similaridades entre ADPF857 e ADPF743, ADPF746.</caption>
+    <thead>
+        <tr>
+            <th>Vetorização</th>
+            <th>Métrica de similaridade</th>
+            <th>Proximidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>doc2vec</em></td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> completo</td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>42º e 89º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>1º e 3º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> reduzido</td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>8º e 9º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+```
+
+
+:::
+
+### Caso 3
+
+::: {style="font-size: 60%;"}
+
+```{=html}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Similaridades</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <caption>Similaridades entre ADO54 e ADPF760.</caption>
+    <thead>
+        <tr>
+            <th>Vetorização</th>
+            <th>Métrica de similaridade</th>
+            <th>Proximidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>doc2vec</em></td>
+            <td>Distância do cosseno</td>
+            <td><strong>4º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> completo</td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>36º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>3º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> reduzido</td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>8º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>2º mais similar</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+```
+
+
+:::
+
+### Caso 4
+
+::: {style="font-size: 60%;"}
+
+```{=html}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Similaridades</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <caption>Similaridades entre ADI7078 e ADI7066, ADI7070.</caption>
+    <thead>
+        <tr>
+            <th>Vetorização</th>
+            <th>Métrica de similaridade</th>
+            <th>Proximidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>doc2vec</em></td>
+            <td>Distância do cosseno</td>
+            <td>1º e 6º mais similar</td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> completo</td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>437º e 475º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> reduzido</td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td><strong>3º e 4º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>1º e 2º mais similar</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+```
+
+
+:::
+
+### Caso 5
+
+::: {style="font-size: 60%;"}
+
+```{=html}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Similaridades</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <caption>Similaridades entre ADI3318 e ADI2943, ADI3309.</caption>
+    <thead>
+        <tr>
+            <th>Vetorização</th>
+            <th>Métrica de similaridade</th>
+            <th>Proximidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>doc2vec</em></td>
+            <td>Distância do cosseno</td>
+            <td><strong>1º e 5º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> completo</td>
+            <td>Distância do cosseno</td>
+            <td><strong>3º e 4º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>358º e 360º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>2º e 3º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td rowspan="3"><em>Bag of Words</em> reduzido</td>
+            <td>Distância do cosseno</td>
+            <td><strong>2º e 3º mais similar</strong></td>
+        </tr>
+        <tr>
+            <td>IMPE</td>
+            <td>6º e 7º mais similar</td>
+        </tr>
+        <tr>
+            <td>Jensen-Shannon</td>
+            <td><strong>2º e 4º mais similar</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+```
+
+:::
+
+:::
+
+## Resultados — t-SNE
+
+::: {style="font-size: 65%;"}
+
+Testou-se utilizar *t-SNE* para visualização do acervo, com objetivo de que as semelhanças entre processos fossem preservadas
+
+:::
+
+:::: columns
+
+::: {.column width="33%"}
+
+Teste 1
+
+![](tsne1.png){width=100%}
+
+:::
+
+::: {.column width="33%"}
+
+Teste 2
+
+![](tsne2.png){width=100%}
+
+:::
+
+::: {.column width="33%"}
+
+Teste 3
+
+![](tsne3.png){width=100%}
+
+:::
+
+::::
+
+::: {style="font-size: 80%;"}
+
+Como os resultados não foram satisfatórios, esta técnica não foi utilizada na aplicação final.
+
+:::
+
+## Conclusão
+
+::: incremental
+
+- A combinação das técnicas mais simples de vetorização *Bag of Words* com a distância do cosseno produziu excelentes resultados na busca de similaridade de processos.
+
+- Este resultado mostra que técnicas simples e parcimoniosas ainda são úteis para problemas práticos no paradigma da NLP.
+
+- A implementação de um aplicativo *Shiny* para utilização deste modelo fornece um valioso insumo para os analistas do Tribunal para o cumprimento da meta de diminuição do acervo de processos de controle concentrado do Ministro Presidente do STF.
+
+:::
+
+
+
+## Referências
+
+::: {style="font-size: 72%;"}
+
+- FREITAS, L. J. G. Clusterização de textos aplicada ao tratamento de dados jurídicos desbalanceados. Tese (Mestrado em Estatística) – Departamento de estatística, Universidade de Brasília, 2023.
+
+- FREITAS, L. J. G.; ALENCAR, E.; RODRIGUES, T. C. V. Rafa 2030-deep learning applied to brazilian supreme court legal documents and un 2030 agenda. Galoá, 2022.
+
+- FREITAS, L. J. G. et al. Catboost algorithm application in legal texts and un 2030 agenda. Revista de Informatica Teórica e Aplicada - RITA - ISSN 2175-2745. Vol. 30, Num. 02 (2023) 51-58, 2023.
+
+- FREITAS, L. J. G. et al. Text clustering applied to data augmentation in legal contexts. arXiv preprint arXiv:2404.08683, 2024.
+
+- LU, J.; HENCHION, M.; NAMEE, B. M. Diverging divergences: Examining variants of jensen shannon divergence for corpus comparison tasks. 2021.
+
+- MORETTIN, P. A.; SINGER, J. M. Estatística e Ciência de Dados. 1ª. ed. Rio de Janeiro: LTC, 2023.
+
+- SOARES, A. Introdção à análise textual aplicada à sociologia. 2022. Disponível em: ⟨https://soaresalisson.github.io/analisetextual/⟩. Acesso em: 31 de dez. de 2024.
+
+:::
