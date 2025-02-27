@@ -13,17 +13,18 @@ about:
       href: "mailto:brunogtoledo96@gmail.com"  
 ---
 
-Estudante de graduação no bacharel de Estatística na Universidade de Brasília - UnB
+Statistician — University of Brasília (UnB)
 
-Aqui estão aplicações pessoais de machine learning, ciência de dados e estatística. Me interesso também em programação, estrutura e modelagem de dados. Acredito em um mundo mais igualitário e justo.
+Here are personal applications of machine learning, data science and statistics. I'm also interested in programming, data structure and modeling. I believe in a more equal and fair world.
 
-## Formação
+## Education
 
-Universidade de Brasília (UnB) | Distrito Federal, Brasil |
-Bacharel em Estatística | Ago 2015 - presente
+University of Brasília (UnB) | Federal District, Brazil | BSc in Statistics | Dez 2015 – Feb 2025
 
-## Experiência
+University of Brasília (UnB) | Distrito Federal, Brazil | MSc in Statistics | Mar 2025 - Mar 2027
 
-Gerente de projetos na ESTAT - Jan 2022 - Jan 2023
+## Experience
 
-Estagiário STF | Núcleo de análise de dados e estatística (NUADE) | Jul 2023 - presente
+Project manager at ESTAT - Jan 2022 - Jan 2023
+
+STF Intern | Data analysis and statistics center (NUADE) | July 2023 – Feb 2025
