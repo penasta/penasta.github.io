@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Bruno Gondim Toledo">
-<meta name="dcterms.date" content="2025-04-15">
+<meta name="dcterms.date" content="2025-04-20">
 
-<title>Bruno Gondim - Lista 2 — Otimização e máxima verossimilhança</title>
+<title>Bruno Gondim - Lista 3 — Algoritmo EM</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -135,7 +135,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Bruno Gondim - Lista 2 — Otimização e máxima verossimilhança">
+<meta property="og:title" content="Bruno Gondim - Lista 3 — Algoritmo EM">
 <meta property="og:description" content="Técnicas computacionais em estatística | Prof.&nbsp;Dr.&nbsp;Helton Saulo Bezerra dos Santos">
 <meta property="og:site_name" content="Bruno Gondim">
 </head>
@@ -242,10 +242,9 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#solução" id="toc-solução" class="nav-link active" data-scroll-target="#solução">Solução</a>
+  <li><a href="#duração-de-desemprego" id="toc-duração-de-desemprego" class="nav-link active" data-scroll-target="#duração-de-desemprego">Duração de desemprego</a>
   <ul class="collapse">
-  <li><a href="#gerando-valores-da-bs" id="toc-gerando-valores-da-bs" class="nav-link" data-scroll-target="#gerando-valores-da-bs">Gerando valores da BS</a></li>
-  <li><a href="#estimando-os-parâmetros" id="toc-estimando-os-parâmetros" class="nav-link" data-scroll-target="#estimando-os-parâmetros">Estimando os parâmetros</a></li>
+  <li><a href="#solução" id="toc-solução" class="nav-link" data-scroll-target="#solução">Solução</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -255,7 +254,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lista 2 — Otimização e máxima verossimilhança</h1>
+<h1 class="title">Lista 3 — Algoritmo EM</h1>
 <p class="subtitle lead">Técnicas computacionais em estatística | Prof.&nbsp;Dr.&nbsp;Helton Saulo Bezerra dos Santos</p>
 </div>
 
@@ -280,7 +279,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 15, 2025</p>
+      <p class="date">April 20, 2025</p>
     </div>
   </div>
   
@@ -292,125 +291,85 @@ window.Quarto = {
 </header>
 
 
-<div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 <div style="page-break-after: always;"></div>
-<p>Seja <span class="math inline">\(\mathbf{T}\)</span> uma variável aleatória seguindo uma distribuição Birnbaum-Saunders. Então, <span class="math inline">\(\mathbf{T}\)</span> é definido por <span class="math display">\[\mathbf{T = \beta  \left[\frac{\alpha}{2}Z+\sqrt{\left[\frac{\alpha}{2}Z\right]^2+1}\right]^2},\]</span> em que <span class="math inline">\(\alpha&gt;0\)</span> e <span class="math inline">\(\beta&gt;0\)</span> são parâmetros de forma e escala, respectivamente, e <span class="math inline">\(\mathbf{Z}\)</span> é uma variável aleatória com distribuição normal padrão. Temos a notação <span class="math inline">\(\mathbf{T\sim BS(\alpha,\beta)}\)</span>. O parâmetro <span class="math inline">\(\beta\)</span> é também um parâmetro de localização, pois ele é a mediana da distribuição de <span class="math inline">\(\mathbf{T}\)</span>.</p>
-<p>Note que se <span class="math inline">\(\mathbf{T\sim BS(\alpha,\beta)}\)</span>, então <span class="math display">\[\mathbf{Z = \frac{1}{\alpha}\left[\sqrt{\frac{T}{\beta}}-\sqrt{\frac{\beta}{T}}\right]\sim N(0,1).}\]</span></p>
-<p>A função densidade de probabilidade de <span class="math inline">\(\mathbf{T}\)</span> é dada por <span class="math display">\[\mathbf{f_T(t)=\frac{1}{\sqrt{2\pi}}exp\left(-\frac{1}{2\alpha^2}\left[\frac{t}{\beta}+\frac{\beta}{t}-2\right]\right)\frac{t^{-\frac{3}{2}}[t+\beta]}{2\alpha\sqrt{\beta}};t&gt;0}.\]</span></p>
-<p>Uma forma alternativa de expressar a densidade dada na equação anterior é <span class="math display">\[\mathbf{f_T(t)=\phi(a_t)A_t;t&gt;0,\alpha&gt;0,\beta&gt;0},\]</span> em que <span class="math inline">\(\mathbf{A_t}\)</span> é a derivada de <span class="math inline">\(\mathbf{a_t}\)</span> com respeito a <span class="math inline">\(\mathbf{t}\)</span>,</p>
-<p><span class="math display">\[\mathbf{a_t(\alpha,\beta)=a_t=\frac{1}{\alpha}\left[\sqrt{\frac{t}{\beta}}-\sqrt{\frac{\beta}{t}}\right]},\]</span></p>
-<p>que é expresso como</p>
-<p><span class="math display">\[\mathbf{A_t=\frac{d}{dt}a_t = \frac{t^{-\frac{3}{2}}[t+\beta]}{2\alpha\sqrt{\beta}}}.\]</span></p>
-<p>Seja <span class="math inline">\(\mathbf{T_1,T_2,...,T_n}\)</span> uma amostra aleatória de tamanho <span class="math inline">\(\mathbf{n}\)</span> de <span class="math inline">\(\mathbf{T \sim BS(\alpha,\beta)},\)</span> e seja <span class="math inline">\(\mathbf{t_1,t_2,...,t_n}\)</span> as correspondentes observações. A função de log-verossimilhança para <span class="math inline">\(\mathbf{\theta=(\alpha,\beta)}^T\)</span> é dada por</p>
-<p><span class="math display">\[\mathbf{\ell(\theta)=c_1+\frac{n}{\alpha^2}-\frac{1}{2\alpha^2}\sum_{i=1}^n\left(\frac{t_i}{\beta}+\frac{\beta}{t_i}\right)- n log(\alpha)-\frac{n}{2}log(\beta)+\sum_{i=1}^{n}log(t_i+\beta)},\]</span> em que <span class="math inline">\(\mathbf{c_1}\)</span> é uma constante que não depende de <span class="math inline">\(\theta\)</span>.</p>
-<p>Para maximizar a função de log-verossimilhança <span class="math inline">\(\mathbf{\ell(\theta)=\ell(\alpha,\beta)},\)</span> precisamos das primeiras derivadas em relação a <span class="math inline">\(\mathbf{\alpha}\)</span> e <span class="math inline">\(\mathbf{\beta}\)</span> formando o vetor escore definido por <span class="math inline">\(\mathbf{\dot{\ell}=(\dot{\ell}_{\alpha},\dot{\ell}_{\beta})}^T,\)</span> cujos elementos são dados por</p>
-<p><span class="math display">\[
-\mathbf{\dot{\ell}_{\alpha}=\frac{\partial\ell(\alpha,\beta)}{\partial\alpha}  =-\frac{2n}{\alpha^3}+\frac{1}{\alpha^3}\sum_{i=1}^n\left(\frac{t_i}{\beta}+\frac{\beta}{t_i}\right)-\frac{n}{\alpha},}
-\]</span></p>
-<p><span class="math display">\[
-\mathbf{\dot{\ell}_{\beta}=\frac{\partial\ell(\alpha,\beta)}{\partial\beta}  =\frac{1}{2\alpha^2}\sum_{i=1}^n\left(\frac{t_i}{\beta^2}+\frac{1}{t_i}\right)-\frac{n}{2\beta}+\sum_{i=1}^n\frac{1}{t_i+\beta}.}
-\]</span></p>
-<p>A matriz Hessiana é dada por</p>
-<p><span class="math display">\[
-\mathbf{\ddot{\ell}=\left(\frac{\partial^2\ell(\theta)}{\partial\theta_i\partial\theta_j}\right) =
-\left(
-\begin{matrix}
-\ddot{\ell}_{\alpha\alpha} &amp; \ddot{\ell}_{\alpha\beta} \\
-\ddot{\ell}_{\beta\alpha} &amp; \ddot{\ell}_{\beta\beta}
-\end{matrix}
-\right), i,j = 1,2},
-\]</span></p>
-<p>em que</p>
-<p><span class="math display">\[\begin{matrix}
-\ddot{\ell}_{\alpha\alpha} = \frac{\partial^2\ell(\alpha,\beta)}{\partial\alpha^2} = \frac{6n}{\alpha^4}-\frac{3}{\alpha^4}\sum_{i=1}^n\left(\frac{t_i}{\beta}+\frac{\beta}{t_i}\right)+\frac{n}{\alpha^2},\\
-\ddot{\ell}_{\alpha\beta} = \frac{\partial^2\ell(\alpha,\beta)}{\partial\alpha\partial\beta} = \ddot{\ell}_{\beta\alpha} =  \frac{1}{\alpha^3}\sum_{i=1}^n\left(\frac{1}{t_i}-\frac{t_i}{\beta^2}\right),\\
-\ddot{\ell}_{\beta\beta} = \frac{\partial^2\ell(\alpha,\beta)}{\partial\beta^2} = -\frac{1}{\alpha^2\beta^3}\sum_{i=1}^nt_i+\frac{n}{2\beta^2}-\sum_{i=1}^n\frac{1}{(t_i+\beta)^2}.
-\end{matrix}\]</span></p>
-<p>Gere uma amostra simulada de tamanho <span class="math inline">\(n=100\)</span> da distribuição Birnbaum-Saunders com <span class="math inline">\(\mathbf{\alpha=0.5}\)</span> e <span class="math inline">\(\mathbf{\beta=2.0}\)</span>. Estime os parâmetros <span class="math inline">\(\mathbf{\alpha}\)</span> e <span class="math inline">\(\mathbf{\beta}\)</span> através do método da máxima verossimilhança (usando o método de Newton) baseado na amostra simulada (pode usar como valores iniciais <span class="math inline">\(\mathbf{\alpha_0=0.1}\)</span> e <span class="math inline">\(\mathbf{\beta_0=1.0}\)</span>).</p>
-<section id="solução" class="level1">
-<h1>Solução</h1>
-<section id="gerando-valores-da-bs" class="level2">
-<h2 class="anchored" data-anchor-id="gerando-valores-da-bs">Gerando valores da BS</h2>
-<p>Para gerar valores da BS, podemos aproveitar da relação estocástica desta distribuição com a distribuição normal, cujo gerador de NPA’s já se encontra implementado no R.</p>
+<section id="duração-de-desemprego" class="level1">
+<h1>Duração de desemprego</h1>
+<p>Seja <span class="math inline">\(\mathbf{T}\)</span> uma variável aleatória com função densidade de probabilidade e função de distribuição acumulada, respectivamente</p>
+<p><span class="math display">\[\mathbf{f(t;\theta)=\theta \text{exp}(-\theta t); F(t;\theta)=1-exp(-\theta t), t&gt;0,\theta &gt; 0.}\]</span></p>
+<p>Em análise de sobrevivência, confiabilidade ou mesmo economia, um estudo para observar uma amostra aleatória proveniente de uma população pode terminar na prática antes de ser possível observar toda a amostra, ou seja, podemos ter observações censuradas.</p>
+<p>Considere uma amostra referente à duração do desemprego, <span class="math inline">\(\mathbf{t}\)</span>, em dias, de 30 indivíduos. A duração do desemprego é o evento de interesse, ou seja, o tempo até o indivíduo deixar a situação de desemprego. No entanto, alguns indivíduos podem não experimentar o evento de interesse (não encontrarem emprego ao final do estudo ou podem ter por algum motivo saído do estudo), resultando em censura à direita.</p>
+<p>Considere que temos acesso às observações:</p>
+<p><span class="math display">\[\mathbf{\{x_i=(t_i\delta_i),i=1,...,n\},}\]</span></p>
+<p>sendo</p>
+<ul>
+<li><span class="math inline">\(\mathbf{\delta_i=1}\)</span> se a observação <span class="math inline">\(\mathbf{t_i}\)</span> não é censurada;</li>
+<li><span class="math inline">\(\mathbf{\delta_i=0}\)</span> se a observação <span class="math inline">\(\mathbf{t_i}\)</span> é censurada.</li>
+</ul>
+<p>Considere o modelo exponencial com censura e obtenha a estimativa de <span class="math inline">\(\mathbf{\theta}\)</span> pelo algoritmo EM baseada nos dados abaixo:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> .<span class="dv">5</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> <span class="dv">2</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">251106723</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> beta<span class="sc">*</span>((alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>Z <span class="sc">+</span> <span class="fu">sqrt</span>((((alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>Z)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>))<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(t);<span class="fu">median</span>(t)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">12</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">14</span>, <span class="dv">4</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>status <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.9541459 1.9799638 2.0596584 0.9425411 2.3689728 2.6796811</code></pre>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.860395</code></pre>
-</div>
-</div>
-</section>
-<section id="estimando-os-parâmetros" class="level2">
-<h2 class="anchored" data-anchor-id="estimando-os-parâmetros">Estimando os parâmetros</h2>
-<p>Para estimar os parâmetros <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, implementaremos o método da máxima verossimilhança, utilizando o método de Newton. É necessário informar um valor inicial para o algoritmo, cujo exercício sugere <span class="math inline">\(\mathbf{\alpha_0=0.1}\)</span> e <span class="math inline">\(\mathbf{\beta_0=1.0}\)</span>.</p>
+<p>Dicas:</p>
+<ul>
+<li>Note que</li>
+</ul>
+<p><span class="math display">\[\mathbf{f(z|y_i;\theta_0)=\frac{f(z;\theta_0)}{1-F(y_i;\theta_0)}=\frac{\theta_0e^{-\theta_0z}}{e^{-\theta_0y_i}},z&gt;y_i;}\]</span></p>
+<ul>
+<li>Note que <span class="math inline">\(\mathbf{\mathbb{E}_{\theta_0}[Z_i]=y_i+\frac{1}{\theta_0}}.\)</span></li>
+<li>A verossimilhança da amostra ampliada(completa)<span class="math inline">\(\mathbf{(z,y)}\)</span> é dada por</li>
+</ul>
+<p><span class="math display">\[\mathbf{L^c(\theta;y,z)=\prod_{i=1}^m f(y_i;\theta)\prod_{i=m+1}^n f(z_i;\theta)}\]</span></p>
+<ul>
+<li>Note que a estimativa de MV baseada na log-verossimilhança com dados censurados é</li>
+</ul>
+<p><span class="math display">\[\mathbf{\hat{\theta}=(\frac{n}{m}\bar{y})^{-1}}.\]</span></p>
+<section id="solução" class="level2">
+<h2 class="anchored" data-anchor-id="solução">Solução</h2>
+<p>Como o EMV baseada na log-verossimilhança com dados censurados é</p>
+<p><span class="math display">\[\mathbf{\hat{\theta}=(\frac{n}{m}\bar{y})^{-1}}.\]</span></p>
+<p>Podemos tomar uma estimativa inicial de <span class="math inline">\(\theta\)</span> a partir da definição da esperança de uma v.a. exponencial não censurada, isto é, <span class="math inline">\(\mathbb{E}[Y] = \frac{1}{\theta} \rightarrow \theta = \frac{1}{\bar{y}}\)</span>. Utilizando esta estimativa inicial, calculamos a esperança condicional dos dados censurados, tal que <span class="math inline">\(\mathbb{E}[z_i]=y_i+\frac{1}{\theta}\)</span>. Com isto, calculamos o EMV tal que</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+\hat{\theta} &amp; = \left(\frac{n}{m}\bar{y}\right)^{-1} \\
+&amp; = \frac{1}{\frac{n}{m}\bar{y}} \\
+&amp; = \frac{1}{\left(\frac{n}{m}\frac{1}{n}\sum_{i=1}^n y_i\right)} \\
+&amp; = \frac{1}{\left(\frac{1}{m}\sum_{i=1}^n y_i\right)} \\
+&amp; = \frac{m}{\sum_{i=1}^n y_i} \\
+\end{split}
+\end{equation}
+\]</span></p>
+<p>E faremos esta atualização até obter uma estimativa estabilizada do parâmetro <span class="math inline">\(\theta\)</span>, recalculando a esperança condicional de <span class="math inline">\(z_i\)</span> para cada novo <span class="math inline">\(\theta_i,i&gt;0\in\mathbb{Z}.\)</span></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>alpha0 <span class="ot">=</span> <span class="fl">0.1</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">=</span> <span class="fu">c</span>(alpha0, beta0)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>bsest <span class="ot">&lt;-</span> <span class="cf">function</span>(t, theta, <span class="at">tol =</span> <span class="fl">1e-6</span>, <span class="at">maxit =</span> <span class="dv">1000</span>) {</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  alpha <span class="ot">&lt;-</span> theta[<span class="dv">1</span>]</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> theta[<span class="dv">2</span>]</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(t)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxit) {</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  la <span class="ot">=</span> <span class="sc">-</span>((<span class="dv">2</span><span class="sc">*</span>n)<span class="sc">/</span>(alpha<span class="sc">^</span><span class="dv">3</span>)) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">/</span>(alpha<span class="sc">^</span><span class="dv">3</span>)) <span class="sc">*</span> <span class="fu">sum</span>((t<span class="sc">/</span>beta) <span class="sc">+</span> (beta<span class="sc">/</span>t)) <span class="sc">-</span> (n<span class="sc">/</span>alpha) </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  lb <span class="ot">=</span> (<span class="dv">1</span><span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>alpha<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">*</span> <span class="fu">sum</span>((t<span class="sc">/</span>beta<span class="sc">^</span><span class="dv">2</span>) <span class="sc">-</span> (<span class="dv">1</span><span class="sc">/</span>t)) <span class="sc">-</span> (n<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>beta)) <span class="sc">+</span> <span class="fu">sum</span>(<span class="dv">1</span><span class="sc">/</span>(t<span class="sc">+</span>beta))</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  laa <span class="ot">=</span> ((<span class="dv">6</span><span class="sc">*</span>n)<span class="sc">/</span>alpha<span class="sc">^</span><span class="dv">4</span>) <span class="sc">-</span> (<span class="dv">3</span><span class="sc">/</span>alpha<span class="sc">^</span><span class="dv">4</span>) <span class="sc">*</span> <span class="fu">sum</span>((t<span class="sc">/</span>beta) <span class="sc">+</span> (beta<span class="sc">/</span>t)) <span class="sc">+</span> (n<span class="sc">/</span>alpha<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  lab <span class="ot">=</span> (<span class="dv">1</span><span class="sc">/</span>alpha<span class="sc">^</span><span class="dv">3</span>) <span class="sc">*</span> <span class="fu">sum</span>((<span class="dv">1</span><span class="sc">/</span>t) <span class="sc">-</span> (t<span class="sc">/</span>beta<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  lbb <span class="ot">=</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">/</span>((alpha<span class="sc">^</span><span class="dv">2</span>)<span class="sc">*</span>(beta<span class="sc">^</span><span class="dv">3</span>))) <span class="sc">*</span> <span class="fu">sum</span>(t <span class="sc">+</span> (n<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>beta<span class="sc">^</span><span class="dv">2</span>))) <span class="sc">-</span> <span class="fu">sum</span>(<span class="dv">1</span><span class="sc">/</span>((t<span class="sc">+</span>beta)<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  H <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(laa, lab, lab, lbb), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  grad <span class="ot">&lt;-</span> <span class="fu">c</span>(la, lb)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  delta <span class="ot">&lt;-</span> <span class="fu">solve</span>(H, <span class="sc">-</span>grad)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  new_theta <span class="ot">&lt;-</span> theta <span class="sc">+</span> delta</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">max</span>(<span class="fu">abs</span>(new_theta <span class="sc">-</span> theta)) <span class="sc">&lt;</span> tol) {</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"Convergiu em"</span>, i, <span class="st">"iterações</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(new_theta)</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    theta <span class="ot">&lt;-</span> new_theta</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    alpha <span class="ot">&lt;-</span> theta[<span class="dv">1</span>]</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    beta <span class="ot">&lt;-</span> theta[<span class="dv">2</span>]</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Não convergiu"</span>)</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">bsest</span>(t, theta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">mean</span>(time) </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Passo E: "Plugando" a esperança calculada para os dados censurados</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  time_recalc <span class="ot">&lt;-</span> time</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  censura <span class="ot">&lt;-</span> (status <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  time_recalc[censura] <span class="ot">&lt;-</span> time[censura] <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> theta</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Passo M: maximizando</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  theta_new <span class="ot">&lt;-</span> <span class="fu">sum</span>(status) <span class="sc">/</span> <span class="fu">sum</span>(time_recalc)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">abs</span>(theta_new <span class="sc">-</span> theta) <span class="sc">&lt;</span> <span class="fl">1e-6</span>) <span class="cf">break</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  theta <span class="ot">&lt;-</span> theta_new</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Estimativa final de theta:"</span>, <span class="fu">round</span>(theta,<span class="dv">3</span>),<span class="st">"(em"</span>,i,<span class="st">"iterações)."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Convergiu em 122 iterações</code></pre>
-</div>
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.4614008 1.8881997</code></pre>
+<pre><code>Estimativa final de theta: 0.081 (em 14 iterações).</code></pre>
 </div>
 </div>
-<p>Podemos observar que a convergência foi muito boa. A menos de um <span class="math inline">\(\epsilon\)</span>, os valores aproximados de <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span> a partir da amostra de fato convergem para os verdadeiros parâmetros.</p>
+<p>Note que, como foi dado o cálculo do EMV, sequer foi necessário expandir ou calcular a verossimilhança, bastando atualizar os valores dos parâmetros diretamente nos dados. Este caminho simplificado somente é possível por conta das propriedades de perda de memória da v.a. exponencial, visto que o novo <span class="math inline">\(\hat{\theta}\)</span> calculado também seguirá distribuição exponencial, permitindo a iteração direta.</p>
 
 
 </section>
