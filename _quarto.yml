@@ -26,6 +26,12 @@ website:
             text: Classificação binária de decisões
           - href: presentations/classificacao_salario_relatorio/trabalho_bruno.qmd
             text: Classificação salarial com Tidymodels
+          - href: presentations/npa/lista1.qmd
+            text: Geração de NPA's
+          - href: presentations/otim_mv/lista2.qmd
+            text: Otimização e Máxima Verossimilhança
+          - href: presentations/em/lista3.qmd
+            text: Algoritmo EM
           - href: presentations/tcc2/slide.qmd
             text: Similaridade de Processos Judiciários utilizando NLP — Monografia
           - href: https://penasta.shinyapps.io/similaridade_processos/

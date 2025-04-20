@@ -1,0 +1,148 @@
+---
+title: "Lista 2 — Otimização e máxima verossimilhança"
+subtitle: "Técnicas computacionais em estatística | Prof. Dr. Helton Saulo Bezerra dos Santos"
+author:
+  - name: Bruno Gondim Toledo
+    affiliation: 
+      - name: PPGEST — Universidade de Brasília (UnB) 
+    url: https://penasta.github.io
+date: last-modified
+output: html_document
+geometry: a4paper
+fontsize: 12pt
+# abstract: ""
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+toc: true
+
+---
+
+```{r setup,results='hide',message=FALSE}
+if (!require("pacman")) install.packages("pacman")
+
+```
+
+\newpage
+
+Seja $\mathbf{T}$ uma variável aleatória seguindo uma distribuição Birnbaum-Saunders. Então, $\mathbf{T}$ é definido por
+$$\mathbf{T = \beta  \left[\frac{\alpha}{2}Z+\sqrt{\left[\frac{\alpha}{2}Z\right]^2+1}\right]^2},$$
+em que $\alpha>0$ e $\beta>0$ são parâmetros de forma e escala, respectivamente, e $\mathbf{Z}$ é uma variável aleatória com distribuição normal padrão. Temos a notação $\mathbf{T\sim BS(\alpha,\beta)}$. O parâmetro $\beta$ é também um parâmetro de localização, pois ele é a mediana da distribuição de $\mathbf{T}$.
+
+Note que se $\mathbf{T\sim BS(\alpha,\beta)}$, então
+$$\mathbf{Z = \frac{1}{\alpha}\left[\sqrt{\frac{T}{\beta}}-\sqrt{\frac{\beta}{T}}\right]\sim N(0,1).}$$
+
+A função densidade de probabilidade de $\mathbf{T}$ é dada por
+$$\mathbf{f_T(t)=\frac{1}{\sqrt{2\pi}}exp\left(-\frac{1}{2\alpha^2}\left[\frac{t}{\beta}+\frac{\beta}{t}-2\right]\right)\frac{t^{-\frac{3}{2}}[t+\beta]}{2\alpha\sqrt{\beta}};t>0}.$$
+
+Uma forma alternativa de expressar a densidade dada na equação anterior é
+$$\mathbf{f_T(t)=\phi(a_t)A_t;t>0,\alpha>0,\beta>0},$$
+em que $\mathbf{A_t}$ é a derivada de $\mathbf{a_t}$ com respeito a $\mathbf{t}$,
+
+$$\mathbf{a_t(\alpha,\beta)=a_t=\frac{1}{\alpha}\left[\sqrt{\frac{t}{\beta}}-\sqrt{\frac{\beta}{t}}\right]},$$
+
+que é expresso como
+
+$$\mathbf{A_t=\frac{d}{dt}a_t = \frac{t^{-\frac{3}{2}}[t+\beta]}{2\alpha\sqrt{\beta}}}.$$
+
+Seja $\mathbf{T_1,T_2,...,T_n}$ uma amostra aleatória de tamanho $\mathbf{n}$ de $\mathbf{T \sim BS(\alpha,\beta)},$ e seja $\mathbf{t_1,t_2,...,t_n}$ as correspondentes observações. A função de log-verossimilhança para $\mathbf{\theta=(\alpha,\beta)}^T$ é dada por
+
+$$\mathbf{\ell(\theta)=c_1+\frac{n}{\alpha^2}-\frac{1}{2\alpha^2}\sum_{i=1}^n\left(\frac{t_i}{\beta}+\frac{\beta}{t_i}\right)- n log(\alpha)-\frac{n}{2}log(\beta)+\sum_{i=1}^{n}log(t_i+\beta)},$$
+em que $\mathbf{c_1}$ é uma constante que não depende de $\theta$.
+
+Para maximizar a função de log-verossimilhança $\mathbf{\ell(\theta)=\ell(\alpha,\beta)},$ precisamos das primeiras derivadas em relação a $\mathbf{\alpha}$ e $\mathbf{\beta}$ formando o vetor escore definido por $\mathbf{\dot{\ell}=(\dot{\ell}_{\alpha},\dot{\ell}_{\beta})}^T,$ cujos elementos são dados por
+
+$$
+\mathbf{\dot{\ell}_{\alpha}=\frac{\partial\ell(\alpha,\beta)}{\partial\alpha}  =-\frac{2n}{\alpha^3}+\frac{1}{\alpha^3}\sum_{i=1}^n\left(\frac{t_i}{\beta}+\frac{\beta}{t_i}\right)-\frac{n}{\alpha},}
+$$
+
+
+$$
+\mathbf{\dot{\ell}_{\beta}=\frac{\partial\ell(\alpha,\beta)}{\partial\beta}  =\frac{1}{2\alpha^2}\sum_{i=1}^n\left(\frac{t_i}{\beta^2}+\frac{1}{t_i}\right)-\frac{n}{2\beta}+\sum_{i=1}^n\frac{1}{t_i+\beta}.}
+$$
+
+A matriz Hessiana é dada por
+
+$$
+\mathbf{\ddot{\ell}=\left(\frac{\partial^2\ell(\theta)}{\partial\theta_i\partial\theta_j}\right) = 
+\left(
+\begin{matrix}
+\ddot{\ell}_{\alpha\alpha} & \ddot{\ell}_{\alpha\beta} \\
+\ddot{\ell}_{\beta\alpha} & \ddot{\ell}_{\beta\beta}
+\end{matrix}
+\right), i,j = 1,2},
+$$
+
+em que
+
+$$\begin{matrix}
+\ddot{\ell}_{\alpha\alpha} = \frac{\partial^2\ell(\alpha,\beta)}{\partial\alpha^2} = \frac{6n}{\alpha^4}-\frac{3}{\alpha^4}\sum_{i=1}^n\left(\frac{t_i}{\beta}+\frac{\beta}{t_i}\right)+\frac{n}{\alpha^2},\\
+\ddot{\ell}_{\alpha\beta} = \frac{\partial^2\ell(\alpha,\beta)}{\partial\alpha\partial\beta} = \ddot{\ell}_{\beta\alpha} =  \frac{1}{\alpha^3}\sum_{i=1}^n\left(\frac{1}{t_i}-\frac{t_i}{\beta^2}\right),\\
+\ddot{\ell}_{\beta\beta} = \frac{\partial^2\ell(\alpha,\beta)}{\partial\beta^2} = -\frac{1}{\alpha^2\beta^3}\sum_{i=1}^nt_i+\frac{n}{2\beta^2}-\sum_{i=1}^n\frac{1}{(t_i+\beta)^2}.
+\end{matrix}$$
+
+Gere uma amostra simulada de tamanho $n=100$ da distribuição Birnbaum-Saunders com $\mathbf{\alpha=0.5}$ e $\mathbf{\beta=2.0}$. Estime os parâmetros $\mathbf{\alpha}$ e $\mathbf{\beta}$ através do método da máxima verossimilhança (usando o método de Newton) baseado na amostra simulada (pode usar como valores iniciais $\mathbf{\alpha_0=0.1}$ e $\mathbf{\beta_0=1.0}$).
+
+# Solução
+
+## Gerando valores da BS
+
+Para gerar valores da BS, podemos aproveitar da relação estocástica desta distribuição com a distribuição normal, cujo gerador de NPA's já se encontra implementado no R.
+
+```{r}
+alpha = .5
+beta = 2
+n = 100
+
+set.seed(251106723)
+Z = rnorm(100)
+
+t = beta*((alpha/2)*Z + sqrt((((alpha/2)*Z)^2)+1))^2
+
+head(t);median(t)
+```
+
+## Estimando os parâmetros
+
+Para estimar os parâmetros $\alpha$ e $\beta$, implementaremos o método da máxima verossimilhança, utilizando o método de Newton. É necessário informar um valor inicial para o algoritmo, cujo exercício sugere $\mathbf{\alpha_0=0.1}$ e $\mathbf{\beta_0=1.0}$.
+
+```{r}
+
+alpha0 = 0.1
+beta0 = 1
+theta = c(alpha0, beta0)
+
+bsest <- function(t, theta, tol = 1e-6, maxit = 1000) {
+  alpha <- theta[1]
+  beta <- theta[2]
+  n <- length(t)
+  for (i in 1:maxit) {
+  
+  la = -((2*n)/(alpha^3)) + (1/(alpha^3)) * sum((t/beta) + (beta/t)) - (n/alpha) 
+  lb = (1/(2*alpha^2)) * sum((t/beta^2) - (1/t)) - (n/(2*beta)) + sum(1/(t+beta))
+  laa = ((6*n)/alpha^4) - (3/alpha^4) * sum((t/beta) + (beta/t)) + (n/alpha^2)
+  lab = (1/alpha^3) * sum((1/t) - (t/beta^2))
+  lbb = -(1/((alpha^2)*(beta^3))) * sum(t + (n/(2*beta^2))) - sum(1/((t+beta)^2))
+  
+  H <- matrix(c(laa, lab, lab, lbb), nrow = 2)
+  grad <- c(la, lb)
+  
+  delta <- solve(H, -grad)
+  new_theta <- theta + delta
+
+    if (max(abs(new_theta - theta)) < tol) {
+      cat("Convergiu em", i, "iterações\n")
+      return(new_theta)
+    }
+    theta <- new_theta
+    alpha <- theta[1]
+    beta <- theta[2]
+  }
+  stop("Não convergiu")
+}
+result <- bsest(t, theta)
+result
+```
+
+Podemos observar que a convergência foi muito boa. A menos de um $\epsilon$, os valores aproximados de $\alpha$ e $\beta$ a partir da amostra de fato convergem para os verdadeiros parâmetros.

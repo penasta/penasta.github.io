@@ -841,7 +841,7 @@ Como os resultados não foram satisfatórios, esta técnica não foi utilizada n
 
 - Este resultado mostra que técnicas simples e parcimoniosas ainda são úteis para problemas práticos no paradigma da NLP.
 
-- A implementação de um aplicativo *Shiny* para utilização deste modelo fornece um valioso insumo para os analistas do Tribunal para o cumprimento da meta de diminuição do acervo de processos de controle concentrado do Ministro Presidente do STF.
+- A implementação de um aplicativo [Shiny](https://penasta.shinyapps.io/similaridade_processos/) para utilização deste modelo fornece um valioso insumo para os analistas do Tribunal para o cumprimento da meta de diminuição do acervo de processos de controle concentrado do Ministro Presidente do STF.
 
 :::
 

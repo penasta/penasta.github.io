@@ -1,0 +1,109 @@
+---
+title: "Lista 3 — Algoritmo EM"
+subtitle: "Técnicas computacionais em estatística | Prof. Dr. Helton Saulo Bezerra dos Santos"
+author:
+  - name: Bruno Gondim Toledo
+    affiliation: 
+      - name: PPGEST — Universidade de Brasília (UnB) 
+    url: https://penasta.github.io
+date: last-modified
+output: html_document
+geometry: a4paper
+fontsize: 12pt
+# abstract: ""
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+toc: true
+
+---
+
+\newpage
+
+# Duração de desemprego
+
+Seja $\mathbf{T}$ uma variável aleatória com função densidade de probabilidade e função de distribuição acumulada, respectivamente
+
+$$\mathbf{f(t;\theta)=\theta \text{exp}(-\theta t); F(t;\theta)=1-exp(-\theta t), t>0,\theta > 0.}$$
+
+Em análise de sobrevivência, confiabilidade ou mesmo economia, um estudo para observar uma amostra aleatória proveniente de uma população pode terminar na prática antes de ser possível observar toda a amostra, ou seja, podemos ter observações censuradas.
+
+Considere uma amostra referente à duração do desemprego, $\mathbf{t}$, em dias, de 30 indivíduos. A duração do desemprego é o evento de interesse, ou seja, o tempo até o indivíduo deixar a situação de desemprego. No entanto, alguns indivíduos podem não experimentar o evento de interesse (não encontrarem emprego ao final do estudo ou podem ter por algum motivo saído do estudo), resultando em censura à direita.
+
+Considere que temos acesso às observações:
+
+$$\mathbf{\{x_i=(t_i\delta_i),i=1,...,n\},}$$
+
+sendo
+
+- $\mathbf{\delta_i=1}$ se a observação $\mathbf{t_i}$ não é censurada;
+- $\mathbf{\delta_i=0}$ se a observação $\mathbf{t_i}$ é censurada.
+
+Considere o modelo exponencial com censura e obtenha a estimativa de $\mathbf{\theta}$ pelo algoritmo EM baseada nos dados abaixo:
+
+```{r}
+time <- c(8, 5, 2, 4, 2, 3, 6, 1, 5, 5, 10, 8, 5, 2, 1, 12, 4, 2, 4, 2, 7, 1, 6, 3, 9, 8, 3, 2, 14, 4)
+  
+status <- c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1)  
+```
+
+Dicas:
+
+- Note que
+
+$$\mathbf{f(z|y_i;\theta_0)=\frac{f(z;\theta_0)}{1-F(y_i;\theta_0)}=\frac{\theta_0e^{-\theta_0z}}{e^{-\theta_0y_i}},z>y_i;}$$
+
+- Note que $\mathbf{\mathbb{E}_{\theta_0}[Z_i]=y_i+\frac{1}{\theta_0}}.$
+- A verossimilhança da amostra ampliada(completa)$\mathbf{(z,y)}$ é dada por
+
+$$\mathbf{L^c(\theta;y,z)=\prod_{i=1}^m f(y_i;\theta)\prod_{i=m+1}^n f(z_i;\theta)}$$
+
+- Note que a estimativa de MV baseada na log-verossimilhança com dados censurados é
+
+$$\mathbf{\hat{\theta}=(\frac{n}{m}\bar{y})^{-1}}.$$
+
+## Solução
+
+Como o EMV baseada na log-verossimilhança com dados censurados é
+
+$$\mathbf{\hat{\theta}=(\frac{n}{m}\bar{y})^{-1}}.$$
+
+Podemos tomar uma estimativa inicial de $\theta$ a partir da definição da esperança de uma v.a. exponencial não censurada, isto é, $\mathbb{E}[Y] = \frac{1}{\theta} \rightarrow \theta = \frac{1}{\bar{y}}$. Utilizando esta estimativa inicial, calculamos a esperança condicional dos dados censurados, tal que $\mathbb{E}[z_i]=y_i+\frac{1}{\theta}$. Com isto, calculamos o EMV tal que
+
+
+$$
+\begin{equation}
+\begin{split}
+\hat{\theta} & = \left(\frac{n}{m}\bar{y}\right)^{-1} \\
+ & = \frac{1}{\frac{n}{m}\bar{y}} \\
+ & = \frac{1}{\left(\frac{n}{m}\frac{1}{n}\sum_{i=1}^n y_i\right)} \\
+ & = \frac{1}{\left(\frac{1}{m}\sum_{i=1}^n y_i\right)} \\
+ & = \frac{m}{\sum_{i=1}^n y_i} \\
+\end{split}
+\end{equation}
+$$
+
+E faremos esta atualização até obter uma estimativa estabilizada do parâmetro $\theta$, recalculando a esperança condicional de $z_i$ para cada novo $\theta_i,i>0\in\mathbb{Z}.$
+
+```{r}
+theta <- 1 / mean(time) 
+
+for (i in 1:1000) {
+  # Passo E: "Plugando" a esperança calculada para os dados censurados
+  time_recalc <- time
+  censura <- (status == 0)
+  time_recalc[censura] <- time[censura] + 1 / theta
+  
+  # Passo M: maximizando
+  theta_new <- sum(status) / sum(time_recalc)
+  
+  if (abs(theta_new - theta) < 1e-6) break
+  theta <- theta_new
+}
+
+cat("Estimativa final de theta:", round(theta,3),"(em",i,"iterações).")
+
+```
+
+Note que, como foi dado o cálculo do EMV, sequer foi necessário expandir ou calcular a verossimilhança, bastando atualizar os valores dos parâmetros diretamente nos dados. Este caminho simplificado somente é possível por conta das propriedades de perda de memória da v.a. exponencial, visto que o novo $\hat{\theta}$ calculado também seguirá distribuição exponencial, permitindo a iteração direta.
