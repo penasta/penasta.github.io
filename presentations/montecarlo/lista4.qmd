@@ -1,0 +1,176 @@
+---
+title: "Lista 4 — Métodos de Monte Carlo"
+subtitle: "Técnicas computacionais em estatística | Prof. Dr. Helton Saulo Bezerra dos Santos"
+author:
+  - name: Bruno Gondim Toledo
+    affiliation: 
+      - name: PPGEST — Universidade de Brasília (UnB) 
+    url: https://penasta.github.io
+date: last-modified
+output: html_document
+geometry: a4paper
+fontsize: 12pt
+# abstract: ""
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+toc: true
+
+---
+
+\newpage
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(reshape2)
+```
+
+
+# Exercício 1
+
+Seja $\mathbf{X_1,...,X_n}$ uma a.a. i.i.d. da distribuição $Pois(\lambda)$ e
+$$
+\hat{\lambda}=\hat{X}=\frac{1}{n}\sum_{i=1}^n X_i
+$$
+Um intervalo de confiança para $\lambda$ é dado por
+$$
+IC(\lambda) = \left[\bar{X}-\frac{p_{n,\alpha}\hat{\sigma}}{\sqrt{n}};\bar{X}+\frac{p_{n,\alpha}\hat{\sigma}}{\sqrt{n}}\right],
+$$
+em que $\hat{\sigma}^2=\frac{1}{n-1}\sum_{i=1^n (X_i-\bar{X})^2}$ e $p_{n,\alpha}$ pode ser escolhido como o $1-\frac{\alpha}{2}$ quantil da $t$ com $n-1$ graus de liberdade. Escreva um código para calcular a estimativa de Monte Carlo para o coeficiente de confiança do intervalo de confiança acima. Para $n=10$ e $\alpha=5\%$, usando o valor $p_{10,0.05}=2.262157$, estime o coeficiente de confiança para um rol de valores de $\lambda$ (e.g.,0.025-1) e crie um plot dos resultados. Comente sobre os resultados obtidos.
+
+## Solução
+
+```{r}
+N = 1000
+alpha = .05
+n = 10
+p = 2.262157
+lambda = seq(0,20,by=1)
+nlambda = length(lambda)
+cobertura <- numeric(nlambda)
+
+for (i in 1:nlambda){
+  Lambda = lambda[i]
+  capturado = 0
+  for (j in 1:N){
+    x = rpois(n,Lambda)
+    xbar = mean(x)
+    sigma2 = (1/(n-1)) * sum((x-xbar)^2)
+    ici = xbar - (p * sqrt(sigma2/n))
+    ics = xbar + (p * sqrt(sigma2/n))
+    if (Lambda >= ici & Lambda <= ics){
+      capturado = capturado + 1}
+    }
+  cobertura[i] = capturado/N
+}
+
+plot(lambda, cobertura, type = "l", ylim = c(0.9, 1), 
+     xlab = expression(lambda), ylab = "Coeficiente de confiança",
+     main = "Estimativa de Monte Carlo para o coeficiente de confiança")
+abline(h = 1 - alpha, col = "red")
+
+```
+Notamos pelo gráfico que os intervalos contém o verdadeiro parâmetro empiricamente aproximadamente a quantidade teórica esperada de 95%, para valores de $\lambda=\{1,2,3,...,20\}$. Este resultado, porém, difere para valores muito pequenos de $\lambda$, onde a sensibilidade da estimativa empírica para $n=10$ não é tão poderosa, como pode-se observar no gráfico a seguir, para valores de $\lambda$ de 0,025 a 1, de 0,025 em 0,025:
+
+```{r}
+lambda = seq(0.025,1,by=0.025)
+nlambda = length(lambda)
+cobertura <- numeric(nlambda)
+
+for (i in 1:nlambda){
+  Lambda = lambda[i]
+  capturado = 0
+  for (j in 1:N){
+    x = rpois(n,Lambda)
+    xbar = mean(x)
+    sigma2 = (1/(n-1)) * sum((x-xbar)^2)
+    ici = xbar - (p * sqrt(sigma2/n))
+    ics = xbar + (p * sqrt(sigma2/n))
+    if (Lambda >= ici & Lambda <= ics){
+      capturado = capturado + 1}
+    }
+  cobertura[i] = capturado/N
+}
+
+plot(lambda, cobertura, type = "l", ylim = c(0.9, 1), 
+     xlab = expression(lambda), ylab = "Coeficiente de confiança",
+     main = "Estimativa de Monte Carlo para o coeficiente de confiança")
+abline(h = 1 - alpha, col = "red")
+
+```
+
+Para este cenário, seria necessário aumentar o valor de $n$.
+
+# Exercício 2
+Considere o teste de comparação de médias
+$$
+Hipótese:\begin{cases}
+H_0:\mu_1=\mu_2=0, \\
+H_1:\mu_1\neq\mu_2
+\end{cases}
+$$
+Estude o poder do teste para $\alpha=0.05, n=m \in\{10,20,50,100,500\}$, e $\sigma^2_1=\sigma^2_2=1$. Considere a normal contaminada sob $H_1$,i.e.,
+$$
+\mathbf{X,Y \sim (1-\epsilon)N(\mu=0,\sigma^2=1)+\epsilon N(\mu=50,\sigma^2=1),0\leq\epsilon\leq1.}
+$$
+Considerar o número de réplicar de Monte Carlo igual a 1000. Faça um plot da curva de potência em função de $\epsilon$ para cada tamanho de amostra. Comente os resultados obtidos.
+
+## Solução
+
+```{r,cache=TRUE}
+alpha = 0.05
+N = 1000
+m = c(10, 20, 50, 100, 500)
+epsilon = seq(0, 1, by = 0.05)
+
+rejeicao = matrix(0, nrow = length(m), ncol = length(epsilon))
+rownames(rejeicao) = paste0("n=", m)
+colnames(rejeicao) = paste0("e=", epsilon)
+
+for (i in 1:length(m)) {
+  n = m[i]
+  for (j in 1:length(epsilon)) {
+    eps = epsilon[j]
+    rejeicoes = 0
+    for (k in 1:N) {
+      x = rnorm(n, mean = 0, sd = 1)
+      n_contaminados = round(eps * n)
+      y = c(rnorm(n_contaminados, mean = 50, sd = 1),rnorm(n - n_contaminados, mean = 0, sd = 1))
+      teste = t.test(x, y)
+      if (teste$p.value < alpha) {
+        rejeicoes = rejeicoes + 1
+      }
+    }
+    rejeicao[i, j] = rejeicoes / N
+  }
+}
+```
+
+```{r}
+knitr::kable(rejeicao)
+```
+
+Pela Tabela acima, nota-se que já para pequenos valores de $\epsilon$ e/ou maiores valores de $n$, a maior parte dos testes irá rejeitar. Isto se dá pelo fato da contaminação ser bastante severa, em que ao adicionar uma pequena proporção de uma contaminação $\sim N(50,1)$, o teste t irá rejeitar a igualdade de médias em relação à amostra gerada da distribuição $N(0,1)$.
+
+Esta evolução pode ser melhor observada pelo gráfico da curva de potência em função de $\epsilon$ para cada tamanho de amostra:
+
+```{r}
+df = melt(rejeicao)
+colnames(df) = c("n","e","rejeicao")
+
+ggplot(df, aes(x = e, y = rejeicao, color = factor(n), group = factor(n))) +
+  geom_line() +
+  geom_point() +
+  geom_hline(yintercept = alpha, linetype = "dashed", color = "red") +
+  labs(
+    title = "Taxa de rejeição do teste T",
+    x = "Proporção da contaminação",
+    y = "Proporção de rejeições de H0",
+    color = "Tamanho da amostra"
+  ) +
+  theme_classic()
+
+```
+
+

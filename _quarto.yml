@@ -32,6 +32,8 @@ website:
             text: Otimização e Máxima Verossimilhança
           - href: presentations/em/lista3.qmd
             text: Algoritmo EM
+          - href: presentations/montecarlo/lista4.qmd
+            text: Métodos Monte Carlo
           - href: presentations/tcc2/slide.qmd
             text: Similaridade de Processos Judiciários utilizando NLP — Monografia
           - href: https://penasta.shinyapps.io/similaridade_processos/
