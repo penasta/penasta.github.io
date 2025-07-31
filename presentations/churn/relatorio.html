@@ -312,7 +312,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Para avaliação dos modelos, utilizou-se métricas de avaliação recomendadas no escopo da ciência de dados, como acurácia (previsões corretas pelo total de previsões), precisão (verdadeiros positivos pelo total de positivos previstos), sensibilidade (verdadeiros positivos pela soma de verdadeiros positivos e falsos negativos), especificidade (verdadeiros negativos pela soma de falsos positivos e verdadeiros negativos), além do F1-Score e área sob a curva, além de visualizações como matriz de confusão, curva ROC e variable importance plot. Além disso, utilizou-se a técnica de validação cruzada para escolha de hiperparâmetros e validação dos modelos, com divisão dos dados em 80% para treino e 20% para teste e validação cruzada.</p>
 <p>Destaca-se ainda que o balanceamento dos dados entre categorias das características, em especial para a variável resposta, pode representar um desafio para a modelagem. Algumas covariáveis como unidade da federação tiveram que ser agregadas em regiões para possibilitar a modelagem, pelo grave desbalanceamento de classes. Para a variável resposta, existiam mais clientes com cancelamento positivo que negativo, entretanto a diferença era pequena para uma grande massa de dados, o que em geral não é problemático para a maioria dos modelos. Ainda assim, quando da divisão entre treino e teste, estratificou-se as amostras em relação a esta variável, garantindo a proporção de cancelamentos e não cancelamentos em ambos os conjuntos de treino e teste.</p>
 <p>Aplicou-se ainda técnicas para lidar com dados ausentes, como imputação ou remoção de instâncias em alguns casos. Para a modelagem, construiu-se algumas features baseadas nas covariáveis originais, além de procedimentos de pré processamento de dados, inclusive da seleção de features e covariáveis relevantes para cada caso. Detalhes da utilização destas técnicas em cada caso serão explicitadas nas seções de análise e modelagem.</p>
-<div id="dd316933" class="cell" data-message="false" data-execution_count="1">
+<div id="dd316933" class="cell" data-message="false" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -356,13 +356,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>cores <span class="op">=</span> {<span class="st">'SIM'</span>: <span class="st">'tomato'</span>, <span class="st">'NÃO'</span>: <span class="st">'steelblue'</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="852e16d0" class="cell" data-execution_count="2">
+<div id="852e16d0" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">"dados/processo_seletivo_base_churn.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="452bcbf7" class="cell" data-execution_count="3">
+<div id="452bcbf7" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.lower()</span>
@@ -404,7 +404,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note que a covariável titularidade não foi incluida neste relatório, visto que não apresentava variação — todos os clientes do conjunto de dados eram titulares do plano.</p>
 <section id="taxa-de-churn" class="level2">
 <h2 class="anchored" data-anchor-id="taxa-de-churn">Taxa de churn</h2>
-<div id="ddc294e2" class="cell" data-execution_count="4">
+<div id="ddc294e2" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>churn_rate <span class="op">=</span> df[<span class="st">'cancelado'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>)[<span class="st">'SIM'</span>] <span class="op">*</span> <span class="dv">100</span></span>
@@ -420,7 +420,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="quantidade-de-cancelamentos-por-grupos" class="level2">
 <h2 class="anchored" data-anchor-id="quantidade-de-cancelamentos-por-grupos">Quantidade de cancelamentos por grupos</h2>
-<div id="0c9fc83e" class="cell" data-execution_count="5">
+<div id="0c9fc83e" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>faixa_renda <span class="op">=</span> df.groupby([<span class="st">'faixa_renda'</span>, <span class="st">'cancelado'</span>], observed<span class="op">=</span><span class="va">True</span>).size().unstack()</span>
@@ -512,7 +512,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-idade-na-adesão" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-idade-na-adesão">Cancelamento por idade na adesão</h2>
-<div id="79e55c1a" class="cell" data-execution_count="6">
+<div id="79e55c1a" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>idade_na_adesao <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'idadenaadesao'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -603,7 +603,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-tempo-de-plano-em-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-tempo-de-plano-em-meses">Cancelamento por tempo de plano em meses</h2>
-<div id="6bd4c341" class="cell" data-execution_count="7">
+<div id="6bd4c341" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tempo_de_plano_meses <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'tempo_de_plano_meses'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -695,7 +695,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-pelo-sexo-do-cliente" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-pelo-sexo-do-cliente">Cancelamento pelo sexo do cliente</h2>
-<div id="18475750" class="cell" data-execution_count="8">
+<div id="18475750" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'sexo'</span>] <span class="op">=</span> df[<span class="st">'sexo'</span>].<span class="bu">map</span>({<span class="st">'F'</span>: <span class="st">'Feminino'</span>, <span class="st">'M'</span>: <span class="st">'Masculino'</span>})</span>
@@ -779,7 +779,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-unidade-da-federação-do-cliente" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-unidade-da-federação-do-cliente">Cancelamento por unidade da federação do cliente</h2>
-<div id="a5085bee" class="cell" data-execution_count="9">
+<div id="a5085bee" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>uf_stats <span class="op">=</span> df.groupby(<span class="st">'uf'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'cancelado'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>).unstack() <span class="op">*</span> <span class="dv">100</span></span>
@@ -843,7 +843,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-inadimplência" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-inadimplência">Cancelamento por inadimplência</h2>
-<div id="3e45c38b" class="cell" data-execution_count="10">
+<div id="3e45c38b" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>inadimplencia <span class="op">=</span> pd.crosstab(df[<span class="st">'inadimplente'</span>], df[<span class="st">'cancelado'</span>], normalize<span class="op">=</span><span class="st">'index'</span>) <span class="op">*</span> <span class="dv">100</span></span>
@@ -911,7 +911,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-quantidade-de-consultas-do-cliente-nos-últimos-12-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-quantidade-de-consultas-do-cliente-nos-últimos-12-meses">Cancelamento por quantidade de consultas do cliente nos últimos 12 meses</h2>
-<div id="31783003" class="cell" data-execution_count="11">
+<div id="31783003" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>qtd_consultas <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'qtd_consultas_12m'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -1011,7 +1011,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-quantidade-de-internações-do-cliente-nos-últimos-12-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-quantidade-de-internações-do-cliente-nos-últimos-12-meses">Cancelamento por quantidade de internações do cliente nos últimos 12 meses</h2>
-<div id="b45ce23c" class="cell" data-execution_count="12">
+<div id="b45ce23c" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>qtd_internacoes <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed <span class="op">=</span> <span class="va">True</span>)[<span class="st">'qtd_internacoes_12m'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -1112,7 +1112,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-valor-da-mensalidade-do-plano" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-valor-da-mensalidade-do-plano">Cancelamento por valor da mensalidade do plano</h2>
-<div id="e8a33bfa" class="cell" data-execution_count="13">
+<div id="e8a33bfa" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>valor_mensalidade <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed <span class="op">=</span> <span class="va">True</span>)[<span class="st">'valor_mensalidade'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -1203,7 +1203,7 @@ if (outputEl) {{
 </section>
 <section id="renda-por-inadimplência-por-cancelamento" class="level2">
 <h2 class="anchored" data-anchor-id="renda-por-inadimplência-por-cancelamento">Renda por inadimplência por cancelamento</h2>
-<div id="f78032c5" class="cell" data-execution_count="14">
+<div id="f78032c5" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_prop <span class="op">=</span> (df.groupby([<span class="st">'faixa_renda'</span>, <span class="st">'inadimplente'</span>, <span class="st">'cancelado'</span>], observed <span class="op">=</span> <span class="va">False</span>)</span>
@@ -1267,7 +1267,7 @@ if (outputEl) {{
 <p>Comparando os grupos de clientes que cancelaram ou não o plano utilizando análises bivariadas, nota-se que dos dados fornecidos, apenas alguns apresentam indícios de significância na determinação do cancelamento ou não do plano.</p>
 <p>As variáveis mais significativas — visualmente — foram renda, tempo em meses do plano, unidade da federação do cliente e inadimplência.</p>
 <p>Além disso, nota-se interação entre a faixa de renda e o inadimplento para explicar o cancelamento do plano dentre os clientes de alta renda. A maior parte dos clientes de alta renda que cancelaram o plano estavam inadimplentes.</p>
-<p>Testes estatísticos para diferença de média ou mediana nos grupos não são adequados, pelo tamanho do conjunto de dados (90.774 instâncias, após remoção de dados absurdos), pois seriam viesados pelo tamanho amostral e detectariam significância em diversos casos pouco significativos.</p>
+<p>Testes estatísticos para diferença de média ou mediana nos grupos não são adequados, pelo tamanho do conjunto de dados (90.774 instâncias, após remoção de dados absurdos e duplicatas), pois seriam viesados pelo tamanho amostral e detectariam significância em diversos casos pouco significativos.</p>
 <p>O agrupamento das unidades da federação em regiões (Norte, Nordeste, Sudeste, Centro-Oeste e Sul) manteria a significância da diferença entre os grupos, entretanto poderia mascarar algumas heterogeneidades regionais (Como o estado do Piauí, que difere significativamente da tendência dos demais estados do Nordeste). Este agrupamento será realizado na modelagem pois a quantidade de instâncias é insuficiente na estratificação dos grupos para algumas unidades da federação.</p>
 <p>Nota-se portanto que a alta taxa de churn aparenta estar mais relacionada com o perfil do cliente do que com o produto da empresa em si, visto que covariáveis mais relacionadas ao produto, como quantidade de consultas, quantidade de internações e valor da mensalidade não apresentaram diferenças entre clientes que cancelaram ou não o plano. Isto pode indicar maior necessidade de compreensão e ações relacionadas ao perfil do cliente do que a readequação do produto oferecido.</p>
 </section>
@@ -1300,7 +1300,7 @@ if (outputEl) {{
 <h2 class="anchored" data-anchor-id="pré-processamento">Pré processamento</h2>
 <p>Uma camada adicional de filtragem foi adicionada nesta etapa: a remoção das instâncias cuja renda observada foi “Média”. Isto por que, conforme observado na etapa exploratória, existe a separação perfeita — nenhum cliente de renda média cancelou o plano. Isto certamente levaria a um modelo com problemas de generalização, visto que quase certamente um cliente de renda média sempre seria classificado como não cancelado, ainda que no futuro possa haver algum cliente de renda média que por ventura cancele o plano. Para além disso, esta informação certamente distorceria os parâmetros dos modelos, inclusive podendo levar modelos mais sensíveis à separação perfeita — como a regressão logística — a ter problemas de convergência. Como a remoção destas observações ainda preserva um volume de dados extremamente satisfatório, julgo ser seguro simplesmente optar por não inseri-los no modelo.</p>
 <p>Outras informações identificadas como potencialmente não relevantes na etapa exploratória serão mantidas nesta etapa, podendo ser removidas na comparação de modelos posteriormente.</p>
-<div id="540554d5" class="cell" data-execution_count="15">
+<div id="540554d5" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">'id_cliente'</span>, <span class="st">'titularidade'</span>, <span class="st">'sexo'</span>, <span class="st">'uf'</span>])</span>
@@ -1351,7 +1351,7 @@ if (outputEl) {{
 <section id="definindo-modelos" class="level2">
 <h2 class="anchored" data-anchor-id="definindo-modelos">Definindo modelos</h2>
 <p>Diversos modelos podem ser escolhidos para a tarefa de classificação binária. Naive Bayes, regressão logística, árvores de decisão, florestas aleatórias, árvores com bagging, XGBoost, Gradient Boost e demais modelos. Além disso, é crucial realizar o fine tuning dos parâmetros de cada modelo, visto que cada um deles contém diversos hiperparâmetros, e a combinação ótima em geral só pode ser encontrada por força bruta. Diversas estratégias podem ser pensadas para teste de hiperparâmetros, como um grid plano, um quadrado latino, uma busca aleatória, varreduras bayesianas, etc. Em geral, opta-se pelo método mais simples — a busca plana — e testa-se métodos mais sofisticados caso hiperparâmetros ideais não sejam encontrados, ou se houver problema de tempo de execução das buscas no grid.</p>
-<div id="3fc7586c" class="cell" data-execution_count="16">
+<div id="3fc7586c" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> {</span>
@@ -1398,7 +1398,7 @@ if (outputEl) {{
 </section>
 <section id="validação-cruzada-ajuste-dos-modelos-e-tuning-de-hiperparâmetros" class="level2">
 <h2 class="anchored" data-anchor-id="validação-cruzada-ajuste-dos-modelos-e-tuning-de-hiperparâmetros">Validação cruzada, ajuste dos modelos e tuning de hiperparâmetros</h2>
-<div id="44387100" class="cell" data-execution_count="17">
+<div id="44387100" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> {}</span>
@@ -1447,7 +1447,7 @@ if (outputEl) {{
 <p>A validação é uma etapa crucial na modelagem. Os modelos sempre buscarão melhor ajuste possível aos dados, entretanto este ajuste pode significar a compreensão perfeita dos dados que forem a eles fornecidos, porém na avaliação de um dado futuro posterior, este modelo pode incorrer em erros em função de sobreajuste (overfitting), isto é, o modelo aprende exatamente os padrões dos dados que foram fornecidos, mas é incapaz de generalizar os resultados para novas observações. Para isso, uma das estratégias é separar o conjunto de dados em treino e teste, em geral utilizando 80% dos dados para treino e 20% dos dados para teste. Desta forma, as métricas do modelo serão avaliadas no conjunto de testes, conjunto este não utilizado para ajuste do modelo, para verificar o quão bem o modelo compreende padrões para além de decorar os dados que a ele foram fornecidos.</p>
 <p>A validação cruzada é uma extensão desta ideia. Não iremos apenas ajustar os modelos, mas também selecionar as melhores combinações possíveis de hiperparâmetros deles. Para isso, podemos dividir o conjunto de dados em treino, teste e validação. Porém, quanto mais separações fazemos, menos dados temos para treino, e prescindir de uma boa quantidade destes pode não ser viável em algumas situações. Para isso, esta metodologia fragmenta o conjunto de treino em v segmentos (v-folds), utilizando uma parte desta para avaliação de hiperparâmetro durante o ajuste do modelo, e as 4 partes restantes para teste. Além disso, a implementação embaralha e troca a ordem desses segmentos a cada ajuste, garantindo a confiabilidade das métricas produzidas.</p>
 <p>Desta forma, podemos avaliar o modelo, testar conjuntos de hiperparâmetros e testar a performance do modelo utilizando uma abordagem segura, confiável e crível.</p>
-<div id="eb7aeec5" class="cell" data-execution_count="18">
+<div id="eb7aeec5" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> []</span>
@@ -1553,7 +1553,7 @@ if (outputEl) {{
 </div>
 </div>
 <p>O Quadro acima mostra as principais métricas associadas aos modelos testados. Nota-se que todos os modelos performaram relativamente bem em todas as métricas selecionadas, com destaque para a área sob a curva (ROC AUC). Isto indica que qualquer um dos modelos poderia ser utilizado para previsão, com F1-Score acima de 95%, que em geral é a métrica mais importante para avaliação de churn.</p>
-<div id="d0ef7d1f" class="cell" data-execution_count="19">
+<div id="d0ef7d1f" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_search_results(results):</span>
@@ -1592,7 +1592,7 @@ if (outputEl) {{
 </section>
 <section id="análise-de-importâncias-dos-melhores-modelos" class="level2">
 <h2 class="anchored" data-anchor-id="análise-de-importâncias-dos-melhores-modelos">Análise de importâncias dos melhores modelos</h2>
-<div id="e615a82e" class="cell" data-execution_count="20">
+<div id="e615a82e" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_feature_names_from_column_transformer(column_transformer):</span>
@@ -1682,7 +1682,7 @@ if (outputEl) {{
 <li><p>Demais covariáveis indicadas como pouco significativas na etapa de análise exploratória serão desconsideradas.</p></li>
 </ul>
 <p>Desta forma, iremos ajustar o modelo explicando o cancelamento baseado em categorias da nova feature tempo de plano, inadimplência combinada com renda e região (agrupamento de unidades da federação segundo classificação do IBGE).</p>
-<div id="01dbfb35" class="cell" data-execution_count="21">
+<div id="01dbfb35" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>tempo_plano_transformer <span class="op">=</span> Pipeline([</span>
@@ -1747,7 +1747,7 @@ if (outputEl) {{
 </div>
 <section id="métricas-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="métricas-do-modelo-interpretável">Métricas do modelo interpretável</h3>
-<div id="6bdd4ec8" class="cell" data-execution_count="22">
+<div id="6bdd4ec8" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
@@ -1815,7 +1815,7 @@ if (outputEl) {{
 </section>
 <section id="matriz-de-confusão-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="matriz-de-confusão-do-modelo-interpretável">Matriz de confusão do modelo interpretável</h3>
-<div id="d194678e" class="cell" data-execution_count="23">
+<div id="d194678e" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
@@ -1840,7 +1840,7 @@ if (outputEl) {{
 </section>
 <section id="curva-roc-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="curva-roc-do-modelo-interpretável">Curva ROC do modelo interpretável</h3>
-<div id="3e01e97b" class="cell" data-execution_count="24">
+<div id="3e01e97b" class="cell" data-execution_count="25">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
@@ -1866,7 +1866,7 @@ if (outputEl) {{
 <p>O principal objetivo deste modelo será a extração de interpretação dos parâmetros. Como ajustou-se um modelo mais parcimonioso, é esperado que suas métricas sejam inferiores ao modelo saturado ajustado anteriormente. Isto é, para previsão, os modelos anteriores são ligeiramente melhores do que o modelo ajustado nesta etapa. Isso não significa que o modelo possa ser ruim: suas métricas devem ainda ser satisfatórias.</p>
 <p>Conforme observado na análise de diagnóstico acima, como valores das principais métricas, área sob a curva e matriz de confusão, notamos uma ligeira piora de algumas métricas em relação ao modelo saturado, em especial na precisão de classificação de verdadeiros negativos. Entretanto, observando o conjunto das métricas em geral, pode-se dizer que este modelo se ajustou bem aos dados, em especial observando as métricas de F1-Score e área sob a curva — ambas performando acima de 95% — que são essenciais neste contexto.</p>
 <p>Desta forma, podemos ter segurança na interpretação dos parâmetros deste modelo, e comunicação de seus resultados para as outras áreas da empresa</p>
-<div id="af1a2310" class="cell" data-execution_count="25">
+<div id="af1a2310" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>logreg <span class="op">=</span> model.named_steps[<span class="st">'classifier'</span>]</span>
@@ -1951,7 +1951,7 @@ Baixa renda + Não inadimplente       2.9060       0.0608  47.7791 &lt;0.0001   
 <h1>Conclusão</h1>
 <p>Conforme especificado, o objetivo desta análise é estimar quais beneficiários têm maior risco de evasão nos próximos 12 meses, dado um modelo estatístico preditivo. Desta forma, podemos utilizar o modelo de random forest para realizar esta estimação.</p>
 <p><strong>Distribuição de clientes por faixa de risco de cancelamento:</strong></p>
-<div id="ef867b5e" class="cell" data-execution_count="26">
+<div id="ef867b5e" class="cell" data-execution_count="27">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>rf_model <span class="op">=</span> results[<span class="st">'Random_Forest'</span>][<span class="st">'best_model'</span>]</span>
