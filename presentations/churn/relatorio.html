@@ -306,13 +306,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Metodologia</h1>
 <p>Para executar esta análise, utilizou-se a linguagem de programação Python, versão 3.12.3, junto com bibliotecas comuns de análise de dados, como pandas, numpy e scipy; bibliotecas de visualização como matplotlib, seaborn e plotly; bibliotecas de ciência de dados como Scikit-learn; além de outras bibliotecas necessárias para tarefas específicas no decorrer da análise, como geopandas, unicodedata, IPython, shap e warnings.</p>
 <p>A criação e execução do jupyter notebook foi realizada no Visual Studio Code, enquanto este relatório técnico foi elaborado com Quarto, por meio da IDE RStudio. Para organização do projeto, criou-se um diretório privado no GitHub com os arquivos separados em pastas específicas, garantindo a inteligibilidade do projeto.</p>
-<p>Para o escopo desta análise, fora fornecido um conjunto de dados com 101.063 observações (instâncias) e 12 variáveis (características). Dessas características, encontra-se a variável alvo (ou variável resposta — ou, simplesmente, variável), que corresponde ao status de cancelamento do cliente (churn). Conjuntamente, encontrava-se 10 variáveis explicativas (ou covariáveis), sendo elas: titularidade, faixa de renda, idade na adesão, tempo de plano em meses, sexo, quantidade de consultas, quantidade de internações, valor da mensalidade, unidade da federação e status de inadimplência do cliente. Essas covariáveis foram utilizadas para explicação do cancelamento, conforme seu potencial explicativo. Encontrava-se ainda uma coluna de identificação única de cada cliente, não utilizada nesta análise por não conter valor preditivo.</p>
+<p>Para o escopo desta análise, fora fornecido um conjunto de dados com 101.063 observações (instâncias) e 12 variáveis (características). Alguns clientes, identificados pelo seu id único, apareciam mais de uma vez na tabela, configurando duplicata. Dessa forma, foram removidas as duplicidades, mantendo apenas uma observação por cliente. Dessas características, encontra-se a variável alvo (ou variável resposta — ou, simplesmente, variável), que corresponde ao status de cancelamento do cliente (churn). Conjuntamente, encontrava-se 10 variáveis explicativas (ou covariáveis), sendo elas: titularidade, faixa de renda, idade na adesão, tempo de plano em meses, sexo, quantidade de consultas, quantidade de internações, valor da mensalidade, unidade da federação e status de inadimplência do cliente. Essas covariáveis foram utilizadas para explicação do cancelamento, conforme seu potencial explicativo. Encontrava-se ainda uma coluna de identificação única de cada cliente, não utilizada nesta análise por não conter valor preditivo.</p>
 <p>A quantidade de instâncias fornecidas é mais que suficiente para realizar modelagem preditiva. No contexto do estudo de dados, apesar de não existir um número analítico (estando este entre 1.000 e 10.000 instâncias), técnicas estatísticas clássicas como teste t para diferença de médias, teste não paramétrico de Kruskal-Wallis e outros utilizados para comparar grupos, tornam-se excessivamente sensíveis, identificando como significativas diferenças de magnitude irrelevante. Neste contexto, apenas técnicas mais sofisticadas, como as de aprendizado de máquina, são robustas para avaliar diferenças entre grupos e metrificar o impacto de características relevantes. Pode-se ainda remover algumas instâncias com inconsistências graves, isto é, que possuem problemas de preenchimento ou dados absurdos, em consonância com o princípio de good data over big data, como idade na adesão negativa ou tempo de plano em meses negativo, visto que estas instâncias não agregam valor ao modelo e podem prejudicar a análise. Além disso, esse processo também contemplou o tratamento de casos de separação perfeita, que poderiam comprometer a estabilidade de modelos explicativos. A quantidade de instâncias restantes permite ainda realizar a divisão de treino e teste, com massa de dados adequada para ambas as etapas.</p>
 <p>Para análise exploratória dos dados, optou-se por visualizações gráficas e apresentação de estatísticas resumo em tabelas ou quadros. Para a modelagem de dados, utilizou-se diversos modelos contidos no scikit-learn, como regressão logística, árvore de decisão, árvore com bagging, florestas aleatórias e naive bayes.</p>
 <p>Para avaliação dos modelos, utilizou-se métricas de avaliação recomendadas no escopo da ciência de dados, como acurácia (previsões corretas pelo total de previsões), precisão (verdadeiros positivos pelo total de positivos previstos), sensibilidade (verdadeiros positivos pela soma de verdadeiros positivos e falsos negativos), especificidade (verdadeiros negativos pela soma de falsos positivos e verdadeiros negativos), além do F1-Score e área sob a curva, além de visualizações como matriz de confusão, curva ROC e variable importance plot. Além disso, utilizou-se a técnica de validação cruzada para escolha de hiperparâmetros e validação dos modelos, com divisão dos dados em 80% para treino e 20% para teste e validação cruzada.</p>
 <p>Destaca-se ainda que o balanceamento dos dados entre categorias das características, em especial para a variável resposta, pode representar um desafio para a modelagem. Algumas covariáveis como unidade da federação tiveram que ser agregadas em regiões para possibilitar a modelagem, pelo grave desbalanceamento de classes. Para a variável resposta, existiam mais clientes com cancelamento positivo que negativo, entretanto a diferença era pequena para uma grande massa de dados, o que em geral não é problemático para a maioria dos modelos. Ainda assim, quando da divisão entre treino e teste, estratificou-se as amostras em relação a esta variável, garantindo a proporção de cancelamentos e não cancelamentos em ambos os conjuntos de treino e teste.</p>
 <p>Aplicou-se ainda técnicas para lidar com dados ausentes, como imputação ou remoção de instâncias em alguns casos. Para a modelagem, construiu-se algumas features baseadas nas covariáveis originais, além de procedimentos de pré processamento de dados, inclusive da seleção de features e covariáveis relevantes para cada caso. Detalhes da utilização destas técnicas em cada caso serão explicitadas nas seções de análise e modelagem.</p>
-<div id="f7386a0b" class="cell" data-message="false" data-execution_count="2">
+<div id="dd316933" class="cell" data-message="false" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -356,42 +356,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>cores <span class="op">=</span> {<span class="st">'SIM'</span>: <span class="st">'tomato'</span>, <span class="st">'NÃO'</span>: <span class="st">'steelblue'</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="23cf58a6" class="cell" data-execution_count="3">
+<div id="852e16d0" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">"dados/processo_seletivo_base_churn.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="7bfbb96c" class="cell" data-execution_count="4">
+<div id="452bcbf7" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.lower()</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'idadenaadesão'</span> <span class="kw">in</span> df.columns:</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.rename(columns<span class="op">=</span>{<span class="st">'idadenaadesão'</span>: <span class="st">'idadenaadesao'</span>})</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> [<span class="st">'titularidade'</span>, <span class="st">'cancelado'</span>, <span class="st">'faixa_renda'</span>, <span class="st">'sexo'</span>, <span class="st">'uf'</span>, <span class="st">'inadimplente'</span>]</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df[categorical_cols] <span class="op">=</span> df[categorical_cols].astype(<span class="st">'category'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'id_cliente'</span>] <span class="op">=</span> df[<span class="st">'id_cliente'</span>].astype(<span class="st">"category"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop_duplicates(subset<span class="op">=</span>[<span class="st">'id_cliente'</span>], keep<span class="op">=</span><span class="st">'first'</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[(df[<span class="st">'idadenaadesao'</span>] <span class="op">&gt;=</span> <span class="dv">0</span>) <span class="op">&amp;</span> </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'idadenaadesao'</span>] <span class="op">&lt;=</span> <span class="dv">100</span>) <span class="op">&amp;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'tempo_de_plano_meses'</span>] <span class="op">&gt;=</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'uf'</span>].notna())]</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>regioes <span class="op">=</span> {</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Norte'</span>: [<span class="st">"AC"</span>, <span class="st">"AM"</span>, <span class="st">"AP"</span>, <span class="st">"PA"</span>, <span class="st">"RO"</span>, <span class="st">"RR"</span>, <span class="st">"TO"</span>],</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Nordeste'</span>: [<span class="st">"AL"</span>, <span class="st">"BA"</span>, <span class="st">"CE"</span>, <span class="st">"MA"</span>, <span class="st">"PB"</span>, <span class="st">"PE"</span>, <span class="st">"PI"</span>, <span class="st">"RN"</span>, <span class="st">"SE"</span>],</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Centro-Oeste'</span>: [<span class="st">"DF"</span>, <span class="st">"GO"</span>, <span class="st">"MS"</span>, <span class="st">"MT"</span>],</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sudeste'</span>: [<span class="st">"ES"</span>, <span class="st">"MG"</span>, <span class="st">"RJ"</span>, <span class="st">"SP"</span>],</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sul'</span>: [<span class="st">"PR"</span>, <span class="st">"RS"</span>, <span class="st">"SC"</span>]</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_regiao(uf):</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> regiao, ufs <span class="kw">in</span> regioes.items():</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> uf <span class="kw">in</span> ufs:</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> regiao</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'regiao'</span>] <span class="op">=</span> df[<span class="st">'uf'</span>].<span class="bu">apply</span>(get_regiao).astype(<span class="st">'category'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> [<span class="st">'titularidade'</span>, <span class="st">'cancelado'</span>, <span class="st">'faixa_renda'</span>, <span class="st">'sexo'</span>, <span class="st">'uf'</span>, <span class="st">'inadimplente'</span>]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df[categorical_cols] <span class="op">=</span> df[categorical_cols].astype(<span class="st">'category'</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[(df[<span class="st">'idadenaadesao'</span>] <span class="op">&gt;=</span> <span class="dv">0</span>) <span class="op">&amp;</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'idadenaadesao'</span>] <span class="op">&lt;=</span> <span class="dv">100</span>) <span class="op">&amp;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'tempo_de_plano_meses'</span>] <span class="op">&gt;=</span> <span class="dv">0</span>) <span class="op">&amp;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        (df[<span class="st">'uf'</span>].notna())]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>regioes <span class="op">=</span> {</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Norte'</span>: [<span class="st">"AC"</span>, <span class="st">"AM"</span>, <span class="st">"AP"</span>, <span class="st">"PA"</span>, <span class="st">"RO"</span>, <span class="st">"RR"</span>, <span class="st">"TO"</span>],</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Nordeste'</span>: [<span class="st">"AL"</span>, <span class="st">"BA"</span>, <span class="st">"CE"</span>, <span class="st">"MA"</span>, <span class="st">"PB"</span>, <span class="st">"PE"</span>, <span class="st">"PI"</span>, <span class="st">"RN"</span>, <span class="st">"SE"</span>],</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Centro-Oeste'</span>: [<span class="st">"DF"</span>, <span class="st">"GO"</span>, <span class="st">"MS"</span>, <span class="st">"MT"</span>],</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sudeste'</span>: [<span class="st">"ES"</span>, <span class="st">"MG"</span>, <span class="st">"RJ"</span>, <span class="st">"SP"</span>],</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sul'</span>: [<span class="st">"PR"</span>, <span class="st">"RS"</span>, <span class="st">"SC"</span>]</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_regiao(uf):</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> regiao, ufs <span class="kw">in</span> regioes.items():</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> uf <span class="kw">in</span> ufs:</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> regiao</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'regiao'</span>] <span class="op">=</span> df[<span class="st">'uf'</span>].<span class="bu">apply</span>(get_regiao).astype(<span class="st">'category'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -401,7 +404,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note que a covariável titularidade não foi incluida neste relatório, visto que não apresentava variação — todos os clientes do conjunto de dados eram titulares do plano.</p>
 <section id="taxa-de-churn" class="level2">
 <h2 class="anchored" data-anchor-id="taxa-de-churn">Taxa de churn</h2>
-<div id="7da4b0e7" class="cell" data-execution_count="5">
+<div id="ddc294e2" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>churn_rate <span class="op">=</span> df[<span class="st">'cancelado'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>)[<span class="st">'SIM'</span>] <span class="op">*</span> <span class="dv">100</span></span>
@@ -410,14 +413,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Taxa global de churn: </span><span class="sc">{</span>churn_rate<span class="sc">}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Taxa global de churn: 58,80%</code></pre>
+<pre><code>Taxa global de churn: 58,85%</code></pre>
 </div>
 </div>
 <p>Observa-se uma taxa de churn superior a 50% nos dados, indicando uma alta evasão de clientes do plano de saúde. Esta taxa é preocupante, visto que pode indicar problemas com o produto ou com o perfil do cliente atendido pela empresa.</p>
 </section>
 <section id="quantidade-de-cancelamentos-por-grupos" class="level2">
 <h2 class="anchored" data-anchor-id="quantidade-de-cancelamentos-por-grupos">Quantidade de cancelamentos por grupos</h2>
-<div id="4dce0120" class="cell" data-execution_count="6">
+<div id="0c9fc83e" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>faixa_renda <span class="op">=</span> df.groupby([<span class="st">'faixa_renda'</span>, <span class="st">'cancelado'</span>], observed<span class="op">=</span><span class="va">True</span>).size().unstack()</span>
@@ -448,15 +451,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style type="text/css">
 </style>
 
-<table id="T_00cb9" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_89884" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_00cb9_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_00cb9_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
-<th id="T_00cb9_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
-<th id="T_00cb9_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
-<th id="T_00cb9_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
+<th id="T_89884_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_89884_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_89884_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
+<th id="T_89884_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
+<th id="T_89884_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
 </tr>
 <tr class="odd">
 <th class="index_name level0" data-quarto-table-cell-role="th">faixa_renda</th>
@@ -469,28 +472,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_00cb9_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Alta renda</td>
-<td id="T_00cb9_row0_col0" class="data row0 col0">7.902,00</td>
-<td id="T_00cb9_row0_col1" class="data row0 col1">2.810,00</td>
-<td id="T_00cb9_row0_col2" class="data row0 col2">10.712,00</td>
-<td id="T_00cb9_row0_col3" class="data row0 col3">73,77</td>
-<td id="T_00cb9_row0_col4" class="data row0 col4">26,23</td>
+<td id="T_89884_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Alta renda</td>
+<td id="T_89884_row0_col0" class="data row0 col0">7.402,00</td>
+<td id="T_89884_row0_col1" class="data row0 col1">2.641,00</td>
+<td id="T_89884_row0_col2" class="data row0 col2">10.043,00</td>
+<td id="T_89884_row0_col3" class="data row0 col3">73,70</td>
+<td id="T_89884_row0_col4" class="data row0 col4">26,30</td>
 </tr>
 <tr class="even">
-<td id="T_00cb9_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Baixa renda</td>
-<td id="T_00cb9_row1_col0" class="data row1 col0">8.140,00</td>
-<td id="T_00cb9_row1_col1" class="data row1 col1">54.271,00</td>
-<td id="T_00cb9_row1_col2" class="data row1 col2">62.411,00</td>
-<td id="T_00cb9_row1_col3" class="data row1 col3">13,04</td>
-<td id="T_00cb9_row1_col4" class="data row1 col4">86,96</td>
+<td id="T_89884_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Baixa renda</td>
+<td id="T_89884_row1_col0" class="data row1 col0">7.598,00</td>
+<td id="T_89884_row1_col1" class="data row1 col1">50.777,00</td>
+<td id="T_89884_row1_col2" class="data row1 col2">58.375,00</td>
+<td id="T_89884_row1_col3" class="data row1 col3">13,02</td>
+<td id="T_89884_row1_col4" class="data row1 col4">86,98</td>
 </tr>
 <tr class="odd">
-<td id="T_00cb9_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">Média renda</td>
-<td id="T_00cb9_row2_col0" class="data row2 col0">23.955,00</td>
-<td id="T_00cb9_row2_col1" class="data row2 col1">0,00</td>
-<td id="T_00cb9_row2_col2" class="data row2 col2">23.955,00</td>
-<td id="T_00cb9_row2_col3" class="data row2 col3">100,00</td>
-<td id="T_00cb9_row2_col4" class="data row2 col4">0,00</td>
+<td id="T_89884_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">Média renda</td>
+<td id="T_89884_row2_col0" class="data row2 col0">22.356,00</td>
+<td id="T_89884_row2_col1" class="data row2 col1">0,00</td>
+<td id="T_89884_row2_col2" class="data row2 col2">22.356,00</td>
+<td id="T_89884_row2_col3" class="data row2 col3">100,00</td>
+<td id="T_89884_row2_col4" class="data row2 col4">0,00</td>
 </tr>
 </tbody>
 </table>
@@ -504,12 +507,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Em geral, clientes de baixa renda tendem a ter alta taxa de cancelamento (86,96% dos clientes de baixa renda cancelaram). Dentre os clientes de renda média, não houve cancelamento algum. Para os clientes de alta renda, a evasão foi de 26,23%.</p>
+<p>Em geral, clientes de baixa renda tendem a ter alta taxa de cancelamento (86,98% dos clientes de baixa renda cancelaram). Dentre os clientes de renda média, não houve cancelamento algum. Para os clientes de alta renda, a evasão foi de 26,3%.</p>
 <p>Estes resultados indicam que podem ser realizadas ações para clientes de faixas de renda específicas — em especial os de baixa renda — na busca da reversão da alta taxa de churn.</p>
 </section>
 <section id="cancelamento-por-idade-na-adesão" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-idade-na-adesão">Cancelamento por idade na adesão</h2>
-<div id="e8df62e8" class="cell" data-execution_count="7">
+<div id="79e55c1a" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>idade_na_adesao <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'idadenaadesao'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -535,54 +538,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style type="text/css">
 </style>
 
-<table id="T_766f1" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_f2da9" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_766f1_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_766f1_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_f2da9_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_f2da9_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_766f1_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_766f1_row0_col0" class="data row0 col0">39.997,00</td>
-<td id="T_766f1_row0_col1" class="data row0 col1">57.081,00</td>
+<td id="T_f2da9_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_f2da9_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_f2da9_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_766f1_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_766f1_row1_col0" class="data row1 col0">29,14</td>
-<td id="T_766f1_row1_col1" class="data row1 col1">29,42</td>
+<td id="T_f2da9_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_f2da9_row1_col0" class="data row1 col0">29,17</td>
+<td id="T_f2da9_row1_col1" class="data row1 col1">29,43</td>
 </tr>
 <tr class="odd">
-<td id="T_766f1_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_766f1_row2_col0" class="data row2 col0">16,89</td>
-<td id="T_766f1_row2_col1" class="data row2 col1">21,11</td>
+<td id="T_f2da9_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_f2da9_row2_col0" class="data row2 col0">16,91</td>
+<td id="T_f2da9_row2_col1" class="data row2 col1">21,13</td>
 </tr>
 <tr class="even">
-<td id="T_766f1_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_766f1_row3_col0" class="data row3 col0">0,00</td>
-<td id="T_766f1_row3_col1" class="data row3 col1">0,00</td>
+<td id="T_f2da9_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_f2da9_row3_col0" class="data row3 col0">0,00</td>
+<td id="T_f2da9_row3_col1" class="data row3 col1">0,00</td>
 </tr>
 <tr class="odd">
-<td id="T_766f1_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_766f1_row4_col0" class="data row4 col0">16,00</td>
-<td id="T_766f1_row4_col1" class="data row4 col1">10,00</td>
+<td id="T_f2da9_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_f2da9_row4_col0" class="data row4 col0">16,00</td>
+<td id="T_f2da9_row4_col1" class="data row4 col1">10,00</td>
 </tr>
 <tr class="even">
-<td id="T_766f1_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_766f1_row5_col0" class="data row5 col0">30,00</td>
-<td id="T_766f1_row5_col1" class="data row5 col1">28,00</td>
+<td id="T_f2da9_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_f2da9_row5_col0" class="data row5 col0">30,00</td>
+<td id="T_f2da9_row5_col1" class="data row5 col1">28,00</td>
 </tr>
 <tr class="odd">
-<td id="T_766f1_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_766f1_row6_col0" class="data row6 col0">40,00</td>
-<td id="T_766f1_row6_col1" class="data row6 col1">44,00</td>
+<td id="T_f2da9_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_f2da9_row6_col0" class="data row6 col0">40,00</td>
+<td id="T_f2da9_row6_col1" class="data row6 col1">44,00</td>
 </tr>
 <tr class="even">
-<td id="T_766f1_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_766f1_row7_col0" class="data row7 col0">82,00</td>
-<td id="T_766f1_row7_col1" class="data row7 col1">94,00</td>
+<td id="T_f2da9_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_f2da9_row7_col0" class="data row7 col0">82,00</td>
+<td id="T_f2da9_row7_col1" class="data row7 col1">94,00</td>
 </tr>
 </tbody>
 </table>
@@ -600,7 +603,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-tempo-de-plano-em-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-tempo-de-plano-em-meses">Cancelamento por tempo de plano em meses</h2>
-<div id="8f4ab1e3" class="cell" data-execution_count="8">
+<div id="6bd4c341" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tempo_de_plano_meses <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'tempo_de_plano_meses'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -626,54 +629,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style type="text/css">
 </style>
 
-<table id="T_47f40" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_79d95" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_47f40_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_47f40_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_79d95_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_79d95_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_47f40_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_47f40_row0_col0" class="data row0 col0">39.997,00</td>
-<td id="T_47f40_row0_col1" class="data row0 col1">57.081,00</td>
+<td id="T_79d95_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_79d95_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_79d95_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_47f40_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_47f40_row1_col0" class="data row1 col0">301,45</td>
-<td id="T_47f40_row1_col1" class="data row1 col1">228,99</td>
+<td id="T_79d95_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_79d95_row1_col0" class="data row1 col0">301,42</td>
+<td id="T_79d95_row1_col1" class="data row1 col1">229,05</td>
 </tr>
 <tr class="odd">
-<td id="T_47f40_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_47f40_row2_col0" class="data row2 col0">7,72</td>
-<td id="T_47f40_row2_col1" class="data row2 col1">45,75</td>
+<td id="T_79d95_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_79d95_row2_col0" class="data row2 col0">7,72</td>
+<td id="T_79d95_row2_col1" class="data row2 col1">45,73</td>
 </tr>
 <tr class="even">
-<td id="T_47f40_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_47f40_row3_col0" class="data row3 col0">280,00</td>
-<td id="T_47f40_row3_col1" class="data row3 col1">128,00</td>
+<td id="T_79d95_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_79d95_row3_col0" class="data row3 col0">280,00</td>
+<td id="T_79d95_row3_col1" class="data row3 col1">128,00</td>
 </tr>
 <tr class="odd">
-<td id="T_47f40_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_47f40_row4_col0" class="data row4 col0">295,00</td>
-<td id="T_47f40_row4_col1" class="data row4 col1">192,00</td>
+<td id="T_79d95_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_79d95_row4_col0" class="data row4 col0">295,00</td>
+<td id="T_79d95_row4_col1" class="data row4 col1">192,00</td>
 </tr>
 <tr class="even">
-<td id="T_47f40_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_47f40_row5_col0" class="data row5 col0">303,00</td>
-<td id="T_47f40_row5_col1" class="data row5 col1">232,00</td>
+<td id="T_79d95_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_79d95_row5_col0" class="data row5 col0">303,00</td>
+<td id="T_79d95_row5_col1" class="data row5 col1">233,00</td>
 </tr>
 <tr class="odd">
-<td id="T_47f40_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_47f40_row6_col0" class="data row6 col0">309,00</td>
-<td id="T_47f40_row6_col1" class="data row6 col1">268,00</td>
+<td id="T_79d95_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_79d95_row6_col0" class="data row6 col0">309,00</td>
+<td id="T_79d95_row6_col1" class="data row6 col1">268,00</td>
 </tr>
 <tr class="even">
-<td id="T_47f40_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_47f40_row7_col0" class="data row7 col0">311,00</td>
-<td id="T_47f40_row7_col1" class="data row7 col1">311,00</td>
+<td id="T_79d95_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_79d95_row7_col0" class="data row7 col0">311,00</td>
+<td id="T_79d95_row7_col1" class="data row7 col1">311,00</td>
 </tr>
 </tbody>
 </table>
@@ -692,7 +695,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-pelo-sexo-do-cliente" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-pelo-sexo-do-cliente">Cancelamento pelo sexo do cliente</h2>
-<div id="9a540472" class="cell" data-execution_count="9">
+<div id="18475750" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'sexo'</span>] <span class="op">=</span> df[<span class="st">'sexo'</span>].<span class="bu">map</span>({<span class="st">'F'</span>: <span class="st">'Feminino'</span>, <span class="st">'M'</span>: <span class="st">'Masculino'</span>})</span>
@@ -724,15 +727,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style type="text/css">
 </style>
 
-<table id="T_ef1ee" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_b1ce5" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_ef1ee_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_ef1ee_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
-<th id="T_ef1ee_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
-<th id="T_ef1ee_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
-<th id="T_ef1ee_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
+<th id="T_b1ce5_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_b1ce5_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_b1ce5_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
+<th id="T_b1ce5_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
+<th id="T_b1ce5_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
 </tr>
 <tr class="odd">
 <th class="index_name level0" data-quarto-table-cell-role="th">sexo</th>
@@ -745,20 +748,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_ef1ee_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Feminino</td>
-<td id="T_ef1ee_row0_col0" class="data row0 col0">22.944,00</td>
-<td id="T_ef1ee_row0_col1" class="data row0 col1">31.380,00</td>
-<td id="T_ef1ee_row0_col2" class="data row0 col2">54.324,00</td>
-<td id="T_ef1ee_row0_col3" class="data row0 col3">42,24</td>
-<td id="T_ef1ee_row0_col4" class="data row0 col4">57,76</td>
+<td id="T_b1ce5_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Feminino</td>
+<td id="T_b1ce5_row0_col0" class="data row0 col0">21.432,00</td>
+<td id="T_b1ce5_row0_col1" class="data row0 col1">29.367,00</td>
+<td id="T_b1ce5_row0_col2" class="data row0 col2">50.799,00</td>
+<td id="T_b1ce5_row0_col3" class="data row0 col3">42,19</td>
+<td id="T_b1ce5_row0_col4" class="data row0 col4">57,81</td>
 </tr>
 <tr class="even">
-<td id="T_ef1ee_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Masculino</td>
-<td id="T_ef1ee_row1_col0" class="data row1 col0">16.271,00</td>
-<td id="T_ef1ee_row1_col1" class="data row1 col1">24.576,00</td>
-<td id="T_ef1ee_row1_col2" class="data row1 col2">40.847,00</td>
-<td id="T_ef1ee_row1_col3" class="data row1 col3">39,83</td>
-<td id="T_ef1ee_row1_col4" class="data row1 col4">60,17</td>
+<td id="T_b1ce5_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Masculino</td>
+<td id="T_b1ce5_row1_col0" class="data row1 col0">15.198,00</td>
+<td id="T_b1ce5_row1_col1" class="data row1 col1">23.006,00</td>
+<td id="T_b1ce5_row1_col2" class="data row1 col2">38.204,00</td>
+<td id="T_b1ce5_row1_col3" class="data row1 col3">39,78</td>
+<td id="T_b1ce5_row1_col4" class="data row1 col4">60,22</td>
 </tr>
 </tbody>
 </table>
@@ -776,7 +779,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-unidade-da-federação-do-cliente" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-unidade-da-federação-do-cliente">Cancelamento por unidade da federação do cliente</h2>
-<div id="4065cb8f" class="cell" data-execution_count="10">
+<div id="a5085bee" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>uf_stats <span class="op">=</span> df.groupby(<span class="st">'uf'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'cancelado'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>).unstack() <span class="op">*</span> <span class="dv">100</span></span>
@@ -809,9 +812,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell-output cell-output-display">
 <div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.0.1.min.js" integrity="sha256-oy6Be7Eh6eiQFs5M7oXuPxxm9qbJXEtTpfSI93dW16Q=" crossorigin="anonymous"></script>                <div id="12f4136d-f2fb-4cdb-bf3d-01a6f408b2a8" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("12f4136d-f2fb-4cdb-bf3d-01a6f408b2a8")) {                    Plotly.newPlot(                        "12f4136d-f2fb-4cdb-bf3d-01a6f408b2a8",                        [{"coloraxis":"coloraxis","featureidkey":"properties.sigla","geo":"geo","geojson":"https:\u002f\u002fraw.githubusercontent.com\u002fcodeforamerica\u002fclick_that_hood\u002fmaster\u002fpublic\u002fdata\u002fbrazil-states.geojson","hovertemplate":"uf=%{location}\u003cbr\u003eTaxa de Cancelamento (%)=%{z}\u003cextra\u003e\u003c\u002fextra\u003e","locations":["AC","AL","AM","AP","BA","CE","DF","ES","GO","MA","MG","MS","MT","PA","PB","PE","PI","PR","RJ","RN","RO","RR","RS","SC","SE","SP","TO"],"name":"","z":{"dtype":"f8","bdata":"zBlzxpwxSUAMgW9R+c9NQEmSJEmShFBA4ziO4ziOSUAvxjL+0MxIQNavINhS1E1AH+DTZoMsR0CIKiwa4F5SQCVUZMYd\u002fE9A6VSAtdMDSUCKATk92WVRQAAAAAAAAE5Axo\u002fFj8WPS0ChkjXzYFFPQDi71oCAs05A7IrysaF2R0Cox83YH4ZRQOQdDVnyVFFAhgv+NC33TUBXHqeGY+VNQFZVVVVVVU5Aq6qqqqqqSkAw1DU6m0hQQGpR3RkYolBARybQO3UtS0CQlT47eGxPQGjAkl7+tEtA"},"type":"choropleth"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"geo":{"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"center":{},"scope":"south america","fitbounds":"locations","visible":false},"coloraxis":{"colorbar":{"title":{"text":"Taxa de Cancelamento (%)"}},"colorscale":[[0.0,"rgb(255,255,204)"],[0.125,"rgb(255,237,160)"],[0.25,"rgb(254,217,118)"],[0.375,"rgb(254,178,76)"],[0.5,"rgb(253,141,60)"],[0.625,"rgb(252,78,42)"],[0.75,"rgb(227,26,28)"],[0.875,"rgb(189,0,38)"],[1.0,"rgb(128,0,38)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Taxa de Cancelamento por UF (%)"},"margin":{"r":0,"t":40,"l":0,"b":0}},                        {"responsive": true}                    ).then(function(){
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.0.1.min.js" integrity="sha256-oy6Be7Eh6eiQFs5M7oXuPxxm9qbJXEtTpfSI93dW16Q=" crossorigin="anonymous"></script>                <div id="7118c76e-655b-4e30-957c-d3d8dda317e1" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("7118c76e-655b-4e30-957c-d3d8dda317e1")) {                    Plotly.newPlot(                        "7118c76e-655b-4e30-957c-d3d8dda317e1",                        [{"coloraxis":"coloraxis","featureidkey":"properties.sigla","geo":"geo","geojson":"https:\u002f\u002fraw.githubusercontent.com\u002fcodeforamerica\u002fclick_that_hood\u002fmaster\u002fpublic\u002fdata\u002fbrazil-states.geojson","hovertemplate":"uf=%{location}\u003cbr\u003eTaxa de Cancelamento (%)=%{z}\u003cextra\u003e\u003c\u002fextra\u003e","locations":["AC","AL","AM","AP","BA","CE","DF","ES","GO","MA","MG","MS","MT","PA","PB","PE","PI","PR","RJ","RN","RO","RR","RS","SC","SE","SP","TO"],"name":"","z":{"dtype":"f8","bdata":"NIVAUwg0SUBXjx0BOshNQJ+BqHRkD1BAAAAAAAAASUBNAourotNIQILFPLCYB05ANYuct8A5R0DdYun5VlxSQHnOqNJO4U9AxOQKYnIFSUDRwuyiRGRRQErXJSzeLU5AlgnVKP2HS0ATO7ETOzFPQJIDzru6yU5ALJ+I2Vx6R0DT3AV\u002fFadRQHopETzSX1FAneZVY7T+TUDTAa5pbLFNQJq+ShibBU9ASpIkSZLkSUBywb7qQUpQQI7cyI3cyFBA0dFIHNUoS0D4w4z8pnpPQLDc0wjLPUtA"},"type":"choropleth"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"geo":{"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"center":{},"scope":"south america","fitbounds":"locations","visible":false},"coloraxis":{"colorbar":{"title":{"text":"Taxa de Cancelamento (%)"}},"colorscale":[[0.0,"rgb(255,255,204)"],[0.125,"rgb(255,237,160)"],[0.25,"rgb(254,217,118)"],[0.375,"rgb(254,178,76)"],[0.5,"rgb(253,141,60)"],[0.625,"rgb(252,78,42)"],[0.75,"rgb(227,26,28)"],[0.875,"rgb(189,0,38)"],[1.0,"rgb(128,0,38)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Taxa de Cancelamento por UF (%)"},"margin":{"r":0,"t":40,"l":0,"b":0}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('12f4136d-f2fb-4cdb-bf3d-01a6f408b2a8');
+var gd = document.getElementById('7118c76e-655b-4e30-957c-d3d8dda317e1');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -840,7 +843,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-inadimplência" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-inadimplência">Cancelamento por inadimplência</h2>
-<div id="b4fe9090" class="cell" data-execution_count="11">
+<div id="3e45c38b" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>inadimplencia <span class="op">=</span> pd.crosstab(df[<span class="st">'inadimplente'</span>], df[<span class="st">'cancelado'</span>], normalize<span class="op">=</span><span class="st">'index'</span>) <span class="op">*</span> <span class="dv">100</span></span>
@@ -867,12 +870,12 @@ if (outputEl) {{
 <style type="text/css">
 </style>
 
-<table id="T_faf9c" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_199d7" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_faf9c_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_faf9c_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_199d7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_199d7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 <tr class="odd">
 <th class="index_name level0" data-quarto-table-cell-role="th">inadimplente</th>
@@ -882,14 +885,14 @@ if (outputEl) {{
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_faf9c_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">NÃO</td>
-<td id="T_faf9c_row0_col0" class="data row0 col0">51,90</td>
-<td id="T_faf9c_row0_col1" class="data row0 col1">48,10</td>
+<td id="T_199d7_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">NÃO</td>
+<td id="T_199d7_row0_col0" class="data row0 col0">51,81</td>
+<td id="T_199d7_row0_col1" class="data row0 col1">48,19</td>
 </tr>
 <tr class="even">
-<td id="T_faf9c_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">SIM</td>
-<td id="T_faf9c_row1_col0" class="data row1 col0">12,00</td>
-<td id="T_faf9c_row1_col1" class="data row1 col1">88,00</td>
+<td id="T_199d7_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">SIM</td>
+<td id="T_199d7_row1_col0" class="data row1 col0">12,06</td>
+<td id="T_199d7_row1_col1" class="data row1 col1">87,94</td>
 </tr>
 </tbody>
 </table>
@@ -908,7 +911,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-quantidade-de-consultas-do-cliente-nos-últimos-12-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-quantidade-de-consultas-do-cliente-nos-últimos-12-meses">Cancelamento por quantidade de consultas do cliente nos últimos 12 meses</h2>
-<div id="34557e6e" class="cell" data-execution_count="12">
+<div id="31783003" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>qtd_consultas <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'qtd_consultas_12m'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -943,54 +946,54 @@ if (outputEl) {{
 <style type="text/css">
 </style>
 
-<table id="T_86657" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_44a58" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_86657_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_86657_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_44a58_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_44a58_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_86657_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_86657_row0_col0" class="data row0 col0">39.997,00</td>
-<td id="T_86657_row0_col1" class="data row0 col1">57.081,00</td>
+<td id="T_44a58_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_44a58_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_44a58_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_86657_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_86657_row1_col0" class="data row1 col0">12,11</td>
-<td id="T_86657_row1_col1" class="data row1 col1">12,07</td>
+<td id="T_44a58_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_44a58_row1_col0" class="data row1 col0">12,09</td>
+<td id="T_44a58_row1_col1" class="data row1 col1">12,07</td>
 </tr>
 <tr class="odd">
-<td id="T_86657_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_86657_row2_col0" class="data row2 col0">10,70</td>
-<td id="T_86657_row2_col1" class="data row2 col1">10,79</td>
+<td id="T_44a58_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_44a58_row2_col0" class="data row2 col0">10,69</td>
+<td id="T_44a58_row2_col1" class="data row2 col1">10,80</td>
 </tr>
 <tr class="even">
-<td id="T_86657_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_86657_row3_col0" class="data row3 col0">1,00</td>
-<td id="T_86657_row3_col1" class="data row3 col1">1,00</td>
+<td id="T_44a58_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_44a58_row3_col0" class="data row3 col0">1,00</td>
+<td id="T_44a58_row3_col1" class="data row3 col1">1,00</td>
 </tr>
 <tr class="odd">
-<td id="T_86657_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_86657_row4_col0" class="data row4 col0">5,00</td>
-<td id="T_86657_row4_col1" class="data row4 col1">5,00</td>
+<td id="T_44a58_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_44a58_row4_col0" class="data row4 col0">5,00</td>
+<td id="T_44a58_row4_col1" class="data row4 col1">5,00</td>
 </tr>
 <tr class="even">
-<td id="T_86657_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_86657_row5_col0" class="data row5 col0">9,00</td>
-<td id="T_86657_row5_col1" class="data row5 col1">9,00</td>
+<td id="T_44a58_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_44a58_row5_col0" class="data row5 col0">9,00</td>
+<td id="T_44a58_row5_col1" class="data row5 col1">9,00</td>
 </tr>
 <tr class="odd">
-<td id="T_86657_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_86657_row6_col0" class="data row6 col0">16,00</td>
-<td id="T_86657_row6_col1" class="data row6 col1">15,00</td>
+<td id="T_44a58_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_44a58_row6_col0" class="data row6 col0">15,00</td>
+<td id="T_44a58_row6_col1" class="data row6 col1">15,00</td>
 </tr>
 <tr class="even">
-<td id="T_86657_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_86657_row7_col0" class="data row7 col0">60,00</td>
-<td id="T_86657_row7_col1" class="data row7 col1">60,00</td>
+<td id="T_44a58_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_44a58_row7_col0" class="data row7 col0">60,00</td>
+<td id="T_44a58_row7_col1" class="data row7 col1">60,00</td>
 </tr>
 </tbody>
 </table>
@@ -1008,7 +1011,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-quantidade-de-internações-do-cliente-nos-últimos-12-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-quantidade-de-internações-do-cliente-nos-últimos-12-meses">Cancelamento por quantidade de internações do cliente nos últimos 12 meses</h2>
-<div id="931a3654" class="cell" data-execution_count="13">
+<div id="b45ce23c" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>qtd_internacoes <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed <span class="op">=</span> <span class="va">True</span>)[<span class="st">'qtd_internacoes_12m'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -1044,54 +1047,54 @@ if (outputEl) {{
 <style type="text/css">
 </style>
 
-<table id="T_7d3e1" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_fb55e" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_7d3e1_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_7d3e1_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_fb55e_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_fb55e_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_7d3e1_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_7d3e1_row0_col0" class="data row0 col0">39.997,00</td>
-<td id="T_7d3e1_row0_col1" class="data row0 col1">57.081,00</td>
+<td id="T_fb55e_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_fb55e_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_fb55e_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_7d3e1_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_7d3e1_row1_col0" class="data row1 col0">1,30</td>
-<td id="T_7d3e1_row1_col1" class="data row1 col1">1,30</td>
+<td id="T_fb55e_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_fb55e_row1_col0" class="data row1 col0">1,30</td>
+<td id="T_fb55e_row1_col1" class="data row1 col1">1,30</td>
 </tr>
 <tr class="odd">
-<td id="T_7d3e1_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_7d3e1_row2_col0" class="data row2 col0">1,29</td>
-<td id="T_7d3e1_row2_col1" class="data row2 col1">1,30</td>
+<td id="T_fb55e_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_fb55e_row2_col0" class="data row2 col0">1,29</td>
+<td id="T_fb55e_row2_col1" class="data row2 col1">1,30</td>
 </tr>
 <tr class="even">
-<td id="T_7d3e1_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_7d3e1_row3_col0" class="data row3 col0">0,00</td>
-<td id="T_7d3e1_row3_col1" class="data row3 col1">0,00</td>
+<td id="T_fb55e_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_fb55e_row3_col0" class="data row3 col0">0,00</td>
+<td id="T_fb55e_row3_col1" class="data row3 col1">0,00</td>
 </tr>
 <tr class="odd">
-<td id="T_7d3e1_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_7d3e1_row4_col0" class="data row4 col0">1,00</td>
-<td id="T_7d3e1_row4_col1" class="data row4 col1">1,00</td>
+<td id="T_fb55e_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_fb55e_row4_col0" class="data row4 col0">1,00</td>
+<td id="T_fb55e_row4_col1" class="data row4 col1">1,00</td>
 </tr>
 <tr class="even">
-<td id="T_7d3e1_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_7d3e1_row5_col0" class="data row5 col0">1,00</td>
-<td id="T_7d3e1_row5_col1" class="data row5 col1">1,00</td>
+<td id="T_fb55e_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_fb55e_row5_col0" class="data row5 col0">1,00</td>
+<td id="T_fb55e_row5_col1" class="data row5 col1">1,00</td>
 </tr>
 <tr class="odd">
-<td id="T_7d3e1_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_7d3e1_row6_col0" class="data row6 col0">2,00</td>
-<td id="T_7d3e1_row6_col1" class="data row6 col1">2,00</td>
+<td id="T_fb55e_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_fb55e_row6_col0" class="data row6 col0">2,00</td>
+<td id="T_fb55e_row6_col1" class="data row6 col1">2,00</td>
 </tr>
 <tr class="even">
-<td id="T_7d3e1_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_7d3e1_row7_col0" class="data row7 col0">9,00</td>
-<td id="T_7d3e1_row7_col1" class="data row7 col1">9,00</td>
+<td id="T_fb55e_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_fb55e_row7_col0" class="data row7 col0">9,00</td>
+<td id="T_fb55e_row7_col1" class="data row7 col1">9,00</td>
 </tr>
 </tbody>
 </table>
@@ -1109,7 +1112,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-valor-da-mensalidade-do-plano" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-valor-da-mensalidade-do-plano">Cancelamento por valor da mensalidade do plano</h2>
-<div id="8e621663" class="cell" data-execution_count="14">
+<div id="e8a33bfa" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>valor_mensalidade <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed <span class="op">=</span> <span class="va">True</span>)[<span class="st">'valor_mensalidade'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -1135,54 +1138,54 @@ if (outputEl) {{
 <style type="text/css">
 </style>
 
-<table id="T_9f369" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_92f90" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_9f369_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_9f369_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_92f90_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_92f90_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_9f369_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_9f369_row0_col0" class="data row0 col0">25.311,00</td>
-<td id="T_9f369_row0_col1" class="data row0 col1">36.053,00</td>
+<td id="T_92f90_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_92f90_row0_col0" class="data row0 col0">23.644,00</td>
+<td id="T_92f90_row0_col1" class="data row0 col1">33.731,00</td>
 </tr>
 <tr class="even">
-<td id="T_9f369_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_9f369_row1_col0" class="data row1 col0">898,37</td>
-<td id="T_9f369_row1_col1" class="data row1 col1">928,68</td>
+<td id="T_92f90_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_92f90_row1_col0" class="data row1 col0">898,77</td>
+<td id="T_92f90_row1_col1" class="data row1 col1">928,94</td>
 </tr>
 <tr class="odd">
-<td id="T_9f369_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_9f369_row2_col0" class="data row2 col0">349,46</td>
-<td id="T_9f369_row2_col1" class="data row2 col1">426,50</td>
+<td id="T_92f90_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_92f90_row2_col0" class="data row2 col0">349,60</td>
+<td id="T_92f90_row2_col1" class="data row2 col1">426,84</td>
 </tr>
 <tr class="even">
-<td id="T_9f369_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_9f369_row3_col0" class="data row3 col0">550,00</td>
-<td id="T_9f369_row3_col1" class="data row3 col1">550,00</td>
+<td id="T_92f90_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_92f90_row3_col0" class="data row3 col0">550,00</td>
+<td id="T_92f90_row3_col1" class="data row3 col1">550,00</td>
 </tr>
 <tr class="odd">
-<td id="T_9f369_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_9f369_row4_col0" class="data row4 col0">550,00</td>
-<td id="T_9f369_row4_col1" class="data row4 col1">550,00</td>
+<td id="T_92f90_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_92f90_row4_col0" class="data row4 col0">550,00</td>
+<td id="T_92f90_row4_col1" class="data row4 col1">550,00</td>
 </tr>
 <tr class="even">
-<td id="T_9f369_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_9f369_row5_col0" class="data row5 col0">720,00</td>
-<td id="T_9f369_row5_col1" class="data row5 col1">720,00</td>
+<td id="T_92f90_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_92f90_row5_col0" class="data row5 col0">720,00</td>
+<td id="T_92f90_row5_col1" class="data row5 col1">720,00</td>
 </tr>
 <tr class="odd">
-<td id="T_9f369_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_9f369_row6_col0" class="data row6 col0">1.030,00</td>
-<td id="T_9f369_row6_col1" class="data row6 col1">1.030,00</td>
+<td id="T_92f90_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_92f90_row6_col0" class="data row6 col0">1.030,00</td>
+<td id="T_92f90_row6_col1" class="data row6 col1">1.030,00</td>
 </tr>
 <tr class="even">
-<td id="T_9f369_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_9f369_row7_col0" class="data row7 col0">1.870,00</td>
-<td id="T_9f369_row7_col1" class="data row7 col1">1.870,00</td>
+<td id="T_92f90_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_92f90_row7_col0" class="data row7 col0">1.870,00</td>
+<td id="T_92f90_row7_col1" class="data row7 col1">1.870,00</td>
 </tr>
 </tbody>
 </table>
@@ -1200,7 +1203,7 @@ if (outputEl) {{
 </section>
 <section id="renda-por-inadimplência-por-cancelamento" class="level2">
 <h2 class="anchored" data-anchor-id="renda-por-inadimplência-por-cancelamento">Renda por inadimplência por cancelamento</h2>
-<div id="65c97dbf" class="cell" data-execution_count="15">
+<div id="f78032c5" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_prop <span class="op">=</span> (df.groupby([<span class="st">'faixa_renda'</span>, <span class="st">'inadimplente'</span>, <span class="st">'cancelado'</span>], observed <span class="op">=</span> <span class="va">False</span>)</span>
@@ -1264,7 +1267,7 @@ if (outputEl) {{
 <p>Comparando os grupos de clientes que cancelaram ou não o plano utilizando análises bivariadas, nota-se que dos dados fornecidos, apenas alguns apresentam indícios de significância na determinação do cancelamento ou não do plano.</p>
 <p>As variáveis mais significativas — visualmente — foram renda, tempo em meses do plano, unidade da federação do cliente e inadimplência.</p>
 <p>Além disso, nota-se interação entre a faixa de renda e o inadimplento para explicar o cancelamento do plano dentre os clientes de alta renda. A maior parte dos clientes de alta renda que cancelaram o plano estavam inadimplentes.</p>
-<p>Testes estatísticos para diferença de média ou mediana nos grupos não são adequados, pelo tamanho do conjunto de dados (97.078 instâncias, após remoção de dados absurdos), pois seriam viesados pelo tamanho amostral e detectariam significância em diversos casos pouco significativos.</p>
+<p>Testes estatísticos para diferença de média ou mediana nos grupos não são adequados, pelo tamanho do conjunto de dados (90.774 instâncias, após remoção de dados absurdos), pois seriam viesados pelo tamanho amostral e detectariam significância em diversos casos pouco significativos.</p>
 <p>O agrupamento das unidades da federação em regiões (Norte, Nordeste, Sudeste, Centro-Oeste e Sul) manteria a significância da diferença entre os grupos, entretanto poderia mascarar algumas heterogeneidades regionais (Como o estado do Piauí, que difere significativamente da tendência dos demais estados do Nordeste). Este agrupamento será realizado na modelagem pois a quantidade de instâncias é insuficiente na estratificação dos grupos para algumas unidades da federação.</p>
 <p>Nota-se portanto que a alta taxa de churn aparenta estar mais relacionada com o perfil do cliente do que com o produto da empresa em si, visto que covariáveis mais relacionadas ao produto, como quantidade de consultas, quantidade de internações e valor da mensalidade não apresentaram diferenças entre clientes que cancelaram ou não o plano. Isto pode indicar maior necessidade de compreensão e ações relacionadas ao perfil do cliente do que a readequação do produto oferecido.</p>
 </section>
@@ -1291,13 +1294,13 @@ if (outputEl) {{
 <section id="o-modelo-geral" class="level2">
 <h2 class="anchored" data-anchor-id="o-modelo-geral">O modelo geral</h2>
 <p>Será considerada para modelagem a variável dependente “cancelado” (SIM/NÃO) como resposta, sendo explicada pelas demais covariáveis selecionadas, à excessão de: id_cliente, titularidade, sexo e unidade da federação.</p>
-<p>id_cliente é simplesmente a identificação única de cada cliente, não havendo sentido em sua inserção para modelagem; sexo por problemas de valores ausentes e baixo indicativo de significância na análise exploratória; titularidade pela ausência de variância; e unidade da federação pelo baixo número de instâncias para algumas unidades da federação, o que confundia o modelo — para esta, optou-se pela feature agregada Região (regiao).</p>
+<p>id_cliente é simplesmente a identificação única de cada cliente, não havendo sentido em sua inserção para modelagem (servindo apenas para remoção de duplicatas); sexo por problemas de valores ausentes e baixo indicativo de significância na análise exploratória; titularidade pela ausência de variância; e unidade da federação pelo baixo número de instâncias para algumas unidades da federação, o que confundia o modelo — para esta, optou-se pela feature agregada Região (regiao).</p>
 </section>
 <section id="pré-processamento" class="level2">
 <h2 class="anchored" data-anchor-id="pré-processamento">Pré processamento</h2>
 <p>Uma camada adicional de filtragem foi adicionada nesta etapa: a remoção das instâncias cuja renda observada foi “Média”. Isto por que, conforme observado na etapa exploratória, existe a separação perfeita — nenhum cliente de renda média cancelou o plano. Isto certamente levaria a um modelo com problemas de generalização, visto que quase certamente um cliente de renda média sempre seria classificado como não cancelado, ainda que no futuro possa haver algum cliente de renda média que por ventura cancele o plano. Para além disso, esta informação certamente distorceria os parâmetros dos modelos, inclusive podendo levar modelos mais sensíveis à separação perfeita — como a regressão logística — a ter problemas de convergência. Como a remoção destas observações ainda preserva um volume de dados extremamente satisfatório, julgo ser seguro simplesmente optar por não inseri-los no modelo.</p>
 <p>Outras informações identificadas como potencialmente não relevantes na etapa exploratória serão mantidas nesta etapa, podendo ser removidas na comparação de modelos posteriormente.</p>
-<div id="6afb5e4b" class="cell" data-execution_count="16">
+<div id="540554d5" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">'id_cliente'</span>, <span class="st">'titularidade'</span>, <span class="st">'sexo'</span>, <span class="st">'uf'</span>])</span>
@@ -1348,7 +1351,7 @@ if (outputEl) {{
 <section id="definindo-modelos" class="level2">
 <h2 class="anchored" data-anchor-id="definindo-modelos">Definindo modelos</h2>
 <p>Diversos modelos podem ser escolhidos para a tarefa de classificação binária. Naive Bayes, regressão logística, árvores de decisão, florestas aleatórias, árvores com bagging, XGBoost, Gradient Boost e demais modelos. Além disso, é crucial realizar o fine tuning dos parâmetros de cada modelo, visto que cada um deles contém diversos hiperparâmetros, e a combinação ótima em geral só pode ser encontrada por força bruta. Diversas estratégias podem ser pensadas para teste de hiperparâmetros, como um grid plano, um quadrado latino, uma busca aleatória, varreduras bayesianas, etc. Em geral, opta-se pelo método mais simples — a busca plana — e testa-se métodos mais sofisticados caso hiperparâmetros ideais não sejam encontrados, ou se houver problema de tempo de execução das buscas no grid.</p>
-<div id="f782a897" class="cell" data-execution_count="17">
+<div id="3fc7586c" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> {</span>
@@ -1395,7 +1398,7 @@ if (outputEl) {{
 </section>
 <section id="validação-cruzada-ajuste-dos-modelos-e-tuning-de-hiperparâmetros" class="level2">
 <h2 class="anchored" data-anchor-id="validação-cruzada-ajuste-dos-modelos-e-tuning-de-hiperparâmetros">Validação cruzada, ajuste dos modelos e tuning de hiperparâmetros</h2>
-<div id="0644e967" class="cell" data-execution_count="18">
+<div id="44387100" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> {}</span>
@@ -1444,7 +1447,7 @@ if (outputEl) {{
 <p>A validação é uma etapa crucial na modelagem. Os modelos sempre buscarão melhor ajuste possível aos dados, entretanto este ajuste pode significar a compreensão perfeita dos dados que forem a eles fornecidos, porém na avaliação de um dado futuro posterior, este modelo pode incorrer em erros em função de sobreajuste (overfitting), isto é, o modelo aprende exatamente os padrões dos dados que foram fornecidos, mas é incapaz de generalizar os resultados para novas observações. Para isso, uma das estratégias é separar o conjunto de dados em treino e teste, em geral utilizando 80% dos dados para treino e 20% dos dados para teste. Desta forma, as métricas do modelo serão avaliadas no conjunto de testes, conjunto este não utilizado para ajuste do modelo, para verificar o quão bem o modelo compreende padrões para além de decorar os dados que a ele foram fornecidos.</p>
 <p>A validação cruzada é uma extensão desta ideia. Não iremos apenas ajustar os modelos, mas também selecionar as melhores combinações possíveis de hiperparâmetros deles. Para isso, podemos dividir o conjunto de dados em treino, teste e validação. Porém, quanto mais separações fazemos, menos dados temos para treino, e prescindir de uma boa quantidade destes pode não ser viável em algumas situações. Para isso, esta metodologia fragmenta o conjunto de treino em v segmentos (v-folds), utilizando uma parte desta para avaliação de hiperparâmetro durante o ajuste do modelo, e as 4 partes restantes para teste. Além disso, a implementação embaralha e troca a ordem desses segmentos a cada ajuste, garantindo a confiabilidade das métricas produzidas.</p>
 <p>Desta forma, podemos avaliar o modelo, testar conjuntos de hiperparâmetros e testar a performance do modelo utilizando uma abordagem segura, confiável e crível.</p>
-<div id="e5e73b5d" class="cell" data-execution_count="19">
+<div id="eb7aeec5" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> []</span>
@@ -1493,54 +1496,54 @@ if (outputEl) {{
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>Random_Forest</td>
-<td>94.74%</td>
-<td>0.988</td>
-<td>0.966</td>
-<td>97.19%</td>
-<td>96.03%</td>
-<td>90.12%</td>
-</tr>
-<tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>Bagging_Tree</td>
-<td>94.58%</td>
+<td>94.74%</td>
 <td>0.987</td>
-<td>0.965</td>
-<td>97.11%</td>
-<td>95.91%</td>
-<td>89.84%</td>
+<td>0.966</td>
+<td>96.92%</td>
+<td>96.32%</td>
+<td>89.10%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Random_Forest</td>
+<td>94.67%</td>
+<td>0.987</td>
+<td>0.966</td>
+<td>97.35%</td>
+<td>95.78%</td>
+<td>90.70%</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>Decision_Tree</td>
-<td>94.48%</td>
-<td>0.984</td>
+<td>94.32%</td>
+<td>0.982</td>
 <td>0.964</td>
-<td>97.02%</td>
-<td>95.87%</td>
-<td>89.53%</td>
+<td>96.67%</td>
+<td>96.03%</td>
+<td>88.23%</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>Logistic_Regression</td>
-<td>93.55%</td>
-<td>0.984</td>
-<td>0.959</td>
-<td>96.02%</td>
-<td>95.70%</td>
-<td>85.88%</td>
+<td>93.96%</td>
+<td>0.985</td>
+<td>0.961</td>
+<td>96.32%</td>
+<td>95.94%</td>
+<td>86.93%</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>Naive_Bayes</td>
-<td>92.96%</td>
-<td>0.978</td>
-<td>0.954</td>
-<td>96.89%</td>
-<td>93.99%</td>
-<td>89.28%</td>
+<td>93.25%</td>
+<td>0.979</td>
+<td>0.956</td>
+<td>96.90%</td>
+<td>94.37%</td>
+<td>89.23%</td>
 </tr>
 </tbody>
 </table>
@@ -1550,7 +1553,7 @@ if (outputEl) {{
 </div>
 </div>
 <p>O Quadro acima mostra as principais métricas associadas aos modelos testados. Nota-se que todos os modelos performaram relativamente bem em todas as métricas selecionadas, com destaque para a área sob a curva (ROC AUC). Isto indica que qualquer um dos modelos poderia ser utilizado para previsão, com F1-Score acima de 95%, que em geral é a métrica mais importante para avaliação de churn.</p>
-<div id="7ec704f7" class="cell" data-execution_count="20">
+<div id="d0ef7d1f" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_search_results(results):</span>
@@ -1589,7 +1592,7 @@ if (outputEl) {{
 </section>
 <section id="análise-de-importâncias-dos-melhores-modelos" class="level2">
 <h2 class="anchored" data-anchor-id="análise-de-importâncias-dos-melhores-modelos">Análise de importâncias dos melhores modelos</h2>
-<div id="7fa25645" class="cell" data-execution_count="21">
+<div id="e615a82e" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_feature_names_from_column_transformer(column_transformer):</span>
@@ -1679,7 +1682,7 @@ if (outputEl) {{
 <li><p>Demais covariáveis indicadas como pouco significativas na etapa de análise exploratória serão desconsideradas.</p></li>
 </ul>
 <p>Desta forma, iremos ajustar o modelo explicando o cancelamento baseado em categorias da nova feature tempo de plano, inadimplência combinada com renda e região (agrupamento de unidades da federação segundo classificação do IBGE).</p>
-<div id="e430c2d4" class="cell" data-execution_count="22">
+<div id="01dbfb35" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>tempo_plano_transformer <span class="op">=</span> Pipeline([</span>
@@ -1744,7 +1747,7 @@ if (outputEl) {{
 </div>
 <section id="métricas-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="métricas-do-modelo-interpretável">Métricas do modelo interpretável</h3>
-<div id="94ff852c" class="cell" data-execution_count="23">
+<div id="6bdd4ec8" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
@@ -1780,27 +1783,27 @@ if (outputEl) {{
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>Acurácia</td>
-<td>93.0%</td>
+<td>93.2%</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>Precisão</td>
-<td>97.1%</td>
+<td>97.2%</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>Sensibilidade (Recall)</td>
-<td>93.9%</td>
+<td>94.1%</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>Especificidade</td>
-<td>90.0%</td>
+<td>90.2%</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>F1-Score</td>
-<td>0.954</td>
+<td>0.956</td>
 </tr>
 </tbody>
 </table>
@@ -1812,7 +1815,7 @@ if (outputEl) {{
 </section>
 <section id="matriz-de-confusão-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="matriz-de-confusão-do-modelo-interpretável">Matriz de confusão do modelo interpretável</h3>
-<div id="fda8c6d6" class="cell" data-execution_count="24">
+<div id="d194678e" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
@@ -1837,7 +1840,7 @@ if (outputEl) {{
 </section>
 <section id="curva-roc-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="curva-roc-do-modelo-interpretável">Curva ROC do modelo interpretável</h3>
-<div id="e756eaa5" class="cell" data-execution_count="25">
+<div id="3e01e97b" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
@@ -1863,7 +1866,7 @@ if (outputEl) {{
 <p>O principal objetivo deste modelo será a extração de interpretação dos parâmetros. Como ajustou-se um modelo mais parcimonioso, é esperado que suas métricas sejam inferiores ao modelo saturado ajustado anteriormente. Isto é, para previsão, os modelos anteriores são ligeiramente melhores do que o modelo ajustado nesta etapa. Isso não significa que o modelo possa ser ruim: suas métricas devem ainda ser satisfatórias.</p>
 <p>Conforme observado na análise de diagnóstico acima, como valores das principais métricas, área sob a curva e matriz de confusão, notamos uma ligeira piora de algumas métricas em relação ao modelo saturado, em especial na precisão de classificação de verdadeiros negativos. Entretanto, observando o conjunto das métricas em geral, pode-se dizer que este modelo se ajustou bem aos dados, em especial observando as métricas de F1-Score e área sob a curva — ambas performando acima de 95% — que são essenciais neste contexto.</p>
 <p>Desta forma, podemos ter segurança na interpretação dos parâmetros deste modelo, e comunicação de seus resultados para as outras áreas da empresa</p>
-<div id="a6b6f1d1" class="cell" data-execution_count="26">
+<div id="af1a2310" class="cell" data-execution_count="25">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>logreg <span class="op">=</span> model.named_steps[<span class="st">'classifier'</span>]</span>
@@ -1916,16 +1919,16 @@ if (outputEl) {{
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                      Variável  Coeficiente  Erro Padrão  z-value p-value  Odds Ratio
-    Baixa renda + Inadimplente       4.8754       0.0773  63.1022 &lt;0.0001    131.0249
-Baixa renda + Não inadimplente       2.9274       0.0592  49.4583 &lt;0.0001     18.6784
-          Tempo: 205-253 meses       1.9157       0.7688   2.4917  0.0127      6.7918
-     Alta renda + Inadimplente       1.8942       0.1118  16.9457 &lt;0.0001      6.6469
-                    Região Sul       0.7311       0.0839   8.7098 &lt;0.0001      2.0774
-                Região Sudeste       0.5648       0.0637   8.8646 &lt;0.0001      1.7591
-                  Região Norte       0.2846       0.1371   2.0763  0.0379      1.3292
-               Região Nordeste      -0.0978       0.0649  -1.5066  0.1319      0.9069
-          Tempo: 253-291 meses      -4.6599       0.2640 -17.6527 &lt;0.0001      0.0095
-             Tempo: &gt;291 meses      -8.0261       0.2638 -30.4252 &lt;0.0001      0.0003</code></pre>
+    Baixa renda + Inadimplente       4.8816       0.0801  60.9565 &lt;0.0001    131.8379
+Baixa renda + Não inadimplente       2.9060       0.0608  47.7791 &lt;0.0001     18.2839
+          Tempo: 205-253 meses       1.9264       0.7675   2.5101  0.0121      6.8648
+     Alta renda + Inadimplente       1.7975       0.1147  15.6764 &lt;0.0001      6.0344
+                    Região Sul       0.7726       0.0863   8.9543 &lt;0.0001      2.1654
+                Região Sudeste       0.5548       0.0656   8.4537 &lt;0.0001      1.7416
+                  Região Norte       0.2458       0.1386   1.7728  0.0763      1.2786
+               Região Nordeste      -0.1179       0.0669  -1.7632  0.0779      0.8888
+          Tempo: 253-291 meses      -4.6209       0.2655 -17.4069 &lt;0.0001      0.0098
+             Tempo: &gt;291 meses      -7.9566       0.2653 -29.9950 &lt;0.0001      0.0004</code></pre>
 </div>
 </div>
 </section>
@@ -1941,14 +1944,14 @@ Baixa renda + Não inadimplente       2.9274       0.0592  49.4583 &lt;0.0001   
 <section id="resultados" class="level1">
 <h1>Resultados</h1>
 <p>A modelagem de dados confirma as tendências observadas na análise exploratória de dados. De fato, clientes com maior tempo de permanência no plano são muito menos propensos a cancelar. Esta é a informação considerada mais importante por todos os modelos analisados. A inadimplência do cliente, quando combinada a sua renda, também constitui um fator altamente explicativo, em que clientes inadimplentes tendem a cancelar mais o plano, em especial os clientes de baixa renda. Existe ainda um fator regional para algumas regiões, posto que clientes das regiões sul e sudeste têm mais propensão a cancelar o plano.</p>
-<p>Todos os modelos selecionados performaram bem. Para análise preditiva, o modelo de random forest saturado é ligeiramente melhor que o modelo logístico, sendo portanto mais indicado para prever o risco de cancelamento de clientes. Com acurácia de 94,73%, esperamos que a grande massa de suas previsões estejam de acordo com o valor esperado na realidade.</p>
-<p>Por outro lado, o modelo logístico obteve também resultados satisfatórios, sendo portanto seguro interpretar seus parâmetros com objetivo de extrair insights relevantes para formulação de estratégias de negócio direcionadas para perfis de cliente específicos. Com acurácia de 93%, em especial para clientes que não cancelaram o plano, temos segurança suficiente da lastreabilidade de seus parâmetros na realidade.</p>
+<p>Todos os modelos selecionados performaram bem. Para análise preditiva, o modelo de random forest saturado é ligeiramente melhor que o modelo logístico, sendo portanto mais indicado para prever o risco de cancelamento de clientes. Com acurácia de 94,68%, esperamos que a grande massa de suas previsões estejam de acordo com o valor esperado na realidade.</p>
+<p>Por outro lado, o modelo logístico obteve também resultados satisfatórios, sendo portanto seguro interpretar seus parâmetros com objetivo de extrair insights relevantes para formulação de estratégias de negócio direcionadas para perfis de cliente específicos. Com acurácia de 93,2%, em especial para clientes que não cancelaram o plano, temos segurança suficiente da lastreabilidade de seus parâmetros na realidade.</p>
 </section>
 <section id="conclusão" class="level1">
 <h1>Conclusão</h1>
 <p>Conforme especificado, o objetivo desta análise é estimar quais beneficiários têm maior risco de evasão nos próximos 12 meses, dado um modelo estatístico preditivo. Desta forma, podemos utilizar o modelo de random forest para realizar esta estimação.</p>
 <p><strong>Distribuição de clientes por faixa de risco de cancelamento:</strong></p>
-<div id="b3f87204" class="cell" data-execution_count="27">
+<div id="ef867b5e" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>rf_model <span class="op">=</span> results[<span class="st">'Random_Forest'</span>][<span class="st">'best_model'</span>]</span>
@@ -2004,32 +2007,32 @@ Baixa renda + Não inadimplente       2.9274       0.0592  49.4583 &lt;0.0001   
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>Até 10%</td>
-<td>10.157</td>
+<td>7.145</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>10% - 25%</td>
-<td>3.169</td>
+<td>3.595</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>25% - 50%</td>
-<td>3.166</td>
+<td>5.181</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>50% - 75%</td>
-<td>2.729</td>
+<td>2.820</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>75% - 90%</td>
-<td>2.001</td>
+<td>2.111</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>Acima de 90%</td>
-<td>51.901</td>
+<td>47.566</td>
 </tr>
 </tbody>
 </table>
@@ -2038,7 +2041,7 @@ Baixa renda + Não inadimplente       2.9274       0.0592  49.4583 &lt;0.0001   
 </div>
 </div>
 </div>
-<p>Note que isto se refere aos clientes que foram de fato inseridos no modelo (seja para treino, seja para teste). Deve-se observar que existem ainda 23.955 clientes removidos do modelo, não descritos na tabela acima, por serem classificados como renda média. Para estes clientes, como não houve cancelamento algum, pode-se dizer que o risco de cancelamento é zero ou próximo de zero.</p>
+<p>Note que isto se refere aos clientes que foram de fato inseridos no modelo (seja para treino, seja para teste). Deve-se observar que existem ainda 22.356 clientes removidos do modelo, não descritos na tabela acima, por serem classificados como renda média. Para estes clientes, como não houve cancelamento algum, pode-se dizer que o risco de cancelamento é zero ou próximo de zero.</p>
 <p>Pode-se inferir ainda, dos resultados do modelo logístico, que os clientes com maior risco de cancelamento são clientes de baixa renda, inadimplentes ou não, com baixo tempo de permanência no plano.</p>
 <p>Destas informações, nota-se que o produto oferecido pela empresa parece ser adequado, entretanto pode existir uma falta de alinhamento com as características de alguns grupos de clientes. Recomenda-se então ajustes no produto no sentido de melhor abarcar perfis diversos de clientes.</p>
 <p>Algumas ações estratégicas que podem ser sugeridas são:</p>
