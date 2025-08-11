@@ -40,7 +40,7 @@ Para executar esta análise, utilizou-se a linguagem de programação Python, ve
 
 A criação e execução do jupyter notebook foi realizada no Visual Studio Code, enquanto este relatório técnico foi elaborado com Quarto, por meio da IDE RStudio. Para organização do projeto, criou-se um diretório privado no GitHub com os arquivos separados em pastas específicas, garantindo a inteligibilidade  do projeto.
 
-Para o escopo desta análise, fora fornecido um conjunto de dados com 101.063 observações (instâncias) e 12 variáveis (características). Dessas características, encontra-se a variável alvo (ou variável resposta — ou, simplesmente, variável), que corresponde ao status de cancelamento do cliente (churn). Conjuntamente, encontrava-se 10 variáveis explicativas (ou covariáveis), sendo elas: titularidade, faixa de renda, idade na adesão, tempo de plano em meses, sexo, quantidade de consultas, quantidade de internações, valor da mensalidade, unidade da federação e status de inadimplência do cliente. Essas covariáveis foram utilizadas para explicação do cancelamento, conforme seu potencial explicativo. Encontrava-se ainda uma coluna de identificação única de cada cliente, não utilizada nesta análise por não conter valor preditivo.
+Para o escopo desta análise, fora fornecido um conjunto de dados com 101.063 observações (instâncias) e 12 variáveis (características). Alguns clientes, identificados pelo seu id único, apareciam mais de uma vez na tabela, configurando duplicata. Dessa forma, foram removidas as duplicidades, mantendo apenas uma observação por cliente. Dessas características, encontra-se a variável alvo (ou variável resposta — ou, simplesmente, variável), que corresponde ao status de cancelamento do cliente (churn). Conjuntamente, encontrava-se 10 variáveis explicativas (ou covariáveis), sendo elas: titularidade, faixa de renda, idade na adesão, tempo de plano em meses, sexo, quantidade de consultas, quantidade de internações, valor da mensalidade, unidade da federação e status de inadimplência do cliente. Essas covariáveis foram utilizadas para explicação do cancelamento, conforme seu potencial explicativo. Encontrava-se ainda uma coluna de identificação única de cada cliente, não utilizada nesta análise por não conter valor preditivo.
 
 A quantidade de instâncias fornecidas é mais que suficiente para realizar modelagem preditiva. No contexto do estudo de dados, apesar de não existir um número analítico (estando este entre 1.000 e 10.000 instâncias), técnicas estatísticas clássicas como teste t para diferença de médias, teste não paramétrico de Kruskal-Wallis e outros utilizados para comparar grupos, tornam-se excessivamente sensíveis, identificando como significativas diferenças de magnitude irrelevante. Neste contexto, apenas técnicas mais sofisticadas, como as de aprendizado de máquina, são robustas para avaliar diferenças entre grupos e metrificar o impacto de características relevantes. Pode-se ainda remover algumas instâncias com inconsistências graves, isto é, que possuem problemas de preenchimento ou dados absurdos, em consonância com o princípio de good data over big data, como idade na adesão negativa ou tempo de plano em meses negativo, visto que estas instâncias não agregam valor ao modelo e podem prejudicar a análise. Além disso, esse processo também contemplou o tratamento de casos de separação perfeita, que poderiam comprometer a estabilidade de modelos explicativos. A quantidade de instâncias restantes permite ainda realizar a divisão de treino e teste, com massa de dados adequada para ambas as etapas.
 
@@ -106,6 +106,9 @@ df = pd.read_excel("dados/processo_seletivo_base_churn.xlsx")
 df.columns = df.columns.str.lower()
 if 'idadenaadesão' in df.columns:
     df = df.rename(columns={'idadenaadesão': 'idadenaadesao'})
+    
+df['id_cliente'] = df['id_cliente'].astype("category")
+df = df.drop_duplicates(subset=['id_cliente'], keep='first')
 
 categorical_cols = ['titularidade', 'cancelado', 'faixa_renda', 'sexo', 'uf', 'inadimplente']
 df[categorical_cols] = df[categorical_cols].astype('category')
@@ -176,9 +179,9 @@ plt.legend(title='Cancelado')
 plt.show()
 ```
 
-Em geral, clientes de baixa renda tendem a ter alta taxa de cancelamento (86,96% dos clientes de baixa renda cancelaram).
+Em geral, clientes de baixa renda tendem a ter alta taxa de cancelamento (86,98% dos clientes de baixa renda cancelaram).
 Dentre os clientes de renda média, não houve cancelamento algum.
-Para os clientes de alta renda, a evasão foi de 26,23%.
+Para os clientes de alta renda, a evasão foi de 26,3%.
 
 Estes resultados indicam que podem ser realizadas ações para clientes de faixas de renda específicas — em especial os de baixa renda — na busca da reversão da alta taxa de churn.
 
@@ -473,7 +476,7 @@ As variáveis mais significativas — visualmente — foram renda, tempo em mese
 
 Além disso, nota-se interação entre a faixa de renda e o inadimplento para explicar o cancelamento do plano dentre os clientes de alta renda. A maior parte dos clientes de alta renda que cancelaram o plano estavam inadimplentes.
 
-Testes estatísticos para diferença de média ou mediana nos grupos não são adequados, pelo tamanho do conjunto de dados (97.078 instâncias, após remoção de dados absurdos), pois seriam viesados pelo tamanho amostral e detectariam significância em diversos casos pouco significativos.
+Testes estatísticos para diferença de média ou mediana nos grupos não são adequados, pelo tamanho do conjunto de dados (90.774 instâncias, após remoção de dados absurdos e duplicatas), pois seriam viesados pelo tamanho amostral e detectariam significância em diversos casos pouco significativos.
 
 O agrupamento das unidades da federação em regiões (Norte, Nordeste, Sudeste, Centro-Oeste e Sul) manteria a significância da diferença entre os grupos, entretanto poderia mascarar algumas heterogeneidades regionais (Como o estado do Piauí, que difere significativamente da tendência dos demais estados do Nordeste). Este agrupamento será realizado na modelagem pois a quantidade de instâncias é insuficiente na estratificação dos grupos para algumas unidades da federação.
 
@@ -509,7 +512,7 @@ A construção de features, isto é, novas covariáveis como modificações e/ou
 
 Será considerada para modelagem a variável dependente "cancelado" (SIM/NÃO) como resposta, sendo explicada pelas demais covariáveis selecionadas, à excessão de: id_cliente, titularidade, sexo e unidade da federação.
 
-id_cliente é simplesmente a identificação única de cada cliente, não havendo sentido em sua inserção para modelagem; sexo por problemas de valores ausentes e baixo indicativo de significância na análise exploratória; titularidade pela ausência de variância; e unidade da federação pelo baixo número de instâncias para algumas unidades da federação, o que confundia o modelo — para esta, optou-se pela feature agregada Região (regiao).
+id_cliente é simplesmente a identificação única de cada cliente, não havendo sentido em sua inserção para modelagem (servindo apenas para remoção de duplicatas); sexo por problemas de valores ausentes e baixo indicativo de significância na análise exploratória; titularidade pela ausência de variância; e unidade da federação pelo baixo número de instâncias para algumas unidades da federação, o que confundia o modelo — para esta, optou-se pela feature agregada Região (regiao).
 
 ## Pré processamento
 
@@ -976,17 +979,17 @@ A utilização do p-valor inferior a 0,05 é uma convenção útil na estatísti
 
 Fixada a categoria de referência: Clientes de alta renda não inadimplentes, moradores do centro-oeste e com tempo de plano até 205 meses, podemos ver como a alteração de um destes fatores — mantidos os restantes inalterados — impacta na chance de cancelamento do plano.
 
-Dos fatores que aumentam a chance de cancelamento, destaca-se que clientes de baixa renda e inadimplentes apresentam chance de cancelamento 130 vezes superior em relação a categoria de referência. Recomenda-se prioridade para este recorte nas ações estratégicas para permanência no plano. Clientes de baixa renda não inadimplentes também apresentam chance de cancelamento 18 vezes superior aos clientes da categoria de referência. Isto indica que uma ação com vista na permanência para clientes de baixa renda, independente de inadimplência, pode ser crucial para reversão da alta taxa de churn. Ainda assim, a inadimplência é um fator relevante, pois clientes de alta renda inadimplentes apresentam uma chance superior a 6 vezes à chance de cancelamento do plano de clientes de alta renda adimplentes, o que indica que a reversão da inadimplência pode ser importante para permanência de clientes com este recorte de renda. Quanto a diferenças regionais, clientes das regiões Sul apresentam o dobro de chance de cancelamento — e 75% maior chance para clientes da região Sudeste —, indicando que políticas regionalizadas podem ser relevantes para reversão da alta taxa de churn nesas regiões.
+Dos fatores que aumentam a chance de cancelamento, destaca-se que clientes de baixa renda e inadimplentes apresentam chance de cancelamento 131 vezes superior em relação a categoria de referência. Recomenda-se prioridade para este recorte nas ações estratégicas para permanência no plano. Clientes de baixa renda não inadimplentes também apresentam chance de cancelamento 18 vezes superior aos clientes da categoria de referência. Isto indica que uma ação com vista na permanência para clientes de baixa renda, independente de inadimplência, pode ser crucial para reversão da alta taxa de churn. Ainda assim, a inadimplência é um fator relevante, pois clientes de alta renda inadimplentes apresentam uma chance superior a 6 vezes à chance de cancelamento do plano de clientes de alta renda adimplentes, o que indica que a reversão da inadimplência pode ser importante para permanência de clientes com este recorte de renda. Quanto a diferenças regionais, clientes das regiões Sul apresentam o dobro de chance de cancelamento — e 74% maior chance para clientes da região Sudeste —, indicando que políticas regionalizadas podem ser relevantes para reversão da alta taxa de churn nesas regiões.
 
-O fator que diminui a chance de cancelamento é o tempo de permanência no plano. Clientes com permanência no plano entre 253 e 291 meses apresentam menos de 1% da chance de cancelamento dos clientes da categoria de referência, enquanto clientes com tempo de permanência superior a 291 meses apresentam chance de cancelamento de apenas 0,03% em relação aos clientes da categoria de referência, indicando que ações de permanência no plano por mais tempo podem levar a um cenário em que menos clientes cancelem o plano por já serem clientes muito antigos.
+O fator que diminui a chance de cancelamento é o tempo de permanência no plano. Clientes com permanência no plano entre 253 e 291 meses apresentam menos de 1% da chance de cancelamento dos clientes da categoria de referência, enquanto clientes com tempo de permanência superior a 291 meses apresentam chance de cancelamento de apenas 0,04% em relação aos clientes da categoria de referência, indicando que ações de permanência no plano por mais tempo podem levar a um cenário em que menos clientes cancelem o plano por já serem clientes muito antigos.
 
 # Resultados
 
 A modelagem de dados confirma as tendências observadas na análise exploratória de dados. De fato, clientes com maior tempo de permanência no plano são muito menos propensos a cancelar. Esta é a informação considerada mais importante por todos os modelos analisados. A inadimplência do cliente, quando combinada a sua renda, também constitui um fator altamente explicativo, em que clientes inadimplentes tendem a cancelar mais o plano, em especial os clientes de baixa renda. Existe ainda um fator regional para algumas regiões, posto que clientes das regiões sul e sudeste têm mais propensão a cancelar o plano.
 
-Todos os modelos selecionados performaram bem. Para análise preditiva, o modelo de random forest saturado é ligeiramente melhor que o modelo logístico, sendo portanto mais indicado para prever o risco de cancelamento de clientes. Com acurácia de 94,73%, esperamos que a grande massa de suas previsões estejam de acordo com o valor esperado na realidade.
+Todos os modelos selecionados performaram bem. Para análise preditiva, o modelo de random forest saturado é ligeiramente melhor que o modelo logístico, sendo portanto mais indicado para prever o risco de cancelamento de clientes. Com acurácia de 94,68%, esperamos que a grande massa de suas previsões estejam de acordo com o valor esperado na realidade.
 
-Por outro lado, o modelo logístico obteve também resultados satisfatórios, sendo portanto seguro interpretar seus parâmetros com objetivo de extrair insights relevantes para formulação de estratégias de negócio direcionadas para perfis de cliente específicos. Com acurácia de 93%, em especial para clientes que não cancelaram o plano, temos segurança suficiente da lastreabilidade de seus parâmetros na realidade.
+Por outro lado, o modelo logístico obteve também resultados satisfatórios, sendo portanto seguro interpretar seus parâmetros com objetivo de extrair insights relevantes para formulação de estratégias de negócio direcionadas para perfis de cliente específicos. Com acurácia de 93,2%, em especial para clientes que não cancelaram o plano, temos segurança suficiente da lastreabilidade de seus parâmetros na realidade.
 
 # Conclusão
 
@@ -1032,7 +1035,7 @@ risco_df['Clientes'] = risco_df['Clientes'].apply(lambda x: f"{x:,.0f}".replace(
 display(risco_df)
 ```
 
-Note que isto se refere aos clientes que foram de fato inseridos no modelo (seja para treino, seja para teste). Deve-se observar que existem ainda 23.955 clientes removidos do modelo, não descritos na tabela acima, por serem classificados como renda média. Para estes clientes, como não houve cancelamento algum, pode-se dizer que o risco de cancelamento é zero ou próximo de zero.
+Note que isto se refere aos clientes que foram de fato inseridos no modelo (seja para treino, seja para teste). Deve-se observar que existem ainda 22.356 clientes removidos do modelo, não descritos na tabela acima, por serem classificados como renda média. Para estes clientes, como não houve cancelamento algum, pode-se dizer que o risco de cancelamento é zero ou próximo de zero.
 
 Pode-se inferir ainda, dos resultados do modelo logístico, que os clientes com maior risco de cancelamento são clientes de baixa renda, inadimplentes ou não, com baixo tempo de permanência no plano.
 
