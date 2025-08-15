@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bruno Gondim - Relatório técnico — Análise de churn</title>
+<title>Relatório técnico — Análise de churn – Bruno Gondim</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,8 +21,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -65,15 +66,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../cup-hot" rel="icon">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-cf4ed800d4ca66ef8d92b312c1c2ee81.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -107,12 +109,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Bruno Gondim - Relatório técnico — Análise de churn">
+<meta property="og:title" content="Relatório técnico — Análise de churn – Bruno Gondim">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://penasta.github.io/presentations/churn/relatorio_files/figure-html/cell-6-output-2.png">
 <meta property="og:site_name" content="Bruno Gondim">
+<meta property="og:image:height" content="1048">
+<meta property="og:image:width" content="1517">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -127,7 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -137,7 +142,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-presentations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-presentations" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Presentations</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-presentations">    
@@ -146,12 +151,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Agrupador de processos de controle concentrado</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../presentations/random_forest/apresentacao.html">
- <span class="dropdown-text">Técnicas de Random Forest em árvores de decisão</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="../../presentations/estocasticos/estocasticos.html">
  <span class="dropdown-text">Processos de Poisson não homogêneos de n tipos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../presentations/churn/relatorio.html">
+ <span class="dropdown-text">Análise de Churn</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../presentations/random_forest/apresentacao.html">
+ <span class="dropdown-text">Técnicas de Random Forest em árvores de decisão</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../presentations/xgboost_catboost/trabalho.html">
@@ -201,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools tools-wide">
+            <div class="quarto-navbar-tools tools-wide">
     <a href="https://www.linkedin.com/in/bruno-gondim/" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-linkedin"></i></a>
     <a href="https://github.com/penasta" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
     <a href="mailto:brunogtoledo96@gmail.com" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-mailbox"></i></a>
@@ -312,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Para avaliação dos modelos, utilizou-se métricas de avaliação recomendadas no escopo da ciência de dados, como acurácia (previsões corretas pelo total de previsões), precisão (verdadeiros positivos pelo total de positivos previstos), sensibilidade (verdadeiros positivos pela soma de verdadeiros positivos e falsos negativos), especificidade (verdadeiros negativos pela soma de falsos positivos e verdadeiros negativos), além do F1-Score e área sob a curva, além de visualizações como matriz de confusão, curva ROC e variable importance plot. Além disso, utilizou-se a técnica de validação cruzada para escolha de hiperparâmetros e validação dos modelos, com divisão dos dados em 80% para treino e 20% para teste e validação cruzada.</p>
 <p>Destaca-se ainda que o balanceamento dos dados entre categorias das características, em especial para a variável resposta, pode representar um desafio para a modelagem. Algumas covariáveis como unidade da federação tiveram que ser agregadas em regiões para possibilitar a modelagem, pelo grave desbalanceamento de classes. Para a variável resposta, existiam mais clientes com cancelamento positivo que negativo, entretanto a diferença era pequena para uma grande massa de dados, o que em geral não é problemático para a maioria dos modelos. Ainda assim, quando da divisão entre treino e teste, estratificou-se as amostras em relação a esta variável, garantindo a proporção de cancelamentos e não cancelamentos em ambos os conjuntos de treino e teste.</p>
 <p>Aplicou-se ainda técnicas para lidar com dados ausentes, como imputação ou remoção de instâncias em alguns casos. Para a modelagem, construiu-se algumas features baseadas nas covariáveis originais, além de procedimentos de pré processamento de dados, inclusive da seleção de features e covariáveis relevantes para cada caso. Detalhes da utilização destas técnicas em cada caso serão explicitadas nas seções de análise e modelagem.</p>
-<div id="dd316933" class="cell" data-message="false" data-execution_count="2">
+<div id="5890caff" class="cell" data-message="false" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -356,13 +365,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>cores <span class="op">=</span> {<span class="st">'SIM'</span>: <span class="st">'tomato'</span>, <span class="st">'NÃO'</span>: <span class="st">'steelblue'</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="852e16d0" class="cell" data-execution_count="3">
+<div id="57ae5804" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">"dados/processo_seletivo_base_churn.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="452bcbf7" class="cell" data-execution_count="4">
+<div id="702825c6" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.lower()</span>
@@ -404,7 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note que a covariável titularidade não foi incluida neste relatório, visto que não apresentava variação — todos os clientes do conjunto de dados eram titulares do plano.</p>
 <section id="taxa-de-churn" class="level2">
 <h2 class="anchored" data-anchor-id="taxa-de-churn">Taxa de churn</h2>
-<div id="ddc294e2" class="cell" data-execution_count="5">
+<div id="6ae53ecd" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>churn_rate <span class="op">=</span> df[<span class="st">'cancelado'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>)[<span class="st">'SIM'</span>] <span class="op">*</span> <span class="dv">100</span></span>
@@ -420,7 +429,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="quantidade-de-cancelamentos-por-grupos" class="level2">
 <h2 class="anchored" data-anchor-id="quantidade-de-cancelamentos-por-grupos">Quantidade de cancelamentos por grupos</h2>
-<div id="0c9fc83e" class="cell" data-execution_count="6">
+<div id="3374c633" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>faixa_renda <span class="op">=</span> df.groupby([<span class="st">'faixa_renda'</span>, <span class="st">'cancelado'</span>], observed<span class="op">=</span><span class="va">True</span>).size().unstack()</span>
@@ -447,21 +456,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_89884" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_cc976" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_89884_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_89884_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
-<th id="T_89884_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
-<th id="T_89884_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
-<th id="T_89884_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
+<th id="T_cc976_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_cc976_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_cc976_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
+<th id="T_cc976_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
+<th id="T_cc976_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
 </tr>
-<tr class="odd">
+<tr class="even">
 <th class="index_name level0" data-quarto-table-cell-role="th">faixa_renda</th>
 <th class="blank col0" data-quarto-table-cell-role="th">&nbsp;</th>
 <th class="blank col1" data-quarto-table-cell-role="th">&nbsp;</th>
@@ -472,32 +480,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_89884_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Alta renda</td>
-<td id="T_89884_row0_col0" class="data row0 col0">7.402,00</td>
-<td id="T_89884_row0_col1" class="data row0 col1">2.641,00</td>
-<td id="T_89884_row0_col2" class="data row0 col2">10.043,00</td>
-<td id="T_89884_row0_col3" class="data row0 col3">73,70</td>
-<td id="T_89884_row0_col4" class="data row0 col4">26,30</td>
+<td id="T_cc976_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Alta renda</td>
+<td id="T_cc976_row0_col0" class="data row0 col0">7.402,00</td>
+<td id="T_cc976_row0_col1" class="data row0 col1">2.641,00</td>
+<td id="T_cc976_row0_col2" class="data row0 col2">10.043,00</td>
+<td id="T_cc976_row0_col3" class="data row0 col3">73,70</td>
+<td id="T_cc976_row0_col4" class="data row0 col4">26,30</td>
 </tr>
 <tr class="even">
-<td id="T_89884_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Baixa renda</td>
-<td id="T_89884_row1_col0" class="data row1 col0">7.598,00</td>
-<td id="T_89884_row1_col1" class="data row1 col1">50.777,00</td>
-<td id="T_89884_row1_col2" class="data row1 col2">58.375,00</td>
-<td id="T_89884_row1_col3" class="data row1 col3">13,02</td>
-<td id="T_89884_row1_col4" class="data row1 col4">86,98</td>
+<td id="T_cc976_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Baixa renda</td>
+<td id="T_cc976_row1_col0" class="data row1 col0">7.598,00</td>
+<td id="T_cc976_row1_col1" class="data row1 col1">50.777,00</td>
+<td id="T_cc976_row1_col2" class="data row1 col2">58.375,00</td>
+<td id="T_cc976_row1_col3" class="data row1 col3">13,02</td>
+<td id="T_cc976_row1_col4" class="data row1 col4">86,98</td>
 </tr>
 <tr class="odd">
-<td id="T_89884_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">Média renda</td>
-<td id="T_89884_row2_col0" class="data row2 col0">22.356,00</td>
-<td id="T_89884_row2_col1" class="data row2 col1">0,00</td>
-<td id="T_89884_row2_col2" class="data row2 col2">22.356,00</td>
-<td id="T_89884_row2_col3" class="data row2 col3">100,00</td>
-<td id="T_89884_row2_col4" class="data row2 col4">0,00</td>
+<td id="T_cc976_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">Média renda</td>
+<td id="T_cc976_row2_col0" class="data row2 col0">22.356,00</td>
+<td id="T_cc976_row2_col1" class="data row2 col1">0,00</td>
+<td id="T_cc976_row2_col2" class="data row2 col2">22.356,00</td>
+<td id="T_cc976_row2_col3" class="data row2 col3">100,00</td>
+<td id="T_cc976_row2_col4" class="data row2 col4">0,00</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -512,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-idade-na-adesão" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-idade-na-adesão">Cancelamento por idade na adesão</h2>
-<div id="79e55c1a" class="cell" data-execution_count="7">
+<div id="852d386e" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>idade_na_adesao <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'idadenaadesao'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -534,62 +541,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_f2da9" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_5bcd3" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_f2da9_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_f2da9_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_5bcd3_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_5bcd3_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_f2da9_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_f2da9_row0_col0" class="data row0 col0">37.356,00</td>
-<td id="T_f2da9_row0_col1" class="data row0 col1">53.418,00</td>
+<td id="T_5bcd3_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_5bcd3_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_5bcd3_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_f2da9_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_f2da9_row1_col0" class="data row1 col0">29,17</td>
-<td id="T_f2da9_row1_col1" class="data row1 col1">29,43</td>
+<td id="T_5bcd3_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_5bcd3_row1_col0" class="data row1 col0">29,17</td>
+<td id="T_5bcd3_row1_col1" class="data row1 col1">29,43</td>
 </tr>
 <tr class="odd">
-<td id="T_f2da9_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_f2da9_row2_col0" class="data row2 col0">16,91</td>
-<td id="T_f2da9_row2_col1" class="data row2 col1">21,13</td>
+<td id="T_5bcd3_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_5bcd3_row2_col0" class="data row2 col0">16,91</td>
+<td id="T_5bcd3_row2_col1" class="data row2 col1">21,13</td>
 </tr>
 <tr class="even">
-<td id="T_f2da9_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_f2da9_row3_col0" class="data row3 col0">0,00</td>
-<td id="T_f2da9_row3_col1" class="data row3 col1">0,00</td>
+<td id="T_5bcd3_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_5bcd3_row3_col0" class="data row3 col0">0,00</td>
+<td id="T_5bcd3_row3_col1" class="data row3 col1">0,00</td>
 </tr>
 <tr class="odd">
-<td id="T_f2da9_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_f2da9_row4_col0" class="data row4 col0">16,00</td>
-<td id="T_f2da9_row4_col1" class="data row4 col1">10,00</td>
+<td id="T_5bcd3_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_5bcd3_row4_col0" class="data row4 col0">16,00</td>
+<td id="T_5bcd3_row4_col1" class="data row4 col1">10,00</td>
 </tr>
 <tr class="even">
-<td id="T_f2da9_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_f2da9_row5_col0" class="data row5 col0">30,00</td>
-<td id="T_f2da9_row5_col1" class="data row5 col1">28,00</td>
+<td id="T_5bcd3_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_5bcd3_row5_col0" class="data row5 col0">30,00</td>
+<td id="T_5bcd3_row5_col1" class="data row5 col1">28,00</td>
 </tr>
 <tr class="odd">
-<td id="T_f2da9_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_f2da9_row6_col0" class="data row6 col0">40,00</td>
-<td id="T_f2da9_row6_col1" class="data row6 col1">44,00</td>
+<td id="T_5bcd3_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_5bcd3_row6_col0" class="data row6 col0">40,00</td>
+<td id="T_5bcd3_row6_col1" class="data row6 col1">44,00</td>
 </tr>
 <tr class="even">
-<td id="T_f2da9_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_f2da9_row7_col0" class="data row7 col0">82,00</td>
-<td id="T_f2da9_row7_col1" class="data row7 col1">94,00</td>
+<td id="T_5bcd3_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_5bcd3_row7_col0" class="data row7 col0">82,00</td>
+<td id="T_5bcd3_row7_col1" class="data row7 col1">94,00</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -603,7 +608,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-tempo-de-plano-em-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-tempo-de-plano-em-meses">Cancelamento por tempo de plano em meses</h2>
-<div id="6bd4c341" class="cell" data-execution_count="8">
+<div id="ee63d297" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tempo_de_plano_meses <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'tempo_de_plano_meses'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -625,62 +630,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_79d95" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_d445b" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_79d95_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_79d95_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_d445b_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_d445b_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_79d95_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_79d95_row0_col0" class="data row0 col0">37.356,00</td>
-<td id="T_79d95_row0_col1" class="data row0 col1">53.418,00</td>
+<td id="T_d445b_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_d445b_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_d445b_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_79d95_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_79d95_row1_col0" class="data row1 col0">301,42</td>
-<td id="T_79d95_row1_col1" class="data row1 col1">229,05</td>
+<td id="T_d445b_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_d445b_row1_col0" class="data row1 col0">301,42</td>
+<td id="T_d445b_row1_col1" class="data row1 col1">229,05</td>
 </tr>
 <tr class="odd">
-<td id="T_79d95_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_79d95_row2_col0" class="data row2 col0">7,72</td>
-<td id="T_79d95_row2_col1" class="data row2 col1">45,73</td>
+<td id="T_d445b_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_d445b_row2_col0" class="data row2 col0">7,72</td>
+<td id="T_d445b_row2_col1" class="data row2 col1">45,73</td>
 </tr>
 <tr class="even">
-<td id="T_79d95_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_79d95_row3_col0" class="data row3 col0">280,00</td>
-<td id="T_79d95_row3_col1" class="data row3 col1">128,00</td>
+<td id="T_d445b_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_d445b_row3_col0" class="data row3 col0">280,00</td>
+<td id="T_d445b_row3_col1" class="data row3 col1">128,00</td>
 </tr>
 <tr class="odd">
-<td id="T_79d95_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_79d95_row4_col0" class="data row4 col0">295,00</td>
-<td id="T_79d95_row4_col1" class="data row4 col1">192,00</td>
+<td id="T_d445b_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_d445b_row4_col0" class="data row4 col0">295,00</td>
+<td id="T_d445b_row4_col1" class="data row4 col1">192,00</td>
 </tr>
 <tr class="even">
-<td id="T_79d95_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_79d95_row5_col0" class="data row5 col0">303,00</td>
-<td id="T_79d95_row5_col1" class="data row5 col1">233,00</td>
+<td id="T_d445b_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_d445b_row5_col0" class="data row5 col0">303,00</td>
+<td id="T_d445b_row5_col1" class="data row5 col1">233,00</td>
 </tr>
 <tr class="odd">
-<td id="T_79d95_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_79d95_row6_col0" class="data row6 col0">309,00</td>
-<td id="T_79d95_row6_col1" class="data row6 col1">268,00</td>
+<td id="T_d445b_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_d445b_row6_col0" class="data row6 col0">309,00</td>
+<td id="T_d445b_row6_col1" class="data row6 col1">268,00</td>
 </tr>
 <tr class="even">
-<td id="T_79d95_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_79d95_row7_col0" class="data row7 col0">311,00</td>
-<td id="T_79d95_row7_col1" class="data row7 col1">311,00</td>
+<td id="T_d445b_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_d445b_row7_col0" class="data row7 col0">311,00</td>
+<td id="T_d445b_row7_col1" class="data row7 col1">311,00</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -695,7 +698,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-pelo-sexo-do-cliente" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-pelo-sexo-do-cliente">Cancelamento pelo sexo do cliente</h2>
-<div id="18475750" class="cell" data-execution_count="9">
+<div id="6b722db1" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'sexo'</span>] <span class="op">=</span> df[<span class="st">'sexo'</span>].<span class="bu">map</span>({<span class="st">'F'</span>: <span class="st">'Feminino'</span>, <span class="st">'M'</span>: <span class="st">'Masculino'</span>})</span>
@@ -723,21 +726,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_b1ce5" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_fc3e7" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_b1ce5_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_b1ce5_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
-<th id="T_b1ce5_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
-<th id="T_b1ce5_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
-<th id="T_b1ce5_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
+<th id="T_fc3e7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_fc3e7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_fc3e7_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total</th>
+<th id="T_fc3e7_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">% NÃO</th>
+<th id="T_fc3e7_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">% SIM</th>
 </tr>
-<tr class="odd">
+<tr class="even">
 <th class="index_name level0" data-quarto-table-cell-role="th">sexo</th>
 <th class="blank col0" data-quarto-table-cell-role="th">&nbsp;</th>
 <th class="blank col1" data-quarto-table-cell-role="th">&nbsp;</th>
@@ -748,24 +750,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_b1ce5_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Feminino</td>
-<td id="T_b1ce5_row0_col0" class="data row0 col0">21.432,00</td>
-<td id="T_b1ce5_row0_col1" class="data row0 col1">29.367,00</td>
-<td id="T_b1ce5_row0_col2" class="data row0 col2">50.799,00</td>
-<td id="T_b1ce5_row0_col3" class="data row0 col3">42,19</td>
-<td id="T_b1ce5_row0_col4" class="data row0 col4">57,81</td>
+<td id="T_fc3e7_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">Feminino</td>
+<td id="T_fc3e7_row0_col0" class="data row0 col0">21.432,00</td>
+<td id="T_fc3e7_row0_col1" class="data row0 col1">29.367,00</td>
+<td id="T_fc3e7_row0_col2" class="data row0 col2">50.799,00</td>
+<td id="T_fc3e7_row0_col3" class="data row0 col3">42,19</td>
+<td id="T_fc3e7_row0_col4" class="data row0 col4">57,81</td>
 </tr>
 <tr class="even">
-<td id="T_b1ce5_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Masculino</td>
-<td id="T_b1ce5_row1_col0" class="data row1 col0">15.198,00</td>
-<td id="T_b1ce5_row1_col1" class="data row1 col1">23.006,00</td>
-<td id="T_b1ce5_row1_col2" class="data row1 col2">38.204,00</td>
-<td id="T_b1ce5_row1_col3" class="data row1 col3">39,78</td>
-<td id="T_b1ce5_row1_col4" class="data row1 col4">60,22</td>
+<td id="T_fc3e7_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">Masculino</td>
+<td id="T_fc3e7_row1_col0" class="data row1 col0">15.198,00</td>
+<td id="T_fc3e7_row1_col1" class="data row1 col1">23.006,00</td>
+<td id="T_fc3e7_row1_col2" class="data row1 col2">38.204,00</td>
+<td id="T_fc3e7_row1_col3" class="data row1 col3">39,78</td>
+<td id="T_fc3e7_row1_col4" class="data row1 col4">60,22</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -779,7 +780,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cancelamento-por-unidade-da-federação-do-cliente" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-unidade-da-federação-do-cliente">Cancelamento por unidade da federação do cliente</h2>
-<div id="a5085bee" class="cell" data-execution_count="10">
+<div id="5dbc0dd5" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>uf_stats <span class="op">=</span> df.groupby(<span class="st">'uf'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'cancelado'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>).unstack() <span class="op">*</span> <span class="dv">100</span></span>
@@ -812,9 +813,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell-output cell-output-display">
 <div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.0.1.min.js" integrity="sha256-oy6Be7Eh6eiQFs5M7oXuPxxm9qbJXEtTpfSI93dW16Q=" crossorigin="anonymous"></script>                <div id="7118c76e-655b-4e30-957c-d3d8dda317e1" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("7118c76e-655b-4e30-957c-d3d8dda317e1")) {                    Plotly.newPlot(                        "7118c76e-655b-4e30-957c-d3d8dda317e1",                        [{"coloraxis":"coloraxis","featureidkey":"properties.sigla","geo":"geo","geojson":"https:\u002f\u002fraw.githubusercontent.com\u002fcodeforamerica\u002fclick_that_hood\u002fmaster\u002fpublic\u002fdata\u002fbrazil-states.geojson","hovertemplate":"uf=%{location}\u003cbr\u003eTaxa de Cancelamento (%)=%{z}\u003cextra\u003e\u003c\u002fextra\u003e","locations":["AC","AL","AM","AP","BA","CE","DF","ES","GO","MA","MG","MS","MT","PA","PB","PE","PI","PR","RJ","RN","RO","RR","RS","SC","SE","SP","TO"],"name":"","z":{"dtype":"f8","bdata":"NIVAUwg0SUBXjx0BOshNQJ+BqHRkD1BAAAAAAAAASUBNAourotNIQILFPLCYB05ANYuct8A5R0DdYun5VlxSQHnOqNJO4U9AxOQKYnIFSUDRwuyiRGRRQErXJSzeLU5AlgnVKP2HS0ATO7ETOzFPQJIDzru6yU5ALJ+I2Vx6R0DT3AV\u002fFadRQHopETzSX1FAneZVY7T+TUDTAa5pbLFNQJq+ShibBU9ASpIkSZLkSUBywb7qQUpQQI7cyI3cyFBA0dFIHNUoS0D4w4z8pnpPQLDc0wjLPUtA"},"type":"choropleth"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"geo":{"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"center":{},"scope":"south america","fitbounds":"locations","visible":false},"coloraxis":{"colorbar":{"title":{"text":"Taxa de Cancelamento (%)"}},"colorscale":[[0.0,"rgb(255,255,204)"],[0.125,"rgb(255,237,160)"],[0.25,"rgb(254,217,118)"],[0.375,"rgb(254,178,76)"],[0.5,"rgb(253,141,60)"],[0.625,"rgb(252,78,42)"],[0.75,"rgb(227,26,28)"],[0.875,"rgb(189,0,38)"],[1.0,"rgb(128,0,38)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Taxa de Cancelamento por UF (%)"},"margin":{"r":0,"t":40,"l":0,"b":0}},                        {"responsive": true}                    ).then(function(){
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.0.1.min.js" integrity="sha256-oy6Be7Eh6eiQFs5M7oXuPxxm9qbJXEtTpfSI93dW16Q=" crossorigin="anonymous"></script>                <div id="b8d7b5a6-250d-4148-ab44-53e482d1c905" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("b8d7b5a6-250d-4148-ab44-53e482d1c905")) {                    Plotly.newPlot(                        "b8d7b5a6-250d-4148-ab44-53e482d1c905",                        [{"coloraxis":"coloraxis","featureidkey":"properties.sigla","geo":"geo","geojson":"https:\u002f\u002fraw.githubusercontent.com\u002fcodeforamerica\u002fclick_that_hood\u002fmaster\u002fpublic\u002fdata\u002fbrazil-states.geojson","hovertemplate":"uf=%{location}\u003cbr\u003eTaxa de Cancelamento (%)=%{z}\u003cextra\u003e\u003c\u002fextra\u003e","locations":["AC","AL","AM","AP","BA","CE","DF","ES","GO","MA","MG","MS","MT","PA","PB","PE","PI","PR","RJ","RN","RO","RR","RS","SC","SE","SP","TO"],"name":"","z":{"dtype":"f8","bdata":"NIVAUwg0SUBXjx0BOshNQJ+BqHRkD1BAAAAAAAAASUBNAourotNIQILFPLCYB05ANYuct8A5R0DdYun5VlxSQHnOqNJO4U9AxOQKYnIFSUDRwuyiRGRRQErXJSzeLU5AlgnVKP2HS0ATO7ETOzFPQJIDzru6yU5ALJ+I2Vx6R0DT3AV\u002fFadRQHopETzSX1FAneZVY7T+TUDTAa5pbLFNQJq+ShibBU9ASpIkSZLkSUBywb7qQUpQQI7cyI3cyFBA0dFIHNUoS0D4w4z8pnpPQLDc0wjLPUtA"},"type":"choropleth"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"geo":{"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"center":{},"scope":"south america","fitbounds":"locations","visible":false},"coloraxis":{"colorbar":{"title":{"text":"Taxa de Cancelamento (%)"}},"colorscale":[[0.0,"rgb(255,255,204)"],[0.125,"rgb(255,237,160)"],[0.25,"rgb(254,217,118)"],[0.375,"rgb(254,178,76)"],[0.5,"rgb(253,141,60)"],[0.625,"rgb(252,78,42)"],[0.75,"rgb(227,26,28)"],[0.875,"rgb(189,0,38)"],[1.0,"rgb(128,0,38)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Taxa de Cancelamento por UF (%)"},"margin":{"r":0,"t":40,"l":0,"b":0}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('7118c76e-655b-4e30-957c-d3d8dda317e1');
+var gd = document.getElementById('b8d7b5a6-250d-4148-ab44-53e482d1c905');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -843,7 +844,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-inadimplência" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-inadimplência">Cancelamento por inadimplência</h2>
-<div id="3e45c38b" class="cell" data-execution_count="11">
+<div id="f870ad16" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>inadimplencia <span class="op">=</span> pd.crosstab(df[<span class="st">'inadimplente'</span>], df[<span class="st">'cancelado'</span>], normalize<span class="op">=</span><span class="st">'index'</span>) <span class="op">*</span> <span class="dv">100</span></span>
@@ -866,18 +867,17 @@ if (outputEl) {{
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_199d7" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_15e22" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_199d7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_199d7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_15e22_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_15e22_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
-<tr class="odd">
+<tr class="even">
 <th class="index_name level0" data-quarto-table-cell-role="th">inadimplente</th>
 <th class="blank col0" data-quarto-table-cell-role="th">&nbsp;</th>
 <th class="blank col1" data-quarto-table-cell-role="th">&nbsp;</th>
@@ -885,18 +885,17 @@ if (outputEl) {{
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_199d7_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">NÃO</td>
-<td id="T_199d7_row0_col0" class="data row0 col0">51,81</td>
-<td id="T_199d7_row0_col1" class="data row0 col1">48,19</td>
+<td id="T_15e22_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">NÃO</td>
+<td id="T_15e22_row0_col0" class="data row0 col0">51,81</td>
+<td id="T_15e22_row0_col1" class="data row0 col1">48,19</td>
 </tr>
 <tr class="even">
-<td id="T_199d7_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">SIM</td>
-<td id="T_199d7_row1_col0" class="data row1 col0">12,06</td>
-<td id="T_199d7_row1_col1" class="data row1 col1">87,94</td>
+<td id="T_15e22_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">SIM</td>
+<td id="T_15e22_row1_col0" class="data row1 col0">12,06</td>
+<td id="T_15e22_row1_col1" class="data row1 col1">87,94</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -911,7 +910,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-quantidade-de-consultas-do-cliente-nos-últimos-12-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-quantidade-de-consultas-do-cliente-nos-últimos-12-meses">Cancelamento por quantidade de consultas do cliente nos últimos 12 meses</h2>
-<div id="31783003" class="cell" data-execution_count="12">
+<div id="3e8c6832" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>qtd_consultas <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'qtd_consultas_12m'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -942,62 +941,60 @@ if (outputEl) {{
 <span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_44a58" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_8a778" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_44a58_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_44a58_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_8a778_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_8a778_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_44a58_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_44a58_row0_col0" class="data row0 col0">37.356,00</td>
-<td id="T_44a58_row0_col1" class="data row0 col1">53.418,00</td>
+<td id="T_8a778_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_8a778_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_8a778_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_44a58_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_44a58_row1_col0" class="data row1 col0">12,09</td>
-<td id="T_44a58_row1_col1" class="data row1 col1">12,07</td>
+<td id="T_8a778_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_8a778_row1_col0" class="data row1 col0">12,09</td>
+<td id="T_8a778_row1_col1" class="data row1 col1">12,07</td>
 </tr>
 <tr class="odd">
-<td id="T_44a58_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_44a58_row2_col0" class="data row2 col0">10,69</td>
-<td id="T_44a58_row2_col1" class="data row2 col1">10,80</td>
+<td id="T_8a778_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_8a778_row2_col0" class="data row2 col0">10,69</td>
+<td id="T_8a778_row2_col1" class="data row2 col1">10,80</td>
 </tr>
 <tr class="even">
-<td id="T_44a58_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_44a58_row3_col0" class="data row3 col0">1,00</td>
-<td id="T_44a58_row3_col1" class="data row3 col1">1,00</td>
+<td id="T_8a778_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_8a778_row3_col0" class="data row3 col0">1,00</td>
+<td id="T_8a778_row3_col1" class="data row3 col1">1,00</td>
 </tr>
 <tr class="odd">
-<td id="T_44a58_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_44a58_row4_col0" class="data row4 col0">5,00</td>
-<td id="T_44a58_row4_col1" class="data row4 col1">5,00</td>
+<td id="T_8a778_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_8a778_row4_col0" class="data row4 col0">5,00</td>
+<td id="T_8a778_row4_col1" class="data row4 col1">5,00</td>
 </tr>
 <tr class="even">
-<td id="T_44a58_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_44a58_row5_col0" class="data row5 col0">9,00</td>
-<td id="T_44a58_row5_col1" class="data row5 col1">9,00</td>
+<td id="T_8a778_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_8a778_row5_col0" class="data row5 col0">9,00</td>
+<td id="T_8a778_row5_col1" class="data row5 col1">9,00</td>
 </tr>
 <tr class="odd">
-<td id="T_44a58_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_44a58_row6_col0" class="data row6 col0">15,00</td>
-<td id="T_44a58_row6_col1" class="data row6 col1">15,00</td>
+<td id="T_8a778_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_8a778_row6_col0" class="data row6 col0">15,00</td>
+<td id="T_8a778_row6_col1" class="data row6 col1">15,00</td>
 </tr>
 <tr class="even">
-<td id="T_44a58_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_44a58_row7_col0" class="data row7 col0">60,00</td>
-<td id="T_44a58_row7_col1" class="data row7 col1">60,00</td>
+<td id="T_8a778_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_8a778_row7_col0" class="data row7 col0">60,00</td>
+<td id="T_8a778_row7_col1" class="data row7 col1">60,00</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1011,7 +1008,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-quantidade-de-internações-do-cliente-nos-últimos-12-meses" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-quantidade-de-internações-do-cliente-nos-últimos-12-meses">Cancelamento por quantidade de internações do cliente nos últimos 12 meses</h2>
-<div id="b45ce23c" class="cell" data-execution_count="13">
+<div id="e893d7a1" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>qtd_internacoes <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed <span class="op">=</span> <span class="va">True</span>)[<span class="st">'qtd_internacoes_12m'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -1043,62 +1040,60 @@ if (outputEl) {{
 <span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_fb55e" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_20fea" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_fb55e_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_fb55e_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_20fea_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_20fea_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_fb55e_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_fb55e_row0_col0" class="data row0 col0">37.356,00</td>
-<td id="T_fb55e_row0_col1" class="data row0 col1">53.418,00</td>
+<td id="T_20fea_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_20fea_row0_col0" class="data row0 col0">37.356,00</td>
+<td id="T_20fea_row0_col1" class="data row0 col1">53.418,00</td>
 </tr>
 <tr class="even">
-<td id="T_fb55e_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_fb55e_row1_col0" class="data row1 col0">1,30</td>
-<td id="T_fb55e_row1_col1" class="data row1 col1">1,30</td>
+<td id="T_20fea_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_20fea_row1_col0" class="data row1 col0">1,30</td>
+<td id="T_20fea_row1_col1" class="data row1 col1">1,30</td>
 </tr>
 <tr class="odd">
-<td id="T_fb55e_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_fb55e_row2_col0" class="data row2 col0">1,29</td>
-<td id="T_fb55e_row2_col1" class="data row2 col1">1,30</td>
+<td id="T_20fea_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_20fea_row2_col0" class="data row2 col0">1,29</td>
+<td id="T_20fea_row2_col1" class="data row2 col1">1,30</td>
 </tr>
 <tr class="even">
-<td id="T_fb55e_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_fb55e_row3_col0" class="data row3 col0">0,00</td>
-<td id="T_fb55e_row3_col1" class="data row3 col1">0,00</td>
+<td id="T_20fea_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_20fea_row3_col0" class="data row3 col0">0,00</td>
+<td id="T_20fea_row3_col1" class="data row3 col1">0,00</td>
 </tr>
 <tr class="odd">
-<td id="T_fb55e_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_fb55e_row4_col0" class="data row4 col0">1,00</td>
-<td id="T_fb55e_row4_col1" class="data row4 col1">1,00</td>
+<td id="T_20fea_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_20fea_row4_col0" class="data row4 col0">1,00</td>
+<td id="T_20fea_row4_col1" class="data row4 col1">1,00</td>
 </tr>
 <tr class="even">
-<td id="T_fb55e_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_fb55e_row5_col0" class="data row5 col0">1,00</td>
-<td id="T_fb55e_row5_col1" class="data row5 col1">1,00</td>
+<td id="T_20fea_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_20fea_row5_col0" class="data row5 col0">1,00</td>
+<td id="T_20fea_row5_col1" class="data row5 col1">1,00</td>
 </tr>
 <tr class="odd">
-<td id="T_fb55e_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_fb55e_row6_col0" class="data row6 col0">2,00</td>
-<td id="T_fb55e_row6_col1" class="data row6 col1">2,00</td>
+<td id="T_20fea_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_20fea_row6_col0" class="data row6 col0">2,00</td>
+<td id="T_20fea_row6_col1" class="data row6 col1">2,00</td>
 </tr>
 <tr class="even">
-<td id="T_fb55e_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_fb55e_row7_col0" class="data row7 col0">9,00</td>
-<td id="T_fb55e_row7_col1" class="data row7 col1">9,00</td>
+<td id="T_20fea_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_20fea_row7_col0" class="data row7 col0">9,00</td>
+<td id="T_20fea_row7_col1" class="data row7 col1">9,00</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1112,7 +1107,7 @@ if (outputEl) {{
 </section>
 <section id="cancelamento-por-valor-da-mensalidade-do-plano" class="level2">
 <h2 class="anchored" data-anchor-id="cancelamento-por-valor-da-mensalidade-do-plano">Cancelamento por valor da mensalidade do plano</h2>
-<div id="e8a33bfa" class="cell" data-execution_count="14">
+<div id="fe43c9ed" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>valor_mensalidade <span class="op">=</span> df.groupby(<span class="st">'cancelado'</span>, observed <span class="op">=</span> <span class="va">True</span>)[<span class="st">'valor_mensalidade'</span>].describe().transpose().<span class="bu">round</span>(<span class="dv">2</span>)</span>
@@ -1134,62 +1129,60 @@ if (outputEl) {{
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div>
 <style type="text/css">
 </style>
 
-<table id="T_92f90" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_77b5a" class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th class="index_name level0" data-quarto-table-cell-role="th">cancelado</th>
-<th id="T_92f90_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
-<th id="T_92f90_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
+<th id="T_77b5a_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">NÃO</th>
+<th id="T_77b5a_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">SIM</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_92f90_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
-<td id="T_92f90_row0_col0" class="data row0 col0">23.644,00</td>
-<td id="T_92f90_row0_col1" class="data row0 col1">33.731,00</td>
+<td id="T_77b5a_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">count</td>
+<td id="T_77b5a_row0_col0" class="data row0 col0">23.644,00</td>
+<td id="T_77b5a_row0_col1" class="data row0 col1">33.731,00</td>
 </tr>
 <tr class="even">
-<td id="T_92f90_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
-<td id="T_92f90_row1_col0" class="data row1 col0">898,77</td>
-<td id="T_92f90_row1_col1" class="data row1 col1">928,94</td>
+<td id="T_77b5a_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">mean</td>
+<td id="T_77b5a_row1_col0" class="data row1 col0">898,77</td>
+<td id="T_77b5a_row1_col1" class="data row1 col1">928,94</td>
 </tr>
 <tr class="odd">
-<td id="T_92f90_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
-<td id="T_92f90_row2_col0" class="data row2 col0">349,60</td>
-<td id="T_92f90_row2_col1" class="data row2 col1">426,84</td>
+<td id="T_77b5a_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">std</td>
+<td id="T_77b5a_row2_col0" class="data row2 col0">349,60</td>
+<td id="T_77b5a_row2_col1" class="data row2 col1">426,84</td>
 </tr>
 <tr class="even">
-<td id="T_92f90_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
-<td id="T_92f90_row3_col0" class="data row3 col0">550,00</td>
-<td id="T_92f90_row3_col1" class="data row3 col1">550,00</td>
+<td id="T_77b5a_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">min</td>
+<td id="T_77b5a_row3_col0" class="data row3 col0">550,00</td>
+<td id="T_77b5a_row3_col1" class="data row3 col1">550,00</td>
 </tr>
 <tr class="odd">
-<td id="T_92f90_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
-<td id="T_92f90_row4_col0" class="data row4 col0">550,00</td>
-<td id="T_92f90_row4_col1" class="data row4 col1">550,00</td>
+<td id="T_77b5a_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">25%</td>
+<td id="T_77b5a_row4_col0" class="data row4 col0">550,00</td>
+<td id="T_77b5a_row4_col1" class="data row4 col1">550,00</td>
 </tr>
 <tr class="even">
-<td id="T_92f90_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
-<td id="T_92f90_row5_col0" class="data row5 col0">720,00</td>
-<td id="T_92f90_row5_col1" class="data row5 col1">720,00</td>
+<td id="T_77b5a_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">50%</td>
+<td id="T_77b5a_row5_col0" class="data row5 col0">720,00</td>
+<td id="T_77b5a_row5_col1" class="data row5 col1">720,00</td>
 </tr>
 <tr class="odd">
-<td id="T_92f90_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
-<td id="T_92f90_row6_col0" class="data row6 col0">1.030,00</td>
-<td id="T_92f90_row6_col1" class="data row6 col1">1.030,00</td>
+<td id="T_77b5a_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">75%</td>
+<td id="T_77b5a_row6_col0" class="data row6 col0">1.030,00</td>
+<td id="T_77b5a_row6_col1" class="data row6 col1">1.030,00</td>
 </tr>
 <tr class="even">
-<td id="T_92f90_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
-<td id="T_92f90_row7_col0" class="data row7 col0">1.870,00</td>
-<td id="T_92f90_row7_col1" class="data row7 col1">1.870,00</td>
+<td id="T_77b5a_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">max</td>
+<td id="T_77b5a_row7_col0" class="data row7 col0">1.870,00</td>
+<td id="T_77b5a_row7_col1" class="data row7 col1">1.870,00</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1203,7 +1196,7 @@ if (outputEl) {{
 </section>
 <section id="renda-por-inadimplência-por-cancelamento" class="level2">
 <h2 class="anchored" data-anchor-id="renda-por-inadimplência-por-cancelamento">Renda por inadimplência por cancelamento</h2>
-<div id="f78032c5" class="cell" data-execution_count="15">
+<div id="c8a3935f" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_prop <span class="op">=</span> (df.groupby([<span class="st">'faixa_renda'</span>, <span class="st">'inadimplente'</span>, <span class="st">'cancelado'</span>], observed <span class="op">=</span> <span class="va">False</span>)</span>
@@ -1300,7 +1293,7 @@ if (outputEl) {{
 <h2 class="anchored" data-anchor-id="pré-processamento">Pré processamento</h2>
 <p>Uma camada adicional de filtragem foi adicionada nesta etapa: a remoção das instâncias cuja renda observada foi “Média”. Isto por que, conforme observado na etapa exploratória, existe a separação perfeita — nenhum cliente de renda média cancelou o plano. Isto certamente levaria a um modelo com problemas de generalização, visto que quase certamente um cliente de renda média sempre seria classificado como não cancelado, ainda que no futuro possa haver algum cliente de renda média que por ventura cancele o plano. Para além disso, esta informação certamente distorceria os parâmetros dos modelos, inclusive podendo levar modelos mais sensíveis à separação perfeita — como a regressão logística — a ter problemas de convergência. Como a remoção destas observações ainda preserva um volume de dados extremamente satisfatório, julgo ser seguro simplesmente optar por não inseri-los no modelo.</p>
 <p>Outras informações identificadas como potencialmente não relevantes na etapa exploratória serão mantidas nesta etapa, podendo ser removidas na comparação de modelos posteriormente.</p>
-<div id="540554d5" class="cell" data-execution_count="16">
+<div id="e8b63ce4" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">'id_cliente'</span>, <span class="st">'titularidade'</span>, <span class="st">'sexo'</span>, <span class="st">'uf'</span>])</span>
@@ -1351,7 +1344,7 @@ if (outputEl) {{
 <section id="definindo-modelos" class="level2">
 <h2 class="anchored" data-anchor-id="definindo-modelos">Definindo modelos</h2>
 <p>Diversos modelos podem ser escolhidos para a tarefa de classificação binária. Naive Bayes, regressão logística, árvores de decisão, florestas aleatórias, árvores com bagging, XGBoost, Gradient Boost e demais modelos. Além disso, é crucial realizar o fine tuning dos parâmetros de cada modelo, visto que cada um deles contém diversos hiperparâmetros, e a combinação ótima em geral só pode ser encontrada por força bruta. Diversas estratégias podem ser pensadas para teste de hiperparâmetros, como um grid plano, um quadrado latino, uma busca aleatória, varreduras bayesianas, etc. Em geral, opta-se pelo método mais simples — a busca plana — e testa-se métodos mais sofisticados caso hiperparâmetros ideais não sejam encontrados, ou se houver problema de tempo de execução das buscas no grid.</p>
-<div id="3fc7586c" class="cell" data-execution_count="17">
+<div id="cb880bbd" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> {</span>
@@ -1398,7 +1391,7 @@ if (outputEl) {{
 </section>
 <section id="validação-cruzada-ajuste-dos-modelos-e-tuning-de-hiperparâmetros" class="level2">
 <h2 class="anchored" data-anchor-id="validação-cruzada-ajuste-dos-modelos-e-tuning-de-hiperparâmetros">Validação cruzada, ajuste dos modelos e tuning de hiperparâmetros</h2>
-<div id="44387100" class="cell" data-execution_count="18">
+<div id="76290417" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> {}</span>
@@ -1447,7 +1440,7 @@ if (outputEl) {{
 <p>A validação é uma etapa crucial na modelagem. Os modelos sempre buscarão melhor ajuste possível aos dados, entretanto este ajuste pode significar a compreensão perfeita dos dados que forem a eles fornecidos, porém na avaliação de um dado futuro posterior, este modelo pode incorrer em erros em função de sobreajuste (overfitting), isto é, o modelo aprende exatamente os padrões dos dados que foram fornecidos, mas é incapaz de generalizar os resultados para novas observações. Para isso, uma das estratégias é separar o conjunto de dados em treino e teste, em geral utilizando 80% dos dados para treino e 20% dos dados para teste. Desta forma, as métricas do modelo serão avaliadas no conjunto de testes, conjunto este não utilizado para ajuste do modelo, para verificar o quão bem o modelo compreende padrões para além de decorar os dados que a ele foram fornecidos.</p>
 <p>A validação cruzada é uma extensão desta ideia. Não iremos apenas ajustar os modelos, mas também selecionar as melhores combinações possíveis de hiperparâmetros deles. Para isso, podemos dividir o conjunto de dados em treino, teste e validação. Porém, quanto mais separações fazemos, menos dados temos para treino, e prescindir de uma boa quantidade destes pode não ser viável em algumas situações. Para isso, esta metodologia fragmenta o conjunto de treino em v segmentos (v-folds), utilizando uma parte desta para avaliação de hiperparâmetro durante o ajuste do modelo, e as 4 partes restantes para teste. Além disso, a implementação embaralha e troca a ordem desses segmentos a cada ajuste, garantindo a confiabilidade das métricas produzidas.</p>
 <p>Desta forma, podemos avaliar o modelo, testar conjuntos de hiperparâmetros e testar a performance do modelo utilizando uma abordagem segura, confiável e crível.</p>
-<div id="eb7aeec5" class="cell" data-execution_count="19">
+<div id="bb0d33a9" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> []</span>
@@ -1478,10 +1471,9 @@ if (outputEl) {{
 </details>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1496,33 +1488,33 @@ if (outputEl) {{
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Bagging_Tree</td>
-<td>94.74%</td>
-<td>0.987</td>
-<td>0.966</td>
-<td>96.92%</td>
-<td>96.32%</td>
-<td>89.10%</td>
-</tr>
-<tr class="even">
 <td data-quarto-table-cell-role="th">4</td>
 <td>Random_Forest</td>
+<td>94.70%</td>
+<td>0.987</td>
+<td>0.966</td>
+<td>97.28%</td>
+<td>95.89%</td>
+<td>90.47%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Bagging_Tree</td>
 <td>94.67%</td>
 <td>0.987</td>
 <td>0.966</td>
-<td>97.35%</td>
-<td>95.78%</td>
-<td>90.70%</td>
+<td>96.87%</td>
+<td>96.28%</td>
+<td>88.93%</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>Decision_Tree</td>
-<td>94.32%</td>
+<td>94.31%</td>
 <td>0.982</td>
-<td>0.964</td>
+<td>0.963</td>
 <td>96.67%</td>
-<td>96.03%</td>
+<td>96.01%</td>
 <td>88.23%</td>
 </tr>
 <tr class="even">
@@ -1551,9 +1543,8 @@ if (outputEl) {{
 </div>
 </div>
 </div>
-</div>
 <p>O Quadro acima mostra as principais métricas associadas aos modelos testados. Nota-se que todos os modelos performaram relativamente bem em todas as métricas selecionadas, com destaque para a área sob a curva (ROC AUC). Isto indica que qualquer um dos modelos poderia ser utilizado para previsão, com F1-Score acima de 95%, que em geral é a métrica mais importante para avaliação de churn.</p>
-<div id="d0ef7d1f" class="cell" data-execution_count="20">
+<div id="d0216a7f" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_search_results(results):</span>
@@ -1592,7 +1583,7 @@ if (outputEl) {{
 </section>
 <section id="análise-de-importâncias-dos-melhores-modelos" class="level2">
 <h2 class="anchored" data-anchor-id="análise-de-importâncias-dos-melhores-modelos">Análise de importâncias dos melhores modelos</h2>
-<div id="e615a82e" class="cell" data-execution_count="21">
+<div id="4047ebe0" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_feature_names_from_column_transformer(column_transformer):</span>
@@ -1682,7 +1673,7 @@ if (outputEl) {{
 <li><p>Demais covariáveis indicadas como pouco significativas na etapa de análise exploratória serão desconsideradas.</p></li>
 </ul>
 <p>Desta forma, iremos ajustar o modelo explicando o cancelamento baseado em categorias da nova feature tempo de plano, inadimplência combinada com renda e região (agrupamento de unidades da federação segundo classificação do IBGE).</p>
-<div id="01dbfb35" class="cell" data-execution_count="22">
+<div id="518a3dd4" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>tempo_plano_transformer <span class="op">=</span> Pipeline([</span>
@@ -1747,7 +1738,7 @@ if (outputEl) {{
 </div>
 <section id="métricas-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="métricas-do-modelo-interpretável">Métricas do modelo interpretável</h3>
-<div id="6bdd4ec8" class="cell" data-execution_count="23">
+<div id="d55c03f1" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
@@ -1768,10 +1759,9 @@ if (outputEl) {{
 </details>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1811,11 +1801,10 @@ if (outputEl) {{
 </div>
 </div>
 </div>
-</div>
 </section>
 <section id="matriz-de-confusão-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="matriz-de-confusão-do-modelo-interpretável">Matriz de confusão do modelo interpretável</h3>
-<div id="d194678e" class="cell" data-execution_count="24">
+<div id="6e85f986" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
@@ -1840,7 +1829,7 @@ if (outputEl) {{
 </section>
 <section id="curva-roc-do-modelo-interpretável" class="level3">
 <h3 class="anchored" data-anchor-id="curva-roc-do-modelo-interpretável">Curva ROC do modelo interpretável</h3>
-<div id="3e01e97b" class="cell" data-execution_count="25">
+<div id="b0046b32" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
@@ -1866,7 +1855,7 @@ if (outputEl) {{
 <p>O principal objetivo deste modelo será a extração de interpretação dos parâmetros. Como ajustou-se um modelo mais parcimonioso, é esperado que suas métricas sejam inferiores ao modelo saturado ajustado anteriormente. Isto é, para previsão, os modelos anteriores são ligeiramente melhores do que o modelo ajustado nesta etapa. Isso não significa que o modelo possa ser ruim: suas métricas devem ainda ser satisfatórias.</p>
 <p>Conforme observado na análise de diagnóstico acima, como valores das principais métricas, área sob a curva e matriz de confusão, notamos uma ligeira piora de algumas métricas em relação ao modelo saturado, em especial na precisão de classificação de verdadeiros negativos. Entretanto, observando o conjunto das métricas em geral, pode-se dizer que este modelo se ajustou bem aos dados, em especial observando as métricas de F1-Score e área sob a curva — ambas performando acima de 95% — que são essenciais neste contexto.</p>
 <p>Desta forma, podemos ter segurança na interpretação dos parâmetros deste modelo, e comunicação de seus resultados para as outras áreas da empresa</p>
-<div id="af1a2310" class="cell" data-execution_count="26">
+<div id="0fc4c356" class="cell" data-execution_count="25">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>logreg <span class="op">=</span> model.named_steps[<span class="st">'classifier'</span>]</span>
@@ -1951,7 +1940,7 @@ Baixa renda + Não inadimplente       2.9060       0.0608  47.7791 &lt;0.0001   
 <h1>Conclusão</h1>
 <p>Conforme especificado, o objetivo desta análise é estimar quais beneficiários têm maior risco de evasão nos próximos 12 meses, dado um modelo estatístico preditivo. Desta forma, podemos utilizar o modelo de random forest para realizar esta estimação.</p>
 <p><strong>Distribuição de clientes por faixa de risco de cancelamento:</strong></p>
-<div id="ef867b5e" class="cell" data-execution_count="27">
+<div id="133c3998" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Mostrar o código</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>rf_model <span class="op">=</span> results[<span class="st">'Random_Forest'</span>][<span class="st">'best_model'</span>]</span>
@@ -1992,10 +1981,9 @@ Baixa renda + Não inadimplente       2.9060       0.0608  47.7791 &lt;0.0001   
 </details>
 <div class="cell-output cell-output-display">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -2007,37 +1995,36 @@ Baixa renda + Não inadimplente       2.9060       0.0608  47.7791 &lt;0.0001   
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>Até 10%</td>
-<td>7.145</td>
+<td>7.033</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>10% - 25%</td>
-<td>3.595</td>
+<td>3.668</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>25% - 50%</td>
-<td>5.181</td>
+<td>5.134</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>50% - 75%</td>
-<td>2.820</td>
+<td>2.834</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>75% - 90%</td>
-<td>2.111</td>
+<td>2.164</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>Acima de 90%</td>
-<td>47.566</td>
+<td>47.585</td>
 </tr>
 </tbody>
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -2057,228 +2044,242 @@ Baixa renda + Não inadimplente       2.9060       0.0608  47.7791 &lt;0.0001   
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/penasta\.github\.io\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
+      return false;
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/penasta\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
         }
-        return container.innerHTML
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -2286,185 +2287,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
