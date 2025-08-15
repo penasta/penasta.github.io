@@ -21,10 +21,26 @@ Here are personal applications of machine learning, data science and statistics.
 
 University of Brasília (UnB) | Federal District, Brazil | BSc in Statistics | Dez 2015 – Feb 2025
 
-University of Brasília (UnB) | Distrito Federal, Brazil | MSc in Statistics | Mar 2025 - Mar 2027
-
 ## Experience
 
 Project manager at ESTAT - Jan 2022 - Jan 2023
 
 STF Intern | Data analysis and statistics center (NUADE) | July 2023 – Feb 2025
+
+## Poster Presentations
+
+Non-homogeneous Poisson Processes of n Types – A Possible Application in the Judiciary (Poster Presentation).
+69th Annual Meeting of the Brazilian Region of the International Biometric Society (RBras) and 21st Symposium on Applied Statistics to Agricultural Experimentation (SEAGRO), Vitória, Brazil. August 2025.
+
+Similarity of Judicial Proceedings Using Natural Language Processing (Poster Presentation).
+69th Annual Meeting of the Brazilian Region of the International Biometric Society (RBras) and 21st Symposium on Applied Statistics to Agricultural Experimentation (SEAGRO), Vitória, Brazil. August 2025.
+
+## Awards
+
+2014 – Honorable Mention at the Brazilian Mathematics Olympiad for Public Schools (OBMEP), Institute for Pure and Applied Mathematics (IMPA)
+
+2023 Innovative Member Award (ESTAT)
+
+2023 Quality and Excellence Member Award (ESTAT)
+
+2023 Valuable Member Award – Boldness (ESTAT)

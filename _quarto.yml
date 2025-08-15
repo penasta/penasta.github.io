@@ -11,11 +11,13 @@ website:
       - text: Presentations
         menu:
           - href: presentations/nlp/index.qmd
-            text: Agrupador de processos de controle concentrado       
-          - href: presentations/random_forest/apresentacao.qmd
-            text: Técnicas de Random Forest em árvores de decisão  
+            text: Agrupador de processos de controle concentrado
           - href: presentations/estocasticos/estocasticos.qmd
             text: Processos de Poisson não homogêneos de n tipos
+          - href: presentations/churn/relatorio.qmd
+            text: Análise de Churn
+          - href: presentations/random_forest/apresentacao.qmd
+            text: Técnicas de Random Forest em árvores de decisão  
           - href: presentations/xgboost_catboost/trabalho.qmd
             text: XGBoost e Catboost
           - href: presentations/classificacao_salario/trabalho.qmd
