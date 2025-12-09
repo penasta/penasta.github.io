@@ -18,6 +18,14 @@ website:
             text: Análise de Churn
           - href: presentations/otimizacao/lista1.qmd
             text: Otimização de funções utilizando gradiente descendente e variações
+          - href: presentations/lista2rna1/lista2.qmd
+            text: Ajustando uma RNA “no braço”
+          - href: presentations/lista3rna1/lista3.qmd
+            text: Avaliando a rede neural.
+          - href: presentations/lista4rna1/lista4.qmd
+            text: Ajustando uma rede com PyTorch
+          - href: presentations/lista5rna1/lista5.qmd
+            text: Classificação de imagens via redes neurais com Pytorch
           - href: presentations/random_forest/apresentacao.qmd
             text: Técnicas de Random Forest em árvores de decisão  
           - href: presentations/xgboost_catboost/trabalho.qmd
