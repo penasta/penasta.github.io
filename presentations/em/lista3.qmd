@@ -42,7 +42,7 @@ sendo
 
 Considere o modelo exponencial com censura e obtenha a estimativa de $\mathbf{\theta}$ pelo algoritmo EM baseada nos dados abaixo:
 
-```{r}
+```{r, cache=TRUE}
 time <- c(8, 5, 2, 4, 2, 3, 6, 1, 5, 5, 10, 8, 5, 2, 1, 12, 4, 2, 4, 2, 7, 1, 6, 3, 9, 8, 3, 2, 14, 4)
   
 status <- c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1)  
@@ -86,7 +86,7 @@ $$
 
 E faremos esta atualização até obter uma estimativa estabilizada do parâmetro $\theta$, recalculando a esperança condicional de $z_i$ para cada novo $\theta_i,i>0\in\mathbb{Z}.$
 
-```{r}
+```{r, cache=TRUE}
 theta <- 1 / mean(time) 
 
 for (i in 1:1000) {

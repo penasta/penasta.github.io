@@ -128,7 +128,7 @@ graph TD
 
 ### Quantidade
 
-```{r, dev='svg', dev.args=list(bg="transparent")}
+```{r, dev='svg', dev.args=list(bg="transparent"),cache=TRUE}
 library(ggplot2)
 
 
@@ -332,7 +332,7 @@ Uma terceira métrica foi proposta para a medição da similaridade entre os pro
 
 ### Implementação
 
-```{r}
+```{r,cache=TRUE}
 #| echo: true
 
 # Calcular interseção mínima de probabilidade empírica entre dois documentos ----

@@ -90,7 +90,7 @@ Gere uma amostra simulada de tamanho $n=100$ da distribuição Birnbaum-Saunders
 
 Para gerar valores da BS, podemos aproveitar da relação estocástica desta distribuição com a distribuição normal, cujo gerador de NPA's já se encontra implementado no R.
 
-```{r}
+```{r, cache=TRUE}
 alpha = .5
 beta = 2
 n = 100
@@ -107,7 +107,7 @@ head(t);median(t)
 
 Para estimar os parâmetros $\alpha$ e $\beta$, implementaremos o método da máxima verossimilhança, utilizando o método de Newton. É necessário informar um valor inicial para o algoritmo, cujo exercício sugere $\mathbf{\alpha_0=0.1}$ e $\mathbf{\beta_0=1.0}$.
 
-```{r}
+```{r, cache=TRUE}
 
 alpha0 = 0.1
 beta0 = 1

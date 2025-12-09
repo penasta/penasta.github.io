@@ -30,6 +30,8 @@ knitr:
     dev: png
     dev.args:
       bg: transparent
+execute: 
+  cache: true
 ---
 
 ```{r, include=FALSE}
@@ -189,7 +191,7 @@ Será realizado o agrupamento com dados em recortes temporais distintos, e, em c
 
 ::: {.column width="30%"}
 
-```{r, dev='svg', dev.args=list(bg="transparent")}
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
 #| echo: false
 
 
@@ -236,7 +238,7 @@ ggplot(data=data, aes(x=Ano, y=Valor)) +
 
 ::: {.column width="40%"}
 
-```{r, dev='svg', dev.args=list(bg="transparent")}
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
 #| echo: false
 
 ponto_P <- data.frame(x = 3, y = 4)
@@ -272,7 +274,7 @@ ggplot() +
 
 ```
 
-```{r, dev='svg', dev.args=list(bg="transparent")}
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
 #| echo: false
 
 ponto_A <- data.frame(x = c(0, 3), y = c(0, 4))
@@ -334,7 +336,7 @@ ggplot() +
 
 ::: {.column width="40%"}
 
-```{r, dev='svg', dev.args=list(bg="transparent")}
+```{r, dev='svg', dev.args=list(bg="transparent"), cache=TRUE}
 #| echo: false
 
 set.seed(123)

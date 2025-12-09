@@ -44,7 +44,7 @@ x=
 $$
 E, desta forma, garantimos gerar valores em todo o suporte de x.
 
-```{r}
+```{r, cache=TRUE}
 n <- 1000
 u <- runif(n, min = 0, max = .5)
 x <- ifelse(runif(n) < 0.5, -log(2*u), log(2*u))
@@ -70,7 +70,7 @@ Para utilizar o método de aceitação-rejeição, desejamos gerar um valor X de
 
 ### Para n = 10
 
-```{r}
+```{r, cache=TRUE}
 n = 10
 theta0 = 3
 set.seed(251106723)
@@ -99,7 +99,7 @@ hist(amostras,main=main,sub = sub)
 
 ### Para n = 10,25,50,100
 
-```{r}
+```{r, cache=TRUE}
 par(mfrow=c(2,2))
 for (n in c(10,25,50,100)){
   theta0 = 3
@@ -150,7 +150,7 @@ Use o método de decomposição de Cholesky.
 
 Podemos utilizar a decomposição de Cholesky para gerar valores de uma normal multivariada à partir da geração de valores normal univariado.
 
-```{r}
+```{r, cache=TRUE}
 cholesky <- function(n, mu, Sigma) {
   d <- length(mu)
   C <- chol(Sigma)
@@ -176,7 +176,7 @@ Considere o artigo "Bivariate Birnbaum–Saunders distribution and associated in
 
 ## Solução
 
-```{r}
+```{r, cache=TRUE}
 a1 <- .5
 a2 <- .8
 b1 <- 1

@@ -41,7 +41,7 @@ em que $\hat{\sigma}^2=\frac{1}{n-1}\sum_{i=1^n (X_i-\bar{X})^2}$ e $p_{n,\alpha
 
 ## Solução
 
-```{r}
+```{r, cache=TRUE}
 N = 1000
 alpha = .05
 n = 10
@@ -73,7 +73,7 @@ abline(h = 1 - alpha, col = "red")
 ```
 Notamos pelo gráfico que os intervalos contém o verdadeiro parâmetro empiricamente aproximadamente a quantidade teórica esperada de 95%, para valores de $\lambda=\{1,2,3,...,20\}$. Este resultado, porém, difere para valores muito pequenos de $\lambda$, onde a sensibilidade da estimativa empírica para $n=10$ não é tão poderosa, como pode-se observar no gráfico a seguir, para valores de $\lambda$ de 0,025 a 1, de 0,025 em 0,025:
 
-```{r}
+```{r, cache=TRUE}
 lambda = seq(0.025,1,by=0.025)
 nlambda = length(lambda)
 cobertura <- numeric(nlambda)
@@ -147,7 +147,7 @@ for (i in 1:length(m)) {
 }
 ```
 
-```{r}
+```{r, cache=TRUE}
 knitr::kable(rejeicao)
 ```
 
@@ -155,7 +155,7 @@ Pela Tabela acima, nota-se que já para pequenos valores de $\epsilon$ e/ou maio
 
 Esta evolução pode ser melhor observada pelo gráfico da curva de potência em função de $\epsilon$ para cada tamanho de amostra:
 
-```{r}
+```{r, cache=TRUE}
 df = melt(rejeicao)
 colnames(df) = c("n","e","rejeicao")
 

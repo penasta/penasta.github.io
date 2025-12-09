@@ -380,7 +380,7 @@ Podemos ver que um menor valor de penalização é benéfico ao modelo, visto a 
 
 ## Estimativa dos parâmetros para o modelo Lasso
 
-```{r}
+```{r, cache=TRUE}
 #| echo: TRUE
 
 best_params = lasso_res %>%

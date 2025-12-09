@@ -28,6 +28,8 @@ knitr:
     dev: png
     dev.args:
       bg: transparent
+execute: 
+  cache: true
 ---
 
 ```{r, include=FALSE}
@@ -44,8 +46,9 @@ if(!('reprtree' %in% installed.packages())){
 for(p in c(cran.packages, 'reprtree')) eval(substitute(library(pkg), list(pkg=p)))
 
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
-pacman::p_load(tidyverse, randomForest,randomForest,reprtree,
-               reshape2,latex2exp,caret)
+pacman::p_load(tidyverse, randomForest,reprtree,
+               reshape2,latex2exp,caret,VGAM,reticulate)
+
 ```
 
 ## Introdução
@@ -129,8 +132,6 @@ Uma rotina minimalista de classificação via *Random Forest* em **R** pode ser 
 ```{r, cache=TRUE}
 #| echo: TRUE
 
-library(randomForest)
-
 data <- iris
 
 data$Species <- as.factor(data$Species)
@@ -149,7 +150,7 @@ rf <- randomForest(Species~., data=train, proximity=TRUE)
 
 ::: {.column width="50%"}
 
-```{r}
+```{r, cache=TRUE}
 rf
 ```
 
@@ -167,14 +168,14 @@ Podemos acessar os resultados do modelo no objeto *rf*
 
 Teste do modelo no conjunto de treino:
 
-```{r}
+```{r, cache=TRUE}
 #| echo: true
 
-library(caret)
 
 p1 <- predict(rf, train)
 confusionMatrix(p1, train$ Species)
 ```
+
 
 :::
 
@@ -182,7 +183,7 @@ confusionMatrix(p1, train$ Species)
 
 Validação do modelo nos dados de teste:
 
-```{r}
+```{r, cache=TRUE}
 #| echo: true
 
 p2 <- predict(rf, test)
@@ -209,7 +210,7 @@ Se for o caso, também podemos fazer o *fine-tuning* dos parâmetros do modelo
 
 ::: {.column width="50%"}
 
-```{r}
+```{r, cache=TRUE}
 #| echo: true
 
 t <- tuneRF(train[,-5], train[,5],
@@ -225,7 +226,7 @@ t <- tuneRF(train[,-5], train[,5],
 
 ::: {.column width="50%"}
 
-```{r}
+```{r, cache=TRUE}
 #| echo: true
 
 hist(treesize(rf),
@@ -247,7 +248,7 @@ Podemos verificar a importância de cada variável para o modelo.
 
 ::: {.column width="50%"}
 
-```{r}
+```{r, cache=TRUE}
 #| echo: true
 
 varImpPlot(rf,
@@ -265,11 +266,11 @@ importance(rf)
 
 ::: {.column width="50%"}
 
-```{r}
+```{r, cache=TRUE}
 partialPlot(rf, train, Petal.Width, "setosa")
 ```
 
-```{r}
+```{r, cache=TRUE}
 MDSplot(rf, train$Species)
 ```
 
@@ -288,12 +289,6 @@ Uma rotina de classificação via *Random forest* poderia ser executada de forma
 ::: columns
 
 ::: {.column width="50%"}
-
-```{r}
-#| echo: true
-
-library(reticulate)
-```
 
 ```{python}
 #| echo: true
@@ -373,7 +368,7 @@ O dataset DARWIN (https://archive.ics.uci.edu/dataset/732/darwin) contém dados 
 
 ::: {.column width="50%"}
 
-```{r}
+```{r, cache=TRUE}
 #| echo: false
 
 data = read.csv('https://raw.githubusercontent.com/penasta/topicos2/main/arquivos/data.csv', header = TRUE)
@@ -627,8 +622,7 @@ confusionMatrix(PredOutliersrf, test$Species)
 
 - Regressão logística
 
-```{r}
-library(VGAM)
+```{r, cache=TRUE}
 #Reg Logística
 OutliersRegLog <- VGAM::vglm(Species ~., family=VGAM::multinomial(refLevel="setosa"), 
              data=DadosExempOutTreino) 
@@ -668,7 +662,7 @@ confusionMatrix(PredOutliersSVMlin, test$Species)
 
 - SVM radial
 
-```{r}
+```{r, cache=TRUE}
 #SVM
 #radial
 OutliersSVMrad <- e1071::svm(Species~., data=DadosExempOutTreino, kernel="radial")
