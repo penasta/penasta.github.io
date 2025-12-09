@@ -54,12 +54,15 @@ pacman::p_load(tidyverse, readxl, janitor,xgboost,tidymodels,vip,rpart.plot,
                conflicted,tictoc,finetune,doParallel,DataExplorer,future,glmnet,
                data.table,summarytools,knitr,compareGroups,bonsai,discrim,
                baguette,naivebayes)
+```
 
+```{r, cache=TRUE}
 registerDoParallel(cores = parallel::detectCores())
 
 tidymodels_prefer()
 df = read_csv("data.csv")
 ```
+
 
 ```{r, cache=TRUE}
 #| echo: true
