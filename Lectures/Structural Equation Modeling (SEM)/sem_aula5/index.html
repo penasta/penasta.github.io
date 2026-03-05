@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lectures &amp; Teaching – Bruno Gondim</title>
+<title>Aula 5 — Exemplo prático (lavaan) – Bruno Gondim</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +23,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../cup-hot" rel="icon">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-cc63fce9873912f1bbbccf05079cc9ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../cup-hot" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-cc63fce9873912f1bbbccf05079cc9ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,111 +68,25 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-BIO .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-BIO'] = new List('listing-BIO', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-SEM .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-SEM'] = new List('listing-SEM', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Lectures &amp; Teaching – Bruno Gondim">
-<meta property="og:description" content="Materiais de apoio e notas de aula">
+<link rel="stylesheet" href="../../../styles.css">
+<meta property="og:title" content="Aula 5 — Exemplo prático (lavaan) – Bruno Gondim">
+<meta property="og:description" content="Script R para aplicação de SEM">
 <meta property="og:site_name" content="Bruno Gondim">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../cup-hot" alt="" class="navbar-logo">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../cup-hot" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Bruno Gondim</span>
     </a>
   </div>
@@ -185,19 +97,19 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../Case studies/index.html"> 
+    <a class="nav-link" href="../../../Case studies/index.html"> 
 <span class="menu-text">Case studies</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../Lectures/index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../Lectures/index.html"> 
 <span class="menu-text">Lectures</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../Academic production/index.html"> 
+    <a class="nav-link" href="../../../Academic production/index.html"> 
 <span class="menu-text">Academic production</span></a>
   </li>  
 </ul>
@@ -209,28 +121,116 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html">Structural Equation Modeling (SEM)</a></li><li class="breadcrumb-item"><a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html">Aula 5 — Exemplo prático</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#biostatistics" id="toc-biostatistics" class="nav-link active" data-scroll-target="#biostatistics">Biostatistics</a></li>
-  <li><a href="#structural-equation-modeling-sem" id="toc-structural-equation-modeling-sem" class="nav-link" data-scroll-target="#structural-equation-modeling-sem">Structural Equation Modeling (SEM)</a></li>
-  </ul>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Biostatistics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 1 — Revisão</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Biostatistics/aula2/aula2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Structural Equation Modeling (SEM)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aula 5 — Exemplo prático</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 6 — PLS SEM</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html">Structural Equation Modeling (SEM)</a></li><li class="breadcrumb-item"><a href="../../../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html">Aula 5 — Exemplo prático</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Lectures &amp; Teaching</h1>
-<p class="subtitle lead">Materiais de apoio e notas de aula</p>
+<h1 class="title">Aula 5 — Exemplo prático (lavaan)</h1>
+<p class="subtitle lead">Script R para aplicação de SEM</p>
 </div>
 
 
@@ -247,139 +247,11 @@ window.Quarto = {
 </header>
 
 
-<p>Nesta seção, organizo materiais didáticos e anotações de tópicos avançados em estatística e biometria.</p>
-<section id="biostatistics" class="level3">
-<h3 class="anchored" data-anchor-id="biostatistics">Biostatistics</h3>
-<div id="listing-BIO" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1772724508072" data-listing-reading-time-sort="4" data-listing-word-count-sort="773">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="no-external">Aula 1</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="no-external">Revisão geral</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1772718779505" data-listing-reading-time-sort="9" data-listing-word-count-sort="1744">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Biostatistics/aula2/aula2.html" class="no-external">Aula 2</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Biostatistics/aula2/aula2.html" class="no-external"></a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Biostatistics/aula2/aula2.html" class="no-external">
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div>
-<hr>
-</section>
-<section id="structural-equation-modeling-sem" class="level3">
-<h3 class="anchored" data-anchor-id="structural-equation-modeling-sem">Structural Equation Modeling (SEM)</h3>
-<div id="listing-SEM" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1772725847393" data-listing-reading-time-sort="1" data-listing-word-count-sort="26">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="no-external">Aula 5 — Exemplo prático (lavaan)</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="no-external">Script R para aplicação de SEM</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1761324750515" data-listing-reading-time-sort="7" data-listing-word-count-sort="1233">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="no-external">Aula 1 — Revisão multivariada</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-file-modified-sort="1761418501984" data-listing-reading-time-sort="4" data-listing-word-count-sort="669">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="no-external">Aula 2 — Análise Fatorial Exploratória</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-file-modified-sort="1772726189017" data-listing-reading-time-sort="5" data-listing-word-count-sort="861">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="no-external">Aula 3 — Análise Fatorial Confirmatória</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-file-modified-sort="1761698764968" data-listing-reading-time-sort="4" data-listing-word-count-sort="770">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="no-external">Aula 4 — Modelagem de equações estruturais</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-listing-file-modified-sort="1772726156889" data-listing-reading-time-sort="8" data-listing-word-count-sort="1537">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="no-external">Aula 6 — Partial Least Squares SEM (PLS-SEM)</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="no-external">
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div>
+<p>Esta aula consistiu em um exemplo prático utilizando o pacote <code>lavaan</code> no R.</p>
+<p>O código-fonte completo está disponível diretamente no repositório do GitHub:</p>
+<p><a href="https://github.com/penasta/sem/blob/main/rdocs/aula5_lavaan.R">Link para o script: aula5_lavaan.R</a></p>
 
 
-
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

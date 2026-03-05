@@ -16,3 +16,12 @@
     background-color: #0056b3;
 }
 
+.quarto-listing, 
+.listing-table,
+.quarto-listing-container-default {
+  text-align: left !important;
+}
+
+.listing-title, .listing-subtitle {
+  text-align: left !important;
+}

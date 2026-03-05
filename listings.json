@@ -1,5 +1,24 @@
 [
   {
+    "listing": "/Lectures/index.html",
+    "items": [
+      "/Lectures/Biostatistics/aula1/tipos_variaveis.html",
+      "/Lectures/Biostatistics/aula2/aula2.html",
+      "/Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html",
+      "/Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html",
+      "/Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html",
+      "/Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html",
+      "/Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html",
+      "/Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html"
+    ]
+  },
+  {
+    "listing": "/Case studies/index.html",
+    "items": [
+      "/Case studies/churn/relatorio.html"
+    ]
+  },
+  {
     "listing": "/Academic production/index.html",
     "items": [
       "/Academic production/Capstone project/nlp/index.html",
@@ -20,24 +39,6 @@
       "/Academic production/Assignments/montecarlo/lista4.html",
       "/Academic production/Assignments/em/lista3.html",
       "/Academic production/Assignments/classificacao_salario_relatorio/trabalho_bruno.html"
-    ]
-  },
-  {
-    "listing": "/Case studies/index.html",
-    "items": [
-      "/Case studies/churn/relatorio.html"
-    ]
-  },
-  {
-    "listing": "/Lectures/index.html",
-    "items": [
-      "/Lectures/Biostatistics/aula1/tipos_variaveis.html",
-      "/Lectures/Biostatistics/aula2/aula2.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html"
     ]
   }
 ]

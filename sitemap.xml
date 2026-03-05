@@ -2,122 +2,126 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html</loc>
-    <lastmod>2026-01-04T18:57:37.993Z</lastmod>
+    <lastmod>2026-03-05T15:55:56.889Z</lastmod>
   </url>
   <url>
-    <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html</loc>
-    <lastmod>2025-10-27T17:58:54.550Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html</loc>
-    <lastmod>2025-10-24T16:52:30.515Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Lectures/Biostatistics/aula2/aula2.html</loc>
-    <lastmod>2026-03-05T13:52:59.505Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/index.html</loc>
-    <lastmod>2025-08-15T18:16:53.175Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Case studies/churn/relatorio.html</loc>
-    <lastmod>2025-07-31T20:13:06.142Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/index.html</loc>
-    <lastmod>2026-03-05T15:35:27.686Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Capstone project/nlp/index.html</loc>
-    <lastmod>2026-03-05T15:16:02.041Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/random_forest/apresentacao.html</loc>
-    <lastmod>2026-03-05T14:59:08.278Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/otimizacao/lista1.html</loc>
-    <lastmod>2025-09-30T19:39:22.515Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/montecarlo/lista4.html</loc>
-    <lastmod>2025-09-30T19:34:35.309Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/lista4rna1/lista4.html</loc>
-    <lastmod>2025-11-23T16:04:23.402Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/lista2rna1/lista2.html</loc>
-    <lastmod>2025-12-09T20:59:26.646Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/classificação binária de decisões/trabalho_final.html</loc>
-    <lastmod>2026-03-05T14:58:16.270Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/classificacao_salario/trabalho.html</loc>
-    <lastmod>2026-03-05T14:59:23.811Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/birnbaum/seminario.html</loc>
-    <lastmod>2026-03-05T14:59:41.567Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/classificacao_salario_relatorio/trabalho_bruno.html</loc>
-    <lastmod>2025-02-08T20:43:39.744Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/em/lista3.html</loc>
-    <lastmod>2025-09-30T19:33:51.094Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/lista3rna1/lista3.html</loc>
-    <lastmod>2025-12-09T21:00:28.811Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/lista5rna1/lista5.html</loc>
-    <lastmod>2025-12-06T19:28:28.507Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/npa/lista1.html</loc>
-    <lastmod>2025-09-30T19:37:31.434Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/otim_mv/lista2.html</loc>
-    <lastmod>2025-09-30T19:38:10.346Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Assignments/xgboost_catboost/trabalho.html</loc>
-    <lastmod>2026-03-05T14:58:41.534Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Capstone project/tcc2/slide.html</loc>
-    <lastmod>2026-03-05T15:00:10.125Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Academic production/Papers/estocasticos/estocasticos.html</loc>
-    <lastmod>2026-03-05T14:57:38.599Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Case studies/index.html</loc>
-    <lastmod>2026-03-05T14:19:53.879Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Lectures/Biostatistics/aula1/tipos_variaveis.html</loc>
-    <lastmod>2026-03-05T15:28:28.072Z</lastmod>
-  </url>
-  <url>
-    <loc>https://penasta.github.io/Lectures/index.html</loc>
-    <lastmod>2026-03-05T15:35:26.303Z</lastmod>
+    <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html</loc>
+    <lastmod>2025-10-29T00:46:04.968Z</lastmod>
   </url>
   <url>
     <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html</loc>
     <lastmod>2025-10-25T18:55:01.984Z</lastmod>
   </url>
   <url>
-    <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html</loc>
-    <lastmod>2025-10-29T00:46:04.968Z</lastmod>
+    <loc>https://penasta.github.io/Lectures/index.html</loc>
+    <lastmod>2026-03-05T15:51:28.066Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Lectures/Biostatistics/aula1/tipos_variaveis.html</loc>
+    <lastmod>2026-03-05T15:28:28.072Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Case studies/index.html</loc>
+    <lastmod>2026-03-05T14:19:53.879Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Papers/estocasticos/estocasticos.html</loc>
+    <lastmod>2026-03-05T14:57:38.599Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Capstone project/tcc2/slide.html</loc>
+    <lastmod>2026-03-05T15:00:10.125Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/xgboost_catboost/trabalho.html</loc>
+    <lastmod>2026-03-05T14:58:41.534Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/otim_mv/lista2.html</loc>
+    <lastmod>2025-09-30T19:38:10.346Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/npa/lista1.html</loc>
+    <lastmod>2025-09-30T19:37:31.434Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/lista5rna1/lista5.html</loc>
+    <lastmod>2025-12-06T19:28:28.507Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/lista3rna1/lista3.html</loc>
+    <lastmod>2025-12-09T21:00:28.811Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/em/lista3.html</loc>
+    <lastmod>2025-09-30T19:33:51.094Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/classificacao_salario_relatorio/trabalho_bruno.html</loc>
+    <lastmod>2025-02-08T20:43:39.744Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/birnbaum/seminario.html</loc>
+    <lastmod>2026-03-05T14:59:41.567Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/classificacao_salario/trabalho.html</loc>
+    <lastmod>2026-03-05T14:59:23.811Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/classificação binária de decisões/trabalho_final.html</loc>
+    <lastmod>2026-03-05T14:58:16.270Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/lista2rna1/lista2.html</loc>
+    <lastmod>2025-12-09T20:59:26.646Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/lista4rna1/lista4.html</loc>
+    <lastmod>2025-11-23T16:04:23.402Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/montecarlo/lista4.html</loc>
+    <lastmod>2025-09-30T19:34:35.309Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/otimizacao/lista1.html</loc>
+    <lastmod>2025-09-30T19:39:22.515Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Assignments/random_forest/apresentacao.html</loc>
+    <lastmod>2026-03-05T14:59:08.278Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/Capstone project/nlp/index.html</loc>
+    <lastmod>2026-03-05T15:16:02.041Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Academic production/index.html</loc>
+    <lastmod>2026-03-05T15:35:27.686Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Case studies/churn/relatorio.html</loc>
+    <lastmod>2025-07-31T20:13:06.142Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/index.html</loc>
+    <lastmod>2025-08-15T18:16:53.175Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Lectures/Biostatistics/aula2/aula2.html</loc>
+    <lastmod>2026-03-05T13:52:59.505Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html</loc>
+    <lastmod>2025-10-24T16:52:30.515Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html</loc>
+    <lastmod>2026-03-05T15:56:29.017Z</lastmod>
+  </url>
+  <url>
+    <loc>https://penasta.github.io/Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html</loc>
+    <lastmod>2026-03-05T15:50:47.393Z</lastmod>
   </url>
 </urlset>
