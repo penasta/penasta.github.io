@@ -13,12 +13,6 @@
     ]
   },
   {
-    "listing": "/Case studies/index.html",
-    "items": [
-      "/Case studies/churn/relatorio.html"
-    ]
-  },
-  {
     "listing": "/Academic production/index.html",
     "items": [
       "/Academic production/Capstone project/nlp/index.html",
@@ -39,6 +33,13 @@
       "/Academic production/Assignments/montecarlo/lista4.html",
       "/Academic production/Assignments/em/lista3.html",
       "/Academic production/Assignments/classificacao_salario_relatorio/trabalho_bruno.html"
+    ]
+  },
+  {
+    "listing": "/Case studies/index.html",
+    "items": [
+      "/Case studies/churn/relatorio.html",
+      "/Case studies/pnad/projeto_html.html"
     ]
   }
 ]
