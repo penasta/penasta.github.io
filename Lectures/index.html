@@ -80,9 +80,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
+      searchColumns: ["listing-title","listing-author"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -108,9 +108,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
+      searchColumns: ["listing-title","listing-author"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -250,130 +250,162 @@ window.Quarto = {
 <p>Nesta seção, organizo materiais didáticos e anotações de tópicos avançados em estatística e biometria.</p>
 <section id="biostatistics" class="level3">
 <h3 class="anchored" data-anchor-id="biostatistics">Biostatistics</h3>
-<div id="listing-BIO" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1772724508072" data-listing-reading-time-sort="4" data-listing-word-count-sort="773">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="no-external">Aula 1</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="no-external">Revisão geral</a>
+<div id="listing-BIO" class="quarto-listing quarto-listing-container-table">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+    <select id="listing-BIO-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-BIO'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+      <option value="" disabled="" selected="" hidden="">Order By</option>
+      <option value="index" data-direction="asc">Default</option>
+      <option value="listing-title-sort" data-direction="asc">
+        Title
+      </option>
+    </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
 </div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1772718779505" data-listing-reading-time-sort="9" data-listing-word-count-sort="1744">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Biostatistics/aula2/aula2.html" class="no-external">Aula 2</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Biostatistics/aula2/aula2.html" class="no-external"></a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Biostatistics/aula2/aula2.html" class="no-external">
-</a>
-</div>
-</div>
-</div>
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+
+<th>
+<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+</th>
+
+<th>
+Subtitle
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-listing-file-modified-sort="1772724508072" data-listing-reading-time-sort="4" data-listing-word-count-sort="773" data-listing-title-sort="Aula 1" data-listing-filename-sort="tipos_variaveis.qmd">
+<td>
+<a href="../Lectures/Biostatistics/aula1/tipos_variaveis.html" class="title listing-title">Aula 1</a>
+</td>
+<td>
+<span class="listing-subtitle">Revisão geral</span>
+</td>
+
+</tr>
+
+<tr data-index="1" data-listing-file-modified-sort="1772718779505" data-listing-reading-time-sort="9" data-listing-word-count-sort="1744" data-listing-title-sort="Aula 2" data-listing-filename-sort="aula2.qmd">
+<td>
+<a href="../Lectures/Biostatistics/aula2/aula2.html" class="title listing-title">Aula 2</a>
+</td>
+<td>
+<span class="listing-subtitle">&nbsp;</span>
+</td>
+
+</tr>
+
+</tbody>
+</table>
 <div class="listing-no-matching d-none">No matching items</div>
 </div>
 <hr>
 </section>
 <section id="structural-equation-modeling-sem" class="level3">
 <h3 class="anchored" data-anchor-id="structural-equation-modeling-sem">Structural Equation Modeling (SEM)</h3>
-<div id="listing-SEM" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1772725847393" data-listing-reading-time-sort="1" data-listing-word-count-sort="26">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="no-external">Aula 5 — Exemplo prático (lavaan)</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="no-external">Script R para aplicação de SEM</a>
+<div id="listing-SEM" class="quarto-listing quarto-listing-container-table">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+    <select id="listing-SEM-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-SEM'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+      <option value="" disabled="" selected="" hidden="">Order By</option>
+      <option value="index" data-direction="asc">Default</option>
+      <option value="listing-title-sort" data-direction="asc">
+        Title
+      </option>
+    </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
 </div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1761324750515" data-listing-reading-time-sort="7" data-listing-word-count-sort="1233">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="no-external">Aula 1 — Revisão multivariada</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-file-modified-sort="1761418501984" data-listing-reading-time-sort="4" data-listing-word-count-sort="669">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="no-external">Aula 2 — Análise Fatorial Exploratória</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-file-modified-sort="1772726189017" data-listing-reading-time-sort="5" data-listing-word-count-sort="861">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="no-external">Aula 3 — Análise Fatorial Confirmatória</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-file-modified-sort="1761698764968" data-listing-reading-time-sort="4" data-listing-word-count-sort="770">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="no-external">Aula 4 — Modelagem de equações estruturais</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-listing-file-modified-sort="1772726156889" data-listing-reading-time-sort="8" data-listing-word-count-sort="1537">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="no-external">Modelos de equações estruturais</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="no-external">Aula 6 — Partial Least Squares SEM (PLS-SEM)</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="no-external">
-</a>
-</div>
-</div>
-</div>
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+
+<th>
+<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+</th>
+
+<th>
+Subtitle
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-listing-file-modified-sort="1761324750515" data-listing-reading-time-sort="7" data-listing-word-count-sort="1233" data-listing-title-sort="Modelos de equações estruturais" data-listing-filename-sort="aula1.qmd">
+<td>
+<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html" class="title listing-title">Modelos de equações estruturais</a>
+</td>
+<td>
+<span class="listing-subtitle">Aula 1 — Revisão multivariada</span>
+</td>
+
+</tr>
+
+<tr data-index="1" data-listing-file-modified-sort="1761418501984" data-listing-reading-time-sort="4" data-listing-word-count-sort="669" data-listing-title-sort="Modelos de equações estruturais" data-listing-filename-sort="aula2.qmd">
+<td>
+<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html" class="title listing-title">Modelos de equações estruturais</a>
+</td>
+<td>
+<span class="listing-subtitle">Aula 2 — Análise Fatorial Exploratória</span>
+</td>
+
+</tr>
+
+<tr data-index="2" data-listing-file-modified-sort="1772726189017" data-listing-reading-time-sort="5" data-listing-word-count-sort="861" data-listing-title-sort="Modelos de equações estruturais" data-listing-filename-sort="aula3.qmd">
+<td>
+<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html" class="title listing-title">Modelos de equações estruturais</a>
+</td>
+<td>
+<span class="listing-subtitle">Aula 3 — Análise Fatorial Confirmatória</span>
+</td>
+
+</tr>
+
+<tr data-index="3" data-listing-file-modified-sort="1761698764968" data-listing-reading-time-sort="4" data-listing-word-count-sort="770" data-listing-title-sort="Modelos de equações estruturais" data-listing-filename-sort="aula4.qmd">
+<td>
+<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html" class="title listing-title">Modelos de equações estruturais</a>
+</td>
+<td>
+<span class="listing-subtitle">Aula 4 — Modelagem de equações estruturais</span>
+</td>
+
+</tr>
+
+<tr data-index="4" data-listing-file-modified-sort="1772726556835" data-listing-reading-time-sort="1" data-listing-word-count-sort="26" data-listing-title-sort="Modelos de equações estruturais" data-listing-filename-sort="index.qmd">
+<td>
+<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html" class="title listing-title">Modelos de equações estruturais</a>
+</td>
+<td>
+<span class="listing-subtitle">Aula 5 — Exemplo prático (lavaan)</span>
+</td>
+
+</tr>
+
+<tr data-index="5" data-listing-file-modified-sort="1772726156889" data-listing-reading-time-sort="8" data-listing-word-count-sort="1537" data-listing-title-sort="Modelos de equações estruturais" data-listing-filename-sort="aula6_pls.qmd">
+<td>
+<a href="../Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html" class="title listing-title">Modelos de equações estruturais</a>
+</td>
+<td>
+<span class="listing-subtitle">Aula 6 — Partial Least Squares SEM (PLS-SEM)</span>
+</td>
+
+</tr>
+
+</tbody>
+</table>
 <div class="listing-no-matching d-none">No matching items</div>
 </div>
 

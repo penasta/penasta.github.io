@@ -4,11 +4,11 @@
     "items": [
       "/Lectures/Biostatistics/aula1/tipos_variaveis.html",
       "/Lectures/Biostatistics/aula2/aula2.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html",
       "/Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html",
       "/Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html",
       "/Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html",
       "/Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html",
+      "/Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html",
       "/Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html"
     ]
   },
@@ -24,10 +24,10 @@
       "/Academic production/Capstone project/nlp/index.html",
       "/Academic production/Capstone project/tcc2/slide.html",
       "/Academic production/Papers/estocasticos/estocasticos.html",
+      "/Academic production/Assignments/xgboost_catboost/trabalho.html",
       "/Academic production/Assignments/birnbaum/seminario.html",
       "/Academic production/Assignments/classificacao_salario/trabalho.html",
       "/Academic production/Assignments/random_forest/apresentacao.html",
-      "/Academic production/Assignments/xgboost_catboost/trabalho.html",
       "/Academic production/Assignments/classificação binária de decisões/trabalho_final.html",
       "/Academic production/Assignments/lista3rna1/lista3.html",
       "/Academic production/Assignments/lista2rna1/lista2.html",
