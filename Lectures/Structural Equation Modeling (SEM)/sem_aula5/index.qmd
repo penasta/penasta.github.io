@@ -1,0 +1,12 @@
+---
+title: "Modelos de equações estruturais"
+subtitle: "Aula 5 — Exemplo prático (lavaan)"
+execute: 
+  cache: true
+---
+
+Esta aula consistiu em um exemplo prático utilizando o pacote `lavaan` no R.
+
+O código-fonte completo está disponível diretamente no repositório do GitHub:
+
+[Link para o script: aula5_lavaan.R](https://github.com/penasta/sem/blob/main/rdocs/aula5_lavaan.R)

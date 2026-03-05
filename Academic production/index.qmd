@@ -1,0 +1,34 @@
+---
+title: "Academic Production"
+listing:
+  - id: capstone
+    contents: "Capstone project/**/*.qmd"
+    type: default
+  - id: papers
+    contents: "Papers/**/*.qmd"
+    type: table
+  - id: assignments
+    contents: "Assignments/**/*.qmd"
+    type: table
+    sort: "date desc"
+---
+
+Compilado da minha produção intelectual durante a graduação.
+
+### Capstone Project
+:::{#capstone}
+:::
+
+Foi produzido também um dashboard Shiny como produto deste trabalho, disponível neste [link](https://penasta.shinyapps.io/similaridade_processos/)
+
+---
+
+### Papers
+:::{#papers}
+:::
+
+---
+
+### Assignments & Coursework
+:::{#assignments}
+:::

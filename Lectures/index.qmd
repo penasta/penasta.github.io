@@ -1,0 +1,25 @@
+---
+title: "Lectures & Teaching"
+subtitle: "Materiais de apoio e notas de aula"
+listing:
+  - id: BIO
+    contents: "Biostatistics/**/*.qmd"
+    type: table
+    fields: [title, subtitle]
+  - id: SEM
+    contents: "Structural Equation Modeling (SEM)/**/*.qmd"
+    type: table
+    fields: [title, subtitle]
+---
+
+Nesta seção, organizo materiais didáticos e anotações de tópicos avançados em estatística e biometria.
+
+### Biostatistics
+:::{#BIO}
+:::
+
+---
+
+### Structural Equation Modeling (SEM)
+:::{#SEM}
+:::

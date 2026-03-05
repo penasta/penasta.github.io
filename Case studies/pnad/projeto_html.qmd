@@ -1,0 +1,475 @@
+---
+title: "Desigualdades de gênero e raça no mercado de trabalho brasileiro"
+subtitle: "Uma breve análise da PNAD Contínua 1º trimestre de 2025"
+author:
+  - name: Bruno Gondim Toledo
+    url: https://penasta.github.io
+date: last-modified
+output: html_document
+geometry: a4paper
+fontsize: 12pt
+format:
+  html:
+    code-fold: true
+    code-summary: "Mostrar códigos"
+    toc: true
+    toc-title: "Índice"
+    lightbox: true
+execute: 
+  cache: true
+---
+
+\newpage
+
+# Introdução
+
+O presente projeto visa explorar como características de gênero e raça influenciam na inserção no mercado de trabalho e na renda, utilizando dados da PNAD Contínua do 1º trimestre de 2025. A análise focará em indicadores-chave como taxa de ocupação, formalidade no emprego e rendimento médio, segmentados por gênero e raça/cor. Além disso, será avaliado o impacto dessas variáveis demográficas na renda por meio de modelos estatísticos, buscando estimar e interpretar diferenças salariais. Desta forma, este trabalho serve como primeiro insumo para uma análise mais rigorosa e detalhada dos possíveis fatores que influenciam a desigualdade de renda no Brasil contemporâneo.
+
+# Dados e Metodologia
+
+Foi utilizado no escopo deste trabalho microdados da pesquisa nacional por amostra de domicílios contínua — PNAD contínua \footnote[1]{Fonte: \url{https://www.ibge.gov.br/estatisticas/sociais/trabalho/17270-pnad-continua.html}}, referente ao primeiro trimestre de 2025, considerando domicílios de todo o Brasil. Para obtenção destes dados, utilizou-se o pacote *PNADcIBGE* no software R, juntamente com o pacote *survey* para análise dos dados subsequentes, respeitando o desenho amostral elaborado pelo IBGE e produzindo estimativas representativas da população e erros-padrão corretos para inferência. As definições de ocupação, gênero e raça são as trazidas pelo próprio IBGE \footnote[2]{Fonte: \url{https://www.ibge.gov.br/estatisticas/sociais/trabalho/17270-pnad-continua.html?=&t=conceitos-e-metodos}}.
+
+Para tal, foram considerados apenas indivíduos da amostra com 14 anos ou mais, bem como foram descartados registros sem raça declarada. Para modelagem linear, foram também excluídos indivíduos sem renda habitual do trabalho principal declarada. Para o modelo log-linear generalizado, aplicou-se transformação logarítmica na renda, e utilizou-se esta nova variável como resposta do modelo. Além disso, aparou-se a renda, antes da transformação, tal que descartasse indivíduos com renda inferior ao quantil 2,5% da amostra, bem como superior ao quantil 97,5%, com objetivo de obter um modelo robusto para a massa central de dados, ainda que sem capacidade para previsão e ajuste em rendas muito baixas ou muito altas. A idade dos indivíduos nesta modelagem também foi modificada, transformada na idade centrada na média, permitindo interpretação dos coeficientes como aumento ou diminuição de um ano em relação a média amostral de idade.
+
+# Resultados
+
+```{r setup, include=FALSE}
+options(survey.lonely.psu = "adjust") 
+
+if(!require(pacman)) install.packages("pacman")
+
+p_load(tidyverse,janitor,survey,srvyr,scales,
+       ranger,tidymodels,vip,hardhat,tictoc,
+       finetune,doParallel,SHAPforxgboost,
+       convey,knitr)
+
+```
+
+```{r dados, include=FALSE, cache=TRUE}
+pnadc_1_2025 <- readRDS("pnadc_2025_1tri.rds")
+
+proposta1 <- pnadc_1_2025$variables %>%
+  clean_names() %>%
+  filter(v2009 >= 14,
+         v2010 != "Ignorado") %>%
+  select(upa,estrato,v1028, # Variáveis para plano amostral: Unidade Primária de Amostragem (UPA); Estrato (As 2 primeiras posições representam o código da Unidade da Federação); Peso do domicílio e das pessoas (Peso trimestral com correção de não entrevista com pós estratificação pela projeção de população)
+         uf, # Unidade da Federação
+         v2007, # Sexo
+         v2009, # Idade
+         v2010, # Cor ou raça
+         vd3004, # Nível de instrução mais elevado alcançado (pessoas de 5 anos ou mais de idade) padronizado para o Ensino fundamental - SISTEMA DE 9 ANOS
+         vd4001, # Condição em relação à força de trabalho na semana de referência para pessoas de 14 anos ou mais de idade
+         vd4002, # Condição de ocupação na semana de referência para pessoas de 14 anos ou mais de idade
+         vd4007, # Posição na ocupação no trabalho principal da semana de referência para pessoas de 14 anos ou mais de idade
+         vd4009, # Posição na ocupação e categoria do emprego do trabalho principal da semana de referência para pessoas de 14 anos ou mais de idade
+         vd4012, # Contribuição para instituto de previdência em qualquer trabalho da semana de referência para pessoas de 14 anos ou mais de idade
+         vd4016, # Rendimento mensal habitual do trabalho principal para pessoas de 14 anos ou mais de idade (apenas para pessoas que receberam em dinheiro, produtos ou mercadorias no trabalho principal)
+         vd4019, # Rendimento mensal habitual de todos os trabalhos para pessoas de 14 anos ou mais de idade (apenas para pessoas que receberam em dinheiro, produtos ou mercadorias em qualquer trabalho)
+         vd4031, # Horas habitualmente trabalhadas por semana em todos os trabalhos para pessoas de 14 anos ou mais de idade
+         vd4035 # Horas efetivamente trabalhadas na semana de referência em todos os trabalhos para pessoas de 14 anos ou mais de idade
+         ) 
+
+rm(pnadc_1_2025)
+gc()
+
+design_proposta1 <- svydesign(
+  ids = ~upa,
+  strata = ~estrato,
+  weights = ~v1028,
+  data = proposta1,
+  nest = TRUE
+)
+
+format_svy_tab <- function(df) {
+
+  df %>%
+    rename(
+      Sexo = v2007,
+      `Raça/Cor` = v2010
+    ) %>%
+
+    mutate(across(where(is.numeric) & !c(Sexo, `Raça/Cor`),
+                  ~ scales::percent(.x, accuracy = 0.01, decimal.mark = ",")))
+}
+
+```
+
+Os dados da PNAD contínua permitem descrever um retrato da desigualdade de renda e acesso ao mercado de trabalho a partir da segmentação dos indivíduos em características de gênero e raça. Os indicadores descritivos evidenciam desigualdades sistemáticas entre os grupos analisados.
+
+## Tabela 1 — Taxa de ocupação
+
+```{r tabela1, echo=FALSE, cache=TRUE}
+taxa_desocup <- svyby(~vd4002, ~v2007 + v2010, 
+                      subset(design_proposta1, vd4001 == "Pessoas na força de trabalho"),
+                      svymean) 
+
+taxa_desocup <- taxa_desocup %>%
+  arrange(desc(`vd4002Pessoas ocupadas`)) %>%
+  select(1:5) %>%
+  rename(
+    `Pessoas ocupadas` = `vd4002Pessoas ocupadas`,
+    `Pessoas desocupadas` = `vd4002Pessoas desocupadas`,
+    `Erro padrão` = `se.vd4002Pessoas ocupadas`
+  )
+
+kable(format_svy_tab(taxa_desocup), row.names = FALSE)
+```
+
+A Tabela 1 mostra que as maiores taxas de ocupação concentram-se entre homens, enquanto as menores são observadas entre mulheres, especialmente pretas (89,07%) e indígenas (88,39%). Essa diferença sinaliza desigualdade persistente no acesso ao trabalho.
+
+Analisou-se também a taxa de contribuintes para instituto de previdência, com objetivo de estudar a qualidade da ocupação por cada grupo característico. Foram consideradas apenas pessoas ocupadas para esta análise
+
+## Tabela 2 — Formalidade
+
+```{r tabela2, echo=FALSE, cache=TRUE}
+formalidade <- svyby(~vd4012, ~v2007 + v2010,
+                     subset(design_proposta1, vd4002 == "Pessoas ocupadas"),
+                     svymean)
+
+formalidade <- formalidade %>%
+  arrange(desc(vd4012Contribuinte)) %>%
+  select(1:5) %>%
+  rename(
+    Contribuinte = vd4012Contribuinte,
+    `Não contribuinte` = `vd4012Não contribuinte`,
+    `Erro padrão` = se.vd4012Contribuinte
+  )
+
+kable(format_svy_tab(formalidade), row.names = FALSE)
+```
+
+A formalidade revela um padrão similar de desigualdade. Como evidenciado na Tabela 2, a proporção de contribuintes à previdência é maior entre mulheres brancas (74,9%) e menor entre mulheres e homens indígenas, com taxas próximas a 52–51%. Grupos pretos e pardos também apresentam participação inferior, evidenciando que neste quesito a desigualdade se dá principalmente pelo fator de raça, o que revela desigualdade tanto no acesso quanto na qualidade das ocupações.
+
+Os dados da PNAD permitem também analisar a composição dentre os ocupados pela posição que ocupa no mercado de trabalho.
+
+## Gráfico 1 — Composição dos ocupados por posição
+
+```{r tabela3, echo=FALSE, cache=TRUE}
+posicao_ocupacao <- svyby(~vd4009, ~v2007 + v2010,
+                          subset(design_proposta1, vd4002 == "Pessoas ocupadas"),
+                          svymean) %>%
+  clean_names() %>%
+  select(1:12)
+
+posicao_long <- posicao_ocupacao %>%
+  rename(Sexo = v2007, `Raça/Cor` = v2010) %>%
+  pivot_longer(
+    cols = starts_with("vd4009"),
+    names_to = "Posição",
+    values_to = "prop"
+  ) 
+
+labels_curto <- c(
+  "vd4009empregado_no_setor_privado_com_carteira_de_trabalho_assinada" = "Priv. c/ CT",
+  "vd4009empregado_no_setor_privado_sem_carteira_de_trabalho_assinada" = "Priv. s/ CT",
+  "vd4009trabalhador_domestico_com_carteira_de_trabalho_assinada" = "Dom. c/ CT",
+  "vd4009trabalhador_domestico_sem_carteira_de_trabalho_assinada" = "Dom. s/ CT",
+  "vd4009empregado_no_setor_publico_com_carteira_de_trabalho_assinada" = "Público c/ CT",
+  "vd4009empregado_no_setor_publico_sem_carteira_de_trabalho_assinada" = "Público s/ CT",
+  "vd4009militar_e_servidor_estatutario" = "Estatutário",
+  "vd4009empregador" = "Empregador",
+  "vd4009conta_propria" = "Conta própria",
+  "vd4009trabalhador_familiar_auxiliar" = "Familiar"
+)
+
+posicao_long$Posição <- labels_curto[posicao_long$Posição]
+
+posicao_long %>%
+  mutate(
+    Posição = factor(
+      Posição,
+      levels = rev(labels_curto),
+      labels = rev(labels_curto)
+    )
+  ) %>%
+  ggplot(.,
+         aes(x = Posição, y = prop, fill = Posição)) +
+  geom_col() +
+  geom_text(
+    aes(label = scales::percent(prop, accuracy = 0.1)),
+    hjust = -0.1,
+    size = 1.8
+  ) +
+  coord_flip() +
+  facet_grid(Sexo ~ `Raça/Cor`) +
+  scale_y_continuous(
+    limits = c(0, 0.55),
+    breaks = c(.1,.2,.3,.4),
+    labels = scales::percent,
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+  theme_classic(base_size = 6) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(size = 9, face = "bold")
+  ) +
+  labs(
+    x = "",
+    y = "",
+    title = ""
+  )
+
+```
+
+O Gráfico 1 aprofunda essa leitura ao decompor a posição na ocupação. Verifica-se que pessoas brancas tendem a ocupar proporcionalmente posições de maior estabilidade, como emprego público, estatutário ou privado com carteira, enquanto pessoas pretas, pardas e indígenas estão mais concentradas em ocupações precárias, como trabalho doméstico (com e sem carteira) e emprego sem carteira assinada, com destaque para as mulheres, em especial as não brancas ou amarelas. A diferença por gênero é ainda mais clara entre trabalhadores domésticos: as mulheres — independentemente da raça — concentram a maior fatia desse segmento. Destaca-se também as mulheres indígenas, que são o único grupo com maior quantidade de indivíduos trabalhando por conta própria, do que na iniciativa privada com carteira de trabalho assinada.
+
+Após breve análise sobre indicadores referentes ao acesso ao mercado de trabalho, mostra-se relevante analisar também os rendimentos médios por gênero e raça.
+
+## Tabela 3 — Rendimento médio por gênero/raça
+
+```{r tabela4, echo=FALSE, cache=TRUE}
+rendimento_genero_raca <- svyby(~vd4016, ~v2007 + v2010, 
+      subset(design_proposta1, vd4002 == "Pessoas ocupadas"), 
+      svymean, na.rm = TRUE) 
+
+rendimento_genero_raca <- rendimento_genero_raca %>%
+  rename(Sexo = v2007, `Raça/Cor` = v2010) %>%
+  arrange(desc(vd4016)) %>%
+  mutate(
+    `Média renda` = number(vd4016,
+                   big.mark = ".",
+                   decimal.mark = ",",
+                   accuracy = 0.01),
+    `Erro-padrão` = number(se,
+                           big.mark = ".",
+                           decimal.mark = ",",
+                           accuracy = 0.01)
+  ) %>%
+  select(Sexo, `Raça/Cor`, `Média renda`, `Erro-padrão`)
+
+kable(rendimento_genero_raca, row.names = FALSE)
+
+```
+
+```{r GINI1, echo=FALSE, cache=TRUE}
+gini <- svygini(formula=~vd4016, design=design_proposta1, na.rm=TRUE) %>%
+  as.data.frame() %>%
+  mutate(gini = scales::number(round(gini*100,1), decimal.mark = ",", accuracy = 0.1)) %>%
+  select(gini) %>%
+  pull()
+
+```
+
+A Tabela 3 revela que o rendimento médio reproduz e amplia as diferenças observadas no acesso ao mercado de trabalho. O grupo com maior rendimento é o de homens amarelos (R\$ 6.335,20), seguido por homens brancos (R\$ 4.717,18). A menor média é registrada entre mulheres pretas (R\$ 2.181,31), cuja renda representa aproximadamente 46% da renda média de homens brancos. Essa disparidade ilustra que as desigualdades não se limitam ao acesso, mas se aprofundam na dimensão remuneratória.
+  
+Para contextualizar os resultados, calculou-se o índice de Gini do rendimento habitual do trabalho principal para o conjunto da população ocupada no 1º trimestre de 2025. O valor estimado foi de `r gini`. Esse dado sugere que, mesmo antes de segmentar por sexo e raça/cor, a distribuição de renda do trabalho no Brasil já apresenta elevada concentração.
+
+Para além do cálculo das estatísticas de média, é relevante utilizar do ferramental estatístico para testar e metrificar as diferenças na média do rendimento por grupos, e avaliar sua significância.
+
+## Tabela 4 — Teste de significância das diferenças
+
+```{r teste1, echo=FALSE, cache=TRUE}
+proposta1 <- proposta1 %>%
+  filter(vd4002 == "Pessoas ocupadas" & !is.na(vd4016))
+
+modelo_renda <- svyglm(vd4016 ~ v2007 + v2010, 
+                       design = design_proposta1)
+
+res <- broom::tidy(modelo_renda, conf.int = F) %>%
+  mutate(
+    term = recode(term,
+                  "(Intercept)" = "Intercepto",
+                  "v2007Mulher" = "Sexo: Mulher",
+                  "v2010Preta" = "Raça: Preta",
+                  "v2010Parda" = "Raça: Parda",
+                  "v2010Indígena" = "Raça: Indígena",
+                  "v2010Amarela" = "Raça: Amarela"),
+    estimate_num = estimate,
+    estimate   = round(estimate, 2),
+    std.error  = round(std.error, 2),
+    p.value    = round(p.value, 4)
+    ,
+    across(
+      c(estimate, std.error),
+      ~ scales::number(.x, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+    ),
+    p.value = scales::pvalue(p.value, decimal.mark = ",")) %>%
+  slice(2:6) %>%
+  arrange(desc(estimate_num)) %>%
+  select(term,estimate,std.error,p.value)%>%
+  rename(
+    `Característica` = term,
+    Coeficiente = estimate,
+    `Erro padrão` = std.error,
+    `P valor` = p.value
+  ) %>%
+  as.data.frame()
+
+kable(res, row.names = FALSE)
+```
+
+```{r modelo1_rmse_rsq, echo=FALSE, cache=TRUE}
+proposta1$pred_glm <- predict(modelo_renda)
+w1 <- proposta1$v1028
+y1 <- proposta1$vd4016
+y_hat1 <- proposta1$pred_glm
+
+rmse_glm1 <- round(sqrt(sum(w1 * (y1 - y_hat1)^2) / sum(w1)),2)
+rmse_glm1 <- number(rmse_glm1,accuracy = 0.01, big.mark = ".",decimal.mark = ",")
+
+y_mean_w1 <- sum(w1 * y1) / sum(w1)
+sst_w1 <- sum(w1 * (y1 - y_mean_w1)^2)
+sse_w1 <- sum(w1 * (y1 - y_hat1)^2)
+rsq_glm1 <- round(1 - sse_w1 / sst_w1,3)
+rsq_glm1 <- number(rsq_glm1,accuracy = 0.001,decimal.mark = ",")
+```
+
+Tomando o homem branco como referência, a Tabela 4 apresenta estimativas de um modelo linear que compara grupos de sexo e raça. Todos os coeficientes são estatisticamente significativos a
+valores $\alpha$ habituais.
+
+O efeito estimado sugere que, mantendo constantes apenas o peso amostral e as condições de ocupação, apenas os indivíduos amarelos apresentam rendimento médio superior ao homem branco. O fato do indivíduo ser mulher e/ou ser preto, pardo ou indígena são fatores de minoração do rendimento médio.
+
+O modelo confirma que sexo e raça são fatores associados a diferenças substanciais de renda.
+Este é um modelo aditivo, ou seja, os efeitos podem ser somados: por exemplo, uma mulher preta teria, em média, redução estimada de R$ 2.555,06 em relação ao homem branco.
+
+Note que é relevante interpretar este modelo com cautela, visto que apresenta baixa qualidade de ajuste observado pelo elevado valor da raiz do erro quadrático médio (`r rmse_glm1`) e baixo valor no coeficiente de determinação R² = `r rsq_glm1`. Seriam necessários mais características demográficas como grau de escolaridade e tempo de experiência para um ajuste mais adequado.
+
+Com objetivo de obter um ajuste mais adequado para explicação da renda, a partir de características sociodemográficas, ajustou-se um modelo log-linear generalizado para estudar outros possíveis fatores que expliquem a renda dos indivíduos, como o grau de escolaridade e a idade, esta última como reflexiva da experiência no mercado de trabalho do indivíduo, inclusive com termo quadrático na expectativa de capturar tanto a inexperiência quanto a idosidade para o mercado de trabalho.
+
+## Tabela 5 — Modelo log-linear generalizado
+
+```{r modelo1, echo=FALSE, cache=TRUE}
+quantis <- quantile(proposta1$vd4016,probs = seq(0,1,.025),na.rm = T)
+
+fit_data <- proposta1 %>%
+  filter(vd4016 > quantis[2] & vd4016 < quantis[length(quantis)-1]) %>%
+  mutate(log_renda = log(vd4016),
+         idade_centrada = v2009 - mean(v2009, na.rm = TRUE)
+  )
+
+design_fitdata <- svydesign(
+  ids = ~upa,
+  strata = ~estrato,
+  weights = ~v1028,
+  data = fit_data,
+  nest = TRUE
+)
+
+categoria_referencia <- paste0(levels(fit_data$v2007)[1],", ", levels(fit_data$v2010)[1],", ", levels(fit_data$vd3004)[1],", ", levels(fit_data$vd4009)[1],", ", levels(fit_data$vd4012)[1])
+
+modelo_survey <- svyglm(
+  log_renda ~ v2007 + v2010 + vd3004 + idade_centrada + I(idade_centrada^2) + vd4009 + vd4012,
+  design = design_fitdata
+)
+
+labels_coef <- c(
+  "v2007Mulher" = "Sexo: Mulher",
+  "v2010Preta" = "Raça: Preta",
+  "v2010Amarela" = "Raça: Amarela",
+  "v2010Parda" = "Raça: Parda",
+  "v2010Indígena" = "Raça: Indígena",
+  
+  "vd3004Fundamental incompleto ou equivalente" = "Escolaridade: Fund. incompleto",
+  "vd3004Fundamental completo ou equivalente"   = "Escolaridade: Fund. completo",
+  "vd3004Médio incompleto ou equivalente"       = "Escolaridade: Médio incompleto",
+  "vd3004Médio completo ou equivalente"         = "Escolaridade: Médio completo",
+  "vd3004Superior incompleto ou equivalente"    = "Escolaridade: Sup. incompleto",
+  "vd3004Superior completo"                     = "Escolaridade: Sup. completo",
+  
+  "idade_centrada"          = "Idade (centrada)",
+  "I(idade_centrada^2)"     = "Idade² (centrada)",
+  
+  "vd4009Empregado no setor privado sem carteira de trabalho assinada" =
+    "Privado s/ carteira",
+  
+  "vd4009Trabalhador doméstico com carteira de trabalho assinada" =
+    "Doméstico c/ carteira",
+  
+  "vd4009Trabalhador doméstico sem carteira de trabalho assinada" =
+    "Doméstico s/ carteira",
+  
+  "vd4009Empregado no setor público com carteira de trabalho assinada" =
+    "Público c/ carteira",
+  
+  "vd4009Empregado no setor público sem carteira de trabalho assinada" =
+    "Público s/ carteira",
+  
+  "vd4009Militar e servidor estatutário" = "Estatutário",
+  "vd4009Empregador"                     = "Empregador",
+  "vd4009Conta-própria"                  = "Conta própria",
+  
+  "vd4012Não contribuinte" = "Não contribuinte"
+)
+
+res2 <- broom::tidy(modelo_survey, conf.int = FALSE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    estimate_num  = estimate,
+    p_value_num   = p.value,
+    efeito_pct_num = (exp(estimate) - 1) * 100
+  ) %>%
+  mutate(
+    term = recode(term, !!!labels_coef)
+  ) %>%
+  arrange(desc(efeito_pct_num)) %>%
+  mutate(
+    `Efeito percentual` = number(
+      efeito_pct_num,
+      accuracy = 0.01,
+      big.mark = ".",
+      decimal.mark = ","
+    ),
+    `P valor` = pvalue(
+      p_value_num,
+      decimal.mark = ","
+    )
+  ) %>%
+  select(
+    `Característica` = term,
+    `Efeito percentual`,
+    `P valor`
+  ) %>%
+  as.data.frame()
+
+kable(res2, row.names = FALSE)
+```
+
+```{r modelo2_rmse_rsq, echo=FALSE, cache=TRUE}
+fit_data$pred_glm <- predict(modelo_survey)
+w2 <- fit_data$v1028
+y2 <- fit_data$log_renda
+y_hat2 <- fit_data$pred_glm
+
+rmse_glm2 <- round(sqrt( sum(w2 * (y2 - y_hat2)^2) / sum(w2)),3)
+rmse_glm2 <- number(rmse_glm2,accuracy = 0.001,decimal.mark = ",")
+
+y_mean_w2 <- sum(w2 * y2) / sum(w2)
+sst_w2 <- sum(w2 * (y2 - y_mean_w2)^2)
+sse_w2 <- sum(w2 * (y2 - y_hat2)^2)
+rsq_glm2 <- round(1 - sse_w2 / sst_w2,3)
+rsq_glm2 <- number(rsq_glm2,accuracy = 0.001,decimal.mark = ",")
+
+idade_media <- mean(fit_data$v2009, na.rm = TRUE)
+idade_media <- number(idade_media,accuracy = 1,decimal.mark = ",")
+
+```
+
+Os resultados, apresentados na Tabela 5, mostram efeitos percentuais relativos à categoria de referência (Homem, branco, sem instrução e menos de 1 ano de estudo, empregado no setor privado com carteira de trabalho assinada, contribuinte, com idade igual a média da amostra, isto é, `r idade_media` anos). O marcador de escolaridade é o componente com maiores coeficientes: indivíduos com ensino superior completo apresentam renda 144,5% maior do que a categoria de referência, enquanto aqueles com ensino fundamental incompleto apresentam aumento mais modesto (14,2%).
+
+A posição na ocupação também exerce forte influência, visto que ser empregador aumenta o rendimento em 62%, enquanto estar no setor privado sem carteira reduz em 2,1%, e ser trabalhador doméstico sem carteira reduz em 21,8%.
+
+Mesmo após esses controles, persistem desigualdades associadas a sexo e raça. Ser mulher reduz o rendimento em 22,9%, pessoas pardas (-13,4%), pretas (-13,7%) e indígenas (-11,0%) mantêm penalidades significativas. Pessoas amarelas não apresentam efeito estatisticamente significativo no modelo.
+
+Esses resultados trazem evidências que parte substancial das desigualdades observadas não se explica apenas pela escolaridade ou inserção ocupacional, mas possui componente estrutural persistente.
+
+O modelo apresentou coeficiente de determinação R² = `r rsq_glm2`, valor alto para dados salariais, e RMSE de `r rmse_glm2` na escala logarítmica, indicando ajuste mais adequado que o modelo anterior.
+
+# Conclusão
+
+Os resultados combinados sugerem que as desigualdades no mercado de trabalho brasileiro operam em múltiplas camadas. A taxa de ocupação e a formalidade evidenciam que diferentes grupos enfrentam barreiras distintas de acesso e estabilidade. A posição na ocupação manifesta forte segregação, especialmente entre mulheres e pessoas pretas e pardas.
+
+O modelo log-linear generalizado demonstra que, mesmo controlando escolaridade e posição na ocupação, fatores sociodemográficos como sexo e raça/cor continuam associados a diferenças significativas de renda. Isso indica que parte da desigualdade observada decorre de mecanismos não capturados apenas por características educacionais e etárias — sugerindo elementos estruturais como discriminação, segmentação ocupacional e barreiras no acesso a posições de maior remuneração como formadores da desigualdade brasileira.
+
+Portanto, a análise dos dados da PNAD Contínua do 1º trimestre de 2025 revela que desigualdades de gênero e raça permanecem amplas e persistentes no mercado de trabalho brasileiro.
+Essas desigualdades se manifestam no acesso à ocupação, na formalidade, na distribuição das posições ocupacionais e, sobretudo, na remuneração.
+
+O presente estudo oferece um panorama inicial, que pode ser aprofundado com análises adicionais, como decomposições econométricas ou modelos de equações estruturais, sobretudo para investigar mecanismos mais subjetivos de discriminação e segmentação no mercado de trabalho.
+
+\newpage
+
+\pagenumbering{gobble}
+
+# Apêndice
+
+A íntegra e organização modularizada dos códigos deste projeto encontram-se disponíveis em meu GitHub, neste [link](https://github.com/penasta/ipea_55)
+

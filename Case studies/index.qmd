@@ -1,0 +1,15 @@
+---
+title: "Case Studies"
+subtitle: "Análises estatísticas e projetos de modelagem de dados"
+listing:
+  contents: 
+    - "**/*.qmd"
+  type: grid
+  sort: "date desc"
+  categories: true 
+  sort-ui: true
+  filter-ui: true
+  fields: [image, date, title, subtitle, reading-time]
+---
+
+Aqui você encontrará estudos de caso focados em resolver problemas reais através da ciência de dados e estatística.
