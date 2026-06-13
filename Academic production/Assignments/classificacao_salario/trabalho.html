@@ -7,8 +7,8 @@
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-b6a8276bf55561bdbc268162d41bd1f7.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.30">
 
   <meta name="author" content="Bruno Gondim Toledo">
   <meta name="dcterms.date" content="2026-03-05">
@@ -19,6 +19,9 @@
   <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -97,7 +100,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/theme/quarto-816793a8a4a837d14f6ea458e2f1c5cb.css">
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/theme/quarto-2abc1c5b7b5c7eecd6137558e106e4c3.css">
   <link rel="stylesheet" href="styles.css">
   <link href="../../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -242,7 +245,7 @@
 <h2>Preparação</h2>
 <p>Os dados disponíveis no Kaggle já haviam passado por algumas etapas de transformações, mas para o objetivo deste trabalho achei pertinente realizar mais algumas rotinas de transformações nas covariáveis</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>df<span class="sc">$</span>salary <span class="ot">=</span> <span class="fu">factor</span>(df<span class="sc">$</span>salary)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>df<span class="sc">$</span>salary <span class="ot">=</span> <span class="fu">factor</span>(df<span class="sc">$</span>salary)</span>
 <span id="cb1-2"><a></a>df <span class="ot">=</span> <span class="fu">clean_names</span>(df)</span>
 <span id="cb1-3"><a></a></span>
 <span id="cb1-4"><a></a>df<span class="sc">$</span>fnlwgt <span class="ot">=</span> df<span class="sc">$</span>fnlwgt<span class="sc">/</span><span class="fu">sum</span>(df<span class="sc">$</span>fnlwgt)</span>
@@ -274,7 +277,7 @@
 <span id="cb1-30"><a></a>           workclass <span class="sc">==</span> <span class="st">"?"</span> <span class="sc">~</span> <span class="st">"unknown"</span>),</span>
 <span id="cb1-31"><a></a>         <span class="at">workclass =</span> <span class="fu">factor</span>(workclass)</span>
 <span id="cb1-32"><a></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb1-33"><a></a>  <span class="fu">select</span>(<span class="sc">-</span>marital_status,<span class="sc">-</span>relationship)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-33"><a></a>  <span class="fu">select</span>(<span class="sc">-</span>marital_status,<span class="sc">-</span>relationship)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="section" class="slide level2">
@@ -288,7 +291,7 @@
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-condensed caption-top" data-quarto-postprocess="true" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-condensed caption-top" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
@@ -635,7 +638,7 @@
 <h2>Parâmetros gerais</h2>
 <p>Irei testar diversos modelos e fazer comparação de resultados destes, mas utilizarei a mesma “receita” para todos</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">set.seed</span>(<span class="dv">150167636</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">set.seed</span>(<span class="dv">150167636</span>)</span>
 <span id="cb2-2"><a></a>split <span class="ot">=</span> <span class="fu">initial_split</span>(df, <span class="at">prop =</span> .<span class="dv">8</span>, <span class="at">strata =</span> salary)</span>
 <span id="cb2-3"><a></a>train <span class="ot">=</span> <span class="fu">training</span>(split)</span>
 <span id="cb2-4"><a></a>test <span class="ot">=</span> <span class="fu">testing</span>(split)</span>
@@ -656,7 +659,7 @@
 <span id="cb2-19"><a></a>dados_preparados <span class="ot">&lt;-</span> recipe <span class="sc">%&gt;%</span> </span>
 <span id="cb2-20"><a></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb2-21"><a></a>  <span class="fu">juice</span>()</span>
-<span id="cb2-22"><a></a><span class="fu">head</span>(dados_preparados)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-22"><a></a><span class="fu">head</span>(dados_preparados)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 38
       age   fnlwgt education_num capital_gain capital_loss hours_per_week salary
@@ -681,7 +684,7 @@
 <h2>Modelo 1: Regressão logística</h2>
 <p>Como a variável resposta é binária, o primeiro modelo que podemos tentar seria o logístico</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>glm_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>glm_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
 <span id="cb4-3"><a></a></span>
 <span id="cb4-4"><a></a>glm_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
@@ -694,7 +697,7 @@
 <span id="cb4-11"><a></a>glm_fit <span class="sc">%&gt;%</span></span>
 <span id="cb4-12"><a></a>  <span class="fu">extract_fit_parsnip</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb4-13"><a></a>  <span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-14"><a></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-14"><a></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 37 × 5
    term                                   estimate std.error statistic   p.value
@@ -755,13 +758,13 @@
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>predictions <span class="ot">&lt;-</span> glm_fit <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>predictions <span class="ot">&lt;-</span> glm_fit <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> test)</span>
 <span id="cb6-3"><a></a></span>
 <span id="cb6-4"><a></a>results <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(test, predictions)</span>
 <span id="cb6-5"><a></a></span>
 <span id="cb6-6"><a></a>results <span class="sc">%&gt;%</span></span>
-<span id="cb6-7"><a></a>  <span class="fu">conf_mat</span>(salary,.pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a></a>  <span class="fu">conf_mat</span>(salary,.pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Truth
 Prediction    0    1
@@ -778,7 +781,7 @@ Prediction    0    1
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>lasso_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>(<span class="at">penalty =</span> <span class="fu">tune</span>(),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>lasso_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>(<span class="at">penalty =</span> <span class="fu">tune</span>(),</span>
 <span id="cb8-2"><a></a>                           <span class="at">mixture =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb8-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glmnet"</span>)</span>
 <span id="cb8-4"><a></a></span>
@@ -794,7 +797,7 @@ Prediction    0    1
 <span id="cb8-14"><a></a>lasso_res <span class="ot">&lt;-</span> lasso_wf <span class="sc">%&gt;%</span></span>
 <span id="cb8-15"><a></a>  <span class="fu">tune_grid</span>(<span class="at">resamples =</span> cv_folds,</span>
 <span id="cb8-16"><a></a>            <span class="at">grid =</span> grid,</span>
-<span id="cb8-17"><a></a>            <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-17"><a></a>            <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
@@ -812,7 +815,7 @@ Prediction    0    1
 <section id="estimativa-dos-parâmetros-para-o-modelo-lasso" class="slide level2">
 <h2>Estimativa dos parâmetros para o modelo Lasso</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>best_params <span class="ot">=</span> lasso_res <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>best_params <span class="ot">=</span> lasso_res <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a></a>  <span class="fu">select_best</span>(<span class="at">metric =</span> <span class="st">"roc_auc"</span>)</span>
 <span id="cb9-3"><a></a></span>
 <span id="cb9-4"><a></a>best_wf <span class="ot">=</span> <span class="fu">finalize_workflow</span>(lasso_wf, best_params)</span>
@@ -823,7 +826,7 @@ Prediction    0    1
 <span id="cb9-9"><a></a>final_fit <span class="sc">%&gt;%</span></span>
 <span id="cb9-10"><a></a>  <span class="fu">extract_fit_parsnip</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb9-11"><a></a>  <span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb9-12"><a></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-12"><a></a>  <span class="fu">print</span>(<span class="at">n=</span><span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 37 × 3
    term                                              estimate  penalty
@@ -884,13 +887,13 @@ Prediction    0    1
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>predictions <span class="ot">&lt;-</span> final_fit <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>predictions <span class="ot">&lt;-</span> final_fit <span class="sc">%&gt;%</span></span>
 <span id="cb11-2"><a></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> test)</span>
 <span id="cb11-3"><a></a></span>
 <span id="cb11-4"><a></a>results <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(test, predictions)</span>
 <span id="cb11-5"><a></a></span>
 <span id="cb11-6"><a></a>results <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a></a>  <span class="fu">conf_mat</span>(salary,.pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-7"><a></a>  <span class="fu">conf_mat</span>(salary,.pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Truth
 Prediction    0    1
@@ -931,7 +934,7 @@ Prediction    0    1
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>model <span class="ot">=</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"classification"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>model <span class="ot">=</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"classification"</span>,</span>
 <span id="cb13-2"><a></a>                   <span class="at">trees =</span> <span class="fu">tune</span>(),</span>
 <span id="cb13-3"><a></a>                   <span class="at">tree_depth =</span> <span class="fu">tune</span>()</span>
 <span id="cb13-4"><a></a>                   ) <span class="sc">%&gt;%</span></span>
@@ -952,7 +955,7 @@ Prediction    0    1
 <span id="cb13-19"><a></a>  <span class="at">resamples =</span> cv_folds,</span>
 <span id="cb13-20"><a></a>  <span class="at">grid =</span> grid,</span>
 <span id="cb13-21"><a></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy, roc_auc, sens,spec)</span>
-<span id="cb13-22"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-22"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
@@ -991,13 +994,13 @@ Prediction    0    1
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>predictions <span class="ot">&lt;-</span> final_fit <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>predictions <span class="ot">&lt;-</span> final_fit <span class="sc">%&gt;%</span></span>
 <span id="cb15-2"><a></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> test)</span>
 <span id="cb15-3"><a></a></span>
 <span id="cb15-4"><a></a>results <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(test, predictions)</span>
 <span id="cb15-5"><a></a></span>
 <span id="cb15-6"><a></a>results <span class="sc">%&gt;%</span></span>
-<span id="cb15-7"><a></a>  <span class="fu">conf_mat</span>(salary,.pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-7"><a></a>  <span class="fu">conf_mat</span>(salary,.pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Truth
 Prediction    0    1
@@ -1298,7 +1301,7 @@ Prediction    0    1
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1448,13 +1451,14 @@ Prediction    0    1
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
