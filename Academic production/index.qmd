@@ -13,13 +13,13 @@ listing:
     sort: "date desc"
 ---
 
-Compilado da minha produção intelectual durante a graduação.
+Compilado de algumas produções intelectuais minhas durante a graduação.
 
 ### Capstone Project
 :::{#capstone}
 :::
 
-Foi produzido também um dashboard Shiny como produto deste trabalho, disponível neste [link](https://penasta.shinyapps.io/similaridade_processos/)
+Foi produzido também um dashboard Shiny como produto deste trabalho, disponível neste [link](https://penasta.shinyapps.io/similaridade_processos/). O repositório que hospeda a monografia pode ser encontrado neste [link](https://bdm.unb.br/handle/10483/43062).
 
 ---
 
@@ -29,6 +29,6 @@ Foi produzido também um dashboard Shiny como produto deste trabalho, disponíve
 
 ---
 
-### Assignments & Coursework
+### Assignments
 :::{#assignments}
 :::

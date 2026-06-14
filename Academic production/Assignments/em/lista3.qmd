@@ -1,5 +1,5 @@
 ---
-title: "Lista 3 — Algoritmo EM"
+title: "Algoritmo EM"
 subtitle: "Técnicas computacionais em estatística | Prof. Dr. Helton Saulo Bezerra dos Santos"
 author:
   - name: Bruno Gondim Toledo

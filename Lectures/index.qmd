@@ -12,7 +12,7 @@ listing:
     fields: [title, subtitle]
 ---
 
-Nesta seção, organizo materiais didáticos e anotações de tópicos avançados em estatística e biometria.
+Nesta seção, organizo materiais didáticos e anotações de tópicos avançados em estatística e biometria de aulas particulares que ministrei.
 
 ### Biostatistics
 :::{#BIO}

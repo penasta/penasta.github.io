@@ -65,3 +65,5 @@ README_BRUNO.txt
 /_site/
 /.quarto/
 Case studies/pnad/pnadc_2025_1tri.rds
+
+**/*.quarto_ipynb

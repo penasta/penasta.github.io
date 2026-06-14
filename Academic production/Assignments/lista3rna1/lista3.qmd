@@ -17,17 +17,15 @@ format:
     toc: true
     toc-title: "Índice"
     lightbox: true
-execute: 
-  cache: true
 ---
 
 ```{r setup}
-knitr::opts_chunk$set(echo = T, message=FALSE, warning=FALSE, cache=T)
+knitr::opts_chunk$set(echo = T, message=FALSE, warning=FALSE, cache = TRUE)
 pacman::p_load("neuralnet", "tidyverse", "latex2exp", "knitr",
                "NeuralNetTools", "Cairo", "hexbin", "tictoc",
                "microbenchmark","tictoc","parallel","furrr")
 
-# Definindo o aspecto dos gráficos
+# Definindo o aspecto dos gráficos 
 tema.graficos <- theme_light() + 
   theme(plot.margin = unit(rep(.2, 4), "cm"),
         axis.title.y = element_text(margin = unit(rep(.2, 4), "cm"), size = 8),

@@ -11,7 +11,7 @@ output: html_document
 bibliography: bibliografia.bib
 geometry: a4paper
 fontsize: 12pt
-abstract: "O presente trabalho foi apresentado na disciplina de Processos estocásticos do bacharel de Estatística da Universidade de Brasília ministrada pela Prof.ª Dr.ª Cira Etheowalda Guevara Otiniano no 1º semestre de 2024, com objetivo responder a seguinte pergunta: \"Quantos processos serão julgados em um determinado tribunal em um ano?\".  Modelar quantidade de processos julgados pode ser relevante para, por exemplo,  estimar custos, número de funcionários necessários, possível expansão ou diminuição  do tribunal em função desta produtividade. Para responder esta pergunta, modelou-se uma  soma de processos de Poisson não homogêneos."
+abstract: "O presente trabalho foi apresentado na disciplina de Processos estocásticos do bacharel de Estatística da Universidade de Brasília ministrada pela Prof.ª Dr.ª Cira Etheowalda Guevara Otiniano no 1º semestre de 2024, sendo posteriormente submetido, aceito e apresentado em formato poster no 69º RBRas (2025), com objetivo responder a seguinte pergunta: \"Quantos processos serão julgados em um determinado tribunal em um ano?\".  Modelar quantidade de processos julgados pode ser relevante para, por exemplo,  estimar custos, número de funcionários necessários, possível expansão ou diminuição  do tribunal em função desta produtividade. Para responder esta pergunta, modelou-se uma  soma de processos de Poisson não homogêneos."
 execute: 
   cache: true
 ---
