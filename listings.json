@@ -1,45 +1,45 @@
 [
   {
-    "listing": "/Lectures/index.html",
+    "listing": "/Aulas/index.html",
     "items": [
-      "/Lectures/Biostatistics/aula1/tipos_variaveis.html",
-      "/Lectures/Biostatistics/aula2/aula2.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula1/aula1.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula2/aula2.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula3/aula3.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula4/aula4.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula5/index.html",
-      "/Lectures/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html"
+      "/Aulas/Biostatistics/aula1/tipos_variaveis.html",
+      "/Aulas/Biostatistics/aula2/aula2.html",
+      "/Aulas/Structural Equation Modeling (SEM)/sem_aula1/aula1.html",
+      "/Aulas/Structural Equation Modeling (SEM)/sem_aula2/aula2.html",
+      "/Aulas/Structural Equation Modeling (SEM)/sem_aula3/aula3.html",
+      "/Aulas/Structural Equation Modeling (SEM)/sem_aula4/aula4.html",
+      "/Aulas/Structural Equation Modeling (SEM)/sem_aula5/index.html",
+      "/Aulas/Structural Equation Modeling (SEM)/sem_aula6/aula6_pls.html"
     ]
   },
   {
-    "listing": "/Academic production/index.html",
+    "listing": "/Estudos de caso/index.html",
     "items": [
-      "/Academic production/Capstone project/nlp/index.html",
-      "/Academic production/Capstone project/tcc2/slide.html",
-      "/Academic production/Papers/estocasticos/estocasticos.html",
-      "/Academic production/Assignments/lista3rna1/lista3.html",
-      "/Academic production/Assignments/em/lista3.html",
-      "/Academic production/Assignments/xgboost_catboost/trabalho.html",
-      "/Academic production/Assignments/otimizacao/lista1.html",
-      "/Academic production/Assignments/otim_mv/lista2.html",
-      "/Academic production/Assignments/npa/lista1.html",
-      "/Academic production/Assignments/montecarlo/lista4.html",
-      "/Academic production/Assignments/lista5rna1/lista5.html",
-      "/Academic production/Assignments/lista4rna1/lista4.html",
-      "/Academic production/Assignments/lista2rna1/lista2.html",
-      "/Academic production/Assignments/classificacao_salario_relatorio/trabalho_bruno.html",
-      "/Academic production/Assignments/classificacao_salario/trabalho.html",
-      "/Academic production/Assignments/classificação binária de decisões/trabalho_final.html",
-      "/Academic production/Assignments/birnbaum/seminario.html",
-      "/Academic production/Assignments/random_forest/apresentacao.html"
+      "/Estudos de caso/churn/relatorio.html",
+      "/Estudos de caso/pnad/projeto_html.html"
     ]
   },
   {
-    "listing": "/Case studies/index.html",
+    "listing": "/Producao academica/index.html",
     "items": [
-      "/Case studies/churn/relatorio.html",
-      "/Case studies/pnad/projeto_html.html"
+      "/Producao academica/Capstone project/nlp/index.html",
+      "/Producao academica/Capstone project/tcc2/slide.html",
+      "/Producao academica/Papers/estocasticos/estocasticos.html",
+      "/Producao academica/Assignments/lista3rna1/lista3.html",
+      "/Producao academica/Assignments/em/lista3.html",
+      "/Producao academica/Assignments/xgboost_catboost/trabalho.html",
+      "/Producao academica/Assignments/otimizacao/lista1.html",
+      "/Producao academica/Assignments/otim_mv/lista2.html",
+      "/Producao academica/Assignments/npa/lista1.html",
+      "/Producao academica/Assignments/montecarlo/lista4.html",
+      "/Producao academica/Assignments/lista5rna1/lista5.html",
+      "/Producao academica/Assignments/lista4rna1/lista4.html",
+      "/Producao academica/Assignments/lista2rna1/lista2.html",
+      "/Producao academica/Assignments/classificacao_salario_relatorio/trabalho_bruno.html",
+      "/Producao academica/Assignments/classificacao_salario/trabalho.html",
+      "/Producao academica/Assignments/classificação binária de decisões/trabalho_final.html",
+      "/Producao academica/Assignments/birnbaum/seminario.html",
+      "/Producao academica/Assignments/random_forest/apresentacao.html"
     ]
   }
 ]
