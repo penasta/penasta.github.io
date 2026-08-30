@@ -1,5 +1,5 @@
 ---
-title: "Case Studies"
+title: "Estudos de caso"
 subtitle: "Análises estatísticas e projetos de modelagem de dados"
 listing:
   contents: 

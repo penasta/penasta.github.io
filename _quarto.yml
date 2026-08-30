@@ -7,13 +7,13 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Home
-      - href: Case studies/index.qmd
-        text: Case studies
-      - href: Lectures/index.qmd
-        text: Lectures
-      - href: Academic production/index.qmd
-        text: Academic production
+        text: Página inicial
+      - href: Estudos de caso/index.qmd
+        text: Estudos de caso
+      - href: Aulas/index.qmd
+        text: Aulas
+      - href: Producao academica/index.qmd
+        text: Produção acadêmica
     logo: cup-hot
     tools:
       - icon: linkedin

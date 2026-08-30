@@ -1,5 +1,5 @@
 ---
-title: "Academic Production"
+title: "Produção acadêmica"
 listing:
   - id: capstone
     contents: "Capstone project/**/*.qmd"
@@ -15,7 +15,7 @@ listing:
 
 Compilado de algumas produções intelectuais minhas durante a graduação.
 
-### Capstone Project
+### Monografia
 :::{#capstone}
 :::
 
@@ -29,6 +29,6 @@ Foi produzido também um dashboard Shiny como produto deste trabalho, disponíve
 
 ---
 
-### Assignments
+### Atividades universitárias
 :::{#assignments}
 :::

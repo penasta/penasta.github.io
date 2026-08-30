@@ -1,5 +1,5 @@
 ---
-title: "Lectures & Teaching"
+title: "Aulas"
 subtitle: "Materiais de apoio e notas de aula"
 listing:
   - id: BIO
@@ -14,12 +14,12 @@ listing:
 
 Nesta seção, organizo materiais didáticos e anotações de tópicos avançados em estatística e biometria de aulas particulares que ministrei.
 
-### Biostatistics
+### Bioestatística
 :::{#BIO}
 :::
 
 ---
 
-### Structural Equation Modeling (SEM)
+### Modelagem de Equações Estruturais (MEE/SEM)
 :::{#SEM}
 :::
